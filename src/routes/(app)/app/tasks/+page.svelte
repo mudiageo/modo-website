@@ -1,7 +1,7 @@
 <script>
   import { preventDefault } from 'svelte/legacy';
   import { onMount } from 'svelte';
-  import { addTask as addtask, getTasks} from '$lib/db/idb'
+  import { addTask as addTaskToDb, getTasks, deleteTask as deleteTaskFromDb} from '$lib/db/idb'
   let tasks = $state([]);
   onMount(async () => {
     tasks = await getTasks()
@@ -26,7 +26,10 @@
       status: 'pending'
     };
     tasks = [...tasks, task];
-   conxole.log(await addtask(task))
+   const adding = await addTaskToDb(task);
+    if(added) {
+      alert("Toast taskAdeed sucessfully")
+    }
     
     // Reset form
     newTask = {
@@ -38,8 +41,9 @@
     };
   }
 
-  function deleteTask(id) {
+ async function deleteTask(id) {
     tasks = tasks.filter(task => task.id !== id);
+    const deleted = await deleteTaskFromDb(id)
   }
 </script>
 
