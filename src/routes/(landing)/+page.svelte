@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-  <title>StudyAI - AI-Powered Study Planner</title>
+  <title>Modo - AI-Powered Study Planner</title>
   <meta name="description" content="Revolutionize your study habits with AI-powered personalized study planning" />
 </svelte:head>
 

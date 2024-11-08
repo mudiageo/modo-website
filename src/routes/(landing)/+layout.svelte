@@ -9,7 +9,7 @@
   <header class="bg-white shadow-sm">
     <nav class="container mx-auto px-4 py-4">
       <div class="flex justify-between items-center">
-        <a href="/" class="text-2xl font-bold text-primary-600">StudyAI</a>
+        <a href="/" class="text-2xl font-bold text-primary-600">Modo</a>
         <div class="flex gap-6">
           <a href="/features" class="text-gray-600 hover:text-primary-600">Features</a>
           <a href="/pricing" class="text-gray-600 hover:text-primary-600">Pricing</a>
@@ -29,7 +29,7 @@
     <div class="container mx-auto px-4">
       <div class="grid md:grid-cols-4 gap-8">
         <div>
-          <h3 class="text-lg font-semibold mb-4">StudyAI</h3>
+          <h3 class="text-lg font-semibold mb-4">Modo</h3>
           <p class="text-gray-600">Revolutionizing study habits with AI technology.</p>
         </div>
         <div>
@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="mt-12 pt-8 border-t border-gray-200 text-center text-gray-600">
-        <p>&copy; {new Date().getFullYear()} StudyAI. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Mudiageo Tech. All rights reserved.</p>
       </div>
     </div>
   </footer>

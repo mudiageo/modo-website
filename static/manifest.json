@@ -1,6 +1,6 @@
 {
-  "name": "StudyAI - AI-Powered Study Planner",
-  "short_name": "StudyAI",
+  "name": "Modo - AI-Powered Study Planner",
+  "short_name": "Modo",
   "start_url": "/app",
   "display": "standalone",
   "background_color": "#ffffff",
