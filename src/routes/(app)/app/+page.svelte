@@ -1,9 +1,34 @@
 <script>
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { tasksStore, profileStore} from '$lib/data/index.svelte.js'
-  const tasks = tasksStore.data || []
-  const profile = profileStore.data || {}
+  import { tasksStore, profileStore } from '$lib/data/index.svelte.js';
+  import MotivationalFeatures from '$lib/components/MotivationalFeatures.svelte';
+  import StudyTips from '$lib/components/StudyTips.svelte';
+  import { fade, slide } from 'svelte/transition';
+  
+  const tasks = tasksStore.data || [];
+  const profile = profileStore.data || {};
+  
+  let studyTips = $state([]);
+  
+  onMount(async () => {
+    if (browser) {
+      // Fetch personalized study tips based on user data
+      const response = await fetch('/api/ai/recommendations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studyPatterns: tasks,
+          preferences: profile.studyPreferences
+        })
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        studyTips = data.recommendations;
+      }
+    }
+  });
 </script>
 
 <svelte:head>

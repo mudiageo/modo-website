@@ -60,4 +60,3 @@ export const studySessionsStore = dbStoreData('studySessions');
 export const progressStore = dbStoreData('progress');
 export const recommendationsStore = dbStoreData('recommendations');
 export const quotesStore = dbStoreData('quotes');
-
