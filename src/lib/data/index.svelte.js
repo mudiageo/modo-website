@@ -54,7 +54,7 @@ export const dbStoreData = (store) => {
 
 
 export const settingsStore = dbStoreData('settings');
-export const profileDataStore = dbStoreData('profile');
+export const profileStore = dbStoreData('profile');
 export const tasksStore = dbStoreData('tasks');
 export const studySessionsStore = dbStoreData('studySessions');
 export const progressStore = dbStoreData('progress');

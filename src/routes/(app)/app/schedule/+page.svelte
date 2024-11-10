@@ -1,9 +1,17 @@
 <script>
   import { onMount } from 'svelte';
-
+ import { tasksStore} from '$lib/data/index.svelte.js'
+ 
   let schedule = $state([]);
-  
+  let tasks = tasksStore.data || [
+      'Mathematics Practice',
+      'Physics Review',
+      'Essay Writing',
+      'Reading Assignment',
+      'Break'
+    ];
   onMount(() => {
+    console.log(schedule)
     //TODO GET AI-gen schedule reom api
     // Simulate AI-generated schedule
     generateSchedule();
@@ -11,7 +19,6 @@
 
   function generateSchedule() {
     const today = new Date();
-    const schedule = [];
     
     // Generate time slots from 9 AM to 5 PM
     for (let hour = 9; hour < 17; hour++) {
@@ -21,19 +28,14 @@
         type: getRandomType()
       });
     }
-    
+    console.log(schedule)
     return schedule;
   }
 
   function getRandomTask() {
-    const tasks = [
-      'Mathematics Practice',
-      'Physics Review',
-      'Essay Writing',
-      'Reading Assignment',
-      'Break'
-    ];
-    return tasks[Math.floor(Math.random() * tasks.length)];
+    const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
+  
+  return (randomTask.title) ? randomTask.title : randomTask;
   }
 
   function getRandomType() {

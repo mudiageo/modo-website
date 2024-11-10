@@ -4,6 +4,9 @@
   import { goto } from '$app/navigation';
   import { signIn } from '@auth/sveltekit/client';
   
+import { profileStore } from '$lib/data/index.svelte.js'
+let profile = profileStore.data
+
   let formData = $state({
     name: '',
     email: '',
@@ -25,6 +28,7 @@
 
       if (response.ok) {
         //Add profile, courses and preferences to idb set user store
+        profileStore.data = {...formData, courses, studyPreferences}
         goto('/app');
       }
     } catch (error) {
