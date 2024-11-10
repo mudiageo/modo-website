@@ -4,6 +4,7 @@
   let schedule = $state([]);
   
   onMount(() => {
+    //TODO GET AI-gen schedule reom api
     // Simulate AI-generated schedule
     generateSchedule();
   });

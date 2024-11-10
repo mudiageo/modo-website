@@ -1,15 +1,15 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { fade, fly } from 'svelte/transition';
   
-  /** @type {string} */
-  let { message } = $props();
-  /** @type {'success' | 'error' | 'info'} */
-  let { type = 'info' } = $props();
-  /** @type {number} */
-  let { duration = 3000 } = $props();
-  
-  let visible = true;
+interface Props {
+  message: string,
+  type:   'success' | 'error' | 'info',
+  duration: number
+}
+  let { message, type = 'info', duration = 3000 } :Props = $props();
+ 
+  let visible = $state(true);
   
   onMount(() => {
     const timer = setTimeout(() => {

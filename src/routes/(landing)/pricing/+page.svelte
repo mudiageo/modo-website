@@ -1,5 +1,24 @@
+
+
 <script>
+  import { onMount } from 'svelte';
+
+  import PaystackButton from '$lib/components/PaystackButton.svelte';
+  import { goto } from '$app/navigation';
  import { page } from '$app/stores'
+  
+  let session = $state($page.data.session);
+  
+
+
+  function handleSuccess() {
+    goto('/app?subscription=success');
+  }
+
+  function handleCancel() {
+    //TODO Optional: Track cancellation
+  }
+
  
   async function handleSubscribe() {
     try {
@@ -19,7 +38,8 @@
 </script>
 
 <svelte:head>
-  <title>Pricing - StudyAI</title>
+  <title>Pricing - Modo</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 </svelte:head>
 
 <div class="bg-gray-50 py-20">
@@ -99,7 +119,32 @@
           </li>
         </ul>
 
-        <button 
+        {#if session?.user}
+          {#if session.user.premium}
+            <a 
+              href="/app/settings/subscription"
+              class="w-full bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors text-center block"
+            >
+              Manage Subscription
+            </a>
+          {:else}
+            <PaystackButton
+              email={session.user.email}
+              amount={5000}
+              text="Subscribe Now"
+              {onSuccess}
+              {onCancel}
+            />
+          {/if}
+        {:else}
+          <a 
+            href="/login?redirect=/pricing"
+            class="w-full bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors text-center block"
+          >
+            Login to Subscribe
+          </a>
+        {/if}
+          <button 
           class="w-full bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
           onclick={handleSubscribe}
         >
@@ -109,3 +154,4 @@
     </div>
   </div>
 </div>
+

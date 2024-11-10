@@ -1,48 +1,28 @@
 <script>
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  
-  let userData = $state({
-    name: '',
-    courses: [],
-    upcomingTasks: []
-  });
-  
-  onMount(async () => {
-    if (browser) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        // Fetch user data
-        const response = await fetch('/api/user', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        if (response.ok) {
-          userData = await response.json();
-        }
-      }
-    }
-  });
+  import { tasksStore, profileStore} from '$lib/data/index.svelte.js'
+  const tasks = tasksStore.data || []
+  const profile = profileStore.data || {}
 </script>
 
 <svelte:head>
-  <title>Dashboard - StudyAI</title>
+  <title>Dashboard - Modo</title>
 </svelte:head>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
   <!-- Welcome Card -->
   <div class="col-span-full bg-white rounded-lg shadow p-6">
-    <h1 class="text-2xl font-bold text-gray-900">Welcome back, {userData.name || 'Student'}!</h1>
+    <h1 class="text-2xl font-bold text-gray-900">Welcome back, {profile?.name || 'Student'}!</h1>
     <p class="mt-2 text-gray-600">Here's your personalized study overview for today.</p>
   </div>
 
   <!-- Priority Tasks -->
   <div class="bg-white rounded-lg shadow p-6">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Priority Tasks</h2>
-    {#if userData.upcomingTasks?.length > 0}
+    {#if tasks?.length > 0}
       <ul class="space-y-3">
-        {#each userData.upcomingTasks as task}
+        {#each tasks as task}
           <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
             <span class="text-gray-700">{task.title}</span>
             <span class="text-sm text-gray-500">{task.dueDate}</span>

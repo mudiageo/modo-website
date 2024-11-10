@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { dailyProgress } from '$lib/stores/progress';
-  import { getProgress, getStudySessions } from '$lib/db/idb';
+  import { progress, studySessions } from '$lib/db/idb';
 
   let studyStats = $state({
     weeklyStudyTime: 0,

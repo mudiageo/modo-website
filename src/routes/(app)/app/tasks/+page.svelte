@@ -1,13 +1,9 @@
 <script>
   import { preventDefault } from 'svelte/legacy';
-  import { onMount } from 'svelte';
-  import { addTask as addTaskToDb, getTasks, deleteTask as deleteTaskFromDb} from '$lib/db/idb'
-  let tasks = $state([]);
-  onMount(async () => {
-    tasks = await getTasks()
-    
-  })
-    
+  import { tasksStore } from '$lib/data/index.svelte.js'
+  
+  let tasks = tasksStore.data || []
+  
   let newTask = $state({
     title: '',
     course: '',
@@ -18,16 +14,14 @@
 
   async function addTask() {
     if (!newTask.title || !newTask.course || !newTask.dueDate) return;
-
     const task = {
       ...newTask,
       id: Date.now(),
       createdAt: new Date().toISOString(),
       status: 'pending'
     };
-    tasks = [...tasks, task];
-   const adding = await addTaskToDb(task);
-    if(added) {
+   const adding = tasksStore.add(task);
+    if(adding) {
       alert("Toast taskAdeed sucessfully")
     }
     
@@ -42,9 +36,9 @@
   }
 
  async function deleteTask(id) {
-    tasks = tasks.filter(task => task.id !== id);
-    const deleted = await deleteTaskFromDb(id)
-  }
+    tasksStore.delete(id)
+ }
+ 
 </script>
 
 <div class="max-w-4xl mx-auto">
@@ -126,6 +120,7 @@
   <div class="bg-white rounded-lg shadow">
     <div class="p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Tasks</h2>
+    
       {#if tasks.length > 0}
         <div class="space-y-4">
           {#each tasks as task}

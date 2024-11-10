@@ -57,7 +57,7 @@
   <section class="bg-primary-600 text-white py-20">
     <div class="container mx-auto px-4 text-center">
       <h2 class="text-3xl font-bold mb-6">Ready to Transform Your Study Habits?</h2>
-      <p class="text-xl mb-8">Join thousands of students who have improved their academic performance with StudyAI.</p>
+      <p class="text-xl mb-8">Join thousands of students who have improved their academic performance with Modo.</p>
       <a href="/signup" class="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
         Start Your Free Trial
       </a>
