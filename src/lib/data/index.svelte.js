@@ -90,3 +90,52 @@ studyData.subscribe(value => {
     localStorage.setItem('studyData', JSON.stringify(value));
   }
 });
+
+import type { StudySession } from '$lib/types';
+
+interface ActiveSession {
+  startTime: Date;
+  subject: string;
+  breaks: number;
+  timer: number;
+  isBreak: boolean;
+}
+
+export const activeSession = writable<ActiveSession | null>(null);
+export const studySessions = writable<StudySession[]>([]);
+
+export function startSession(subject: string) {
+  activeSession.set({
+    startTime: new Date(),
+    subject,
+    breaks: 0,
+    timer: 0,
+    isBreak: false
+  });
+}
+
+export function endSession(focusScore: number, mood: string, notes?: string) {
+  activeSession.update(session => {
+    if (session) {
+      const endTime = new Date();
+      const duration = Math.floor((endTime.getTime() - session.startTime.getTime()) / 60000);
+      
+      const newSession: StudySession = {
+        id: crypto.randomUUID(),
+        startTime: session.startTime,
+        endTime,
+        duration,
+        subject: session.subject,
+        userId: 'current-user', // Replace with actual user ID
+        createdAt: new Date(),
+        focusScore,
+        breaksTaken: session.breaks,
+        mood: mood as StudySession['mood'],
+        notes
+      };
+      
+      studySessions.update(sessions => [...sessions, newSession]);
+    }
+    return null;
+  });
+}
