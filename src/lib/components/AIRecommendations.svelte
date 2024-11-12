@@ -2,7 +2,7 @@
 <script>
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
-  import { generateRecommendations } from '$lib/server/ai/recommendations';
+  import { generateRecommendations } from '$lib/ai/recommendations';
   
   let { userData } = $props();
   

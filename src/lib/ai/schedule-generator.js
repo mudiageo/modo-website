@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs';
 import { loadOrCreateModel } from './model';
-import { prioritizeTasks } from './task-prioritizer';
 
 export async function generateSchedule(tasks, preferences) {
   const model = await loadOrCreateModel();

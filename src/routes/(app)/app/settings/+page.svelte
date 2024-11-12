@@ -1,7 +1,9 @@
 <script>
   import { onMount } from 'svelte';
   import { preventDefault } from 'svelte/legacy';
-  import { settingsStore } from '$lib/data/index.svelte.js';
+  import { theme } from '$lib/stores/theme';
+  
+  import { settingsStore , studyData } from '$lib/data/index.svelte.js';
 
 const settings = settingsStore.data ||{
     theme: 'light',
@@ -12,96 +14,243 @@ const settings = settingsStore.data ||{
       reminders: true
     }
 }
+
+  
+  
+
+  let studyPreferences = $state({
+    stressLevel: $studyData.stressLevel,
+    focusScore: $studyData.focusScore,
+    breakFrequency: $studyData.breakFrequency,
+    subjectStrengths: $studyData.subjectStrengths || {}
+  });
+
+  let newSubject = $state({ name: '', strength: 5 });
+
+  function addSubject() {
+    if (newSubject.name) {
+      studyPreferences.subjectStrengths[newSubject.name] = newSubject.strength / 10;
+      newSubject = { name: '', strength: 5 };
+      updateStudyData();
+    }
+  }
+
+  function removeSubject(subject) {
+    delete studyPreferences.subjectStrengths[subject];
+    updateStudyData();
+  }
+
+  function updateStudyData() {
+    $studyData = {
+      ...$studyData,
+      ...studyPreferences
+    };
+  }
+
   async function updateSettings() {
-  //  settingsStore.data  = settings
+    settingsStore.data = settings;
+    updateStudyData();
   }
 </script>
 
 <div class="max-w-4xl mx-auto">
-  <h1 class="text-2xl font-bold text-gray-900 mb-8">Settings</h1>
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Settings</h1>
 
-  <div class="bg-white rounded-lg shadow p-6">
-    <form onsubmit={preventDefault(updateSettings)} class="space-y-6">
-      <div>
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Notifications</h2>
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <div>
-              <label for="email-notifications" class="font-medium text-gray-700">Email Notifications</label>
-              <p class="text-sm text-gray-500">Receive study reminders via email</p>
-            </div>
-            <button
-              type="button"
-              class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {settings.notifications.email ? 'bg-primary-600' : 'bg-gray-200'}"
-              role="switch"
-              aria-checked={settings.notifications.email}
-              onclick={() => settings.notifications.email = !settings.notifications.email}
-            >
-              <span
-                class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                class:translate-x-5={settings.notifications.email}
-                class:translate-x-0={!settings.notifications.email}
-              ></span>
-            </button>
+  <div class="space-y-8">
+    <!-- Theme Settings -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Theme</h2>
+      <select
+        bind:value={$theme}
+        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500"
+      >
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="system">System Default</option>
+      </select>
+    </div>
+
+    <!-- Study Preferences -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Study Preferences</h2>
+      
+      <div class="space-y-4">
+        <!-- Stress Level -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Stress Level (1-10)
+          </label>
+          <input
+            type="range"
+            min="1"
+            max="10"
+            bind:value={studyPreferences.stressLevel}
+            onchange={updateStudyData}
+            class="w-full"
+          />
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            Current: {studyPreferences.stressLevel}
+          </div>
+        </div>
+
+        <!-- Focus Score -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Focus Score (0-100)
+          </label>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            bind:value={studyPreferences.focusScore}
+            onchange={updateStudyData}
+            class="w-full"
+          />
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            Current: {studyPreferences.focusScore}
+          </div>
+        </div>
+
+        <!-- Break Frequency -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Break Frequency (minutes)
+          </label>
+          <select
+            bind:value={studyPreferences.breakFrequency}
+            onchange={updateStudyData}
+            class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          >
+            <option value={15}>Every 15 minutes</option>
+            <option value={30}>Every 30 minutes</option>
+            <option value={45}>Every 45 minutes</option>
+            <option value={60}>Every hour</option>
+          </select>
+        </div>
+
+        <!-- Subject Strengths -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Subject Strengths
+          </label>
+          
+          <div class="space-y-2">
+            {#each Object.entries(studyPreferences.subjectStrengths) as [subject, strength]}
+              <div class="flex items-center gap-2">
+                <span class="flex-1 text-gray-700 dark:text-gray-300">{subject}</span>
+                <div class="w-24 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                  <div
+                    class="bg-primary-600 h-2.5 rounded-full"
+                    style="width: {strength * 100}%"
+                  ></div>
+                </div>
+                <button
+                  onclick={() => removeSubject(subject)}
+                  class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                >
+                  Remove
+                </button>
+              </div>
+            {/each}
           </div>
 
-          <div class="flex items-center justify-between">
-            <div>
-              <label for="push-notifications" class="font-medium text-gray-700">Push Notifications</label>
-              <p class="text-sm text-gray-500">Receive notifications in your browser</p>
-            </div>
+          <div class="mt-2 flex flex-row gap-2">
+            <input
+              type="text"
+              placeholder="Subject name"
+              bind:value={newSubject.name}
+              class="flex-1 w-100 rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500"
+            />
+            <input
+              type="range"
+              min="0"
+              max="10"
+              bind:value={newSubject.strength}
+              class="w-24"
+            />
             <button
-              type="button"
-              class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {settings.notifications.push ? 'bg-primary-600' : 'bg-gray-200'}"
-              role="switch"
-              aria-checked={settings.notifications.push}
-              onclick={() => settings.notifications.push = !settings.notifications.push}
+              onclick={addSubject}
+              class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
             >
-              <span
-                class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-                class:translate-x-5={settings.notifications.push}
-                class:translate-x-0={!settings.notifications.push}
-              ></span>
+              Add
             </button>
           </div>
         </div>
       </div>
+    </div>
 
-      <div>
-        <h2 class="text-lg font-medium text-gray-900 mb-4">Appearance</h2>
-        <div class="space-y-4">
+    <!-- Notifications -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Notifications</h2>
+      
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
           <div>
-            <label for="theme" class="block text-sm font-medium text-gray-700">Theme</label>
-            <select
-              id="theme"
-              bind:value={settings.theme}
-              class="
-              mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">System Default</option>
-            </select>
+            <label class="font-medium text-gray-700 dark:text-gray-300">Email Notifications</label>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Receive study reminders via email</p>
           </div>
+          <button
+            type="button"
+            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {settings.notifications?.email ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'}"
+            role="switch"
+            aria-checked={settings.notifications?.email}
+            onclick={() => settings.notifications.email = !settings.notifications?.email}
+          >
+            <span
+              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+              class:translate-x-5={settings.notifications?.email}
+              class:translate-x-0={!settings.notifications?.email}
+            ></span>
+          </button>
+        </div>
 
+        <div class="flex items-center justify-between">
           <div>
-            <label for="language" class="block text-sm font-medium text-gray-700">Language</label>
-            <select
+            <label id="push-switch" class="font-medium text-gray-700 dark:text-gray-300">Push Notifications</label>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications in your browser</p>
+          </div>
+          <button
+            type="button"
+            class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {settings.notifications?.push ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'}"
+            role="switch"
+            aria-labelledBy="push-switch"
+            aria-checked={settings.notifications?.push}
+            onclick={() => settings.notifications.push = !settings.notifications?.push}
+          >
+            <span
+              class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+              class:translate-x-5={settings.notifications?.push}
+              class:translate-x-0={!settings.notifications?.push}
+            ></span>
+          </button>
+        </div>
+      </div>
+    </div>
+        <!--Language Settings -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Language</h2>
+      <select
               id="language"
               bind:value={settings.language}
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-            >
+
+        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500"
+      >
               <option value="en">English</option>
               <option value="es">Español</option>
               <option value="fr">Français</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      </select>
+    </div>
 
-      <button type="submit" class="btn-primary">
-        Save Settings
-      </button>
-    </form>
+    <button
+      onclick={updateSettings}
+      class=" btn-primary dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-offset-gray-900"
+    >
+      Save Settings
+    </button>
   </div>
 </div>
+
+
+ 
+
+  

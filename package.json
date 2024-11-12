@@ -45,6 +45,8 @@
 		"@prisma/client": "^5.22.0",
 		"@tensorflow/tfjs": "^4.22.0",
 		"bcryptjs": "^2.4.3",
+		"chart.js": "^4.4.6",
+		"chartjs": "^0.3.24",
 		"idb": "^8.0.0",
 		"jsonwebtoken": "^9.0.2",
 		"paystack": "^2.0.1",

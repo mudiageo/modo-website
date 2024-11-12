@@ -4,7 +4,7 @@ import { getRandomQuote } from './quotes';
 export async function generateRecommendations(userData) {
   const model = await loadOrCreateModel();
   const processedData = preprocessStudyData(userData);
- console.log(processedData)
+  console.log(processedData)
   const predictions = await model.predict(processedData).array();
   
   return formatRecommendations(predictions[0], userData);

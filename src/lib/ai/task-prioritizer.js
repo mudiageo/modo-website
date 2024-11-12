@@ -15,7 +15,7 @@ function preprocessTaskFeatures(tasks, preferences) {
       getDaysUntilDue(task.dueDate),
       task.estimatedTime / 60, // Convert to hours
       getTaskComplexity(task),
-      
+      preferences.subjectStrengths[task.course] || 0.5
     ]);
     
     return tf.tensor2d(features);
