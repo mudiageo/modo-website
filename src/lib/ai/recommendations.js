@@ -4,7 +4,7 @@ import { getRandomQuote } from './quotes';
 export async function generateRecommendations(userData) {
   const model = await loadOrCreateModel();
   const processedData = preprocessStudyData(userData);
-  console.log(processedData)
+ console.log(processedData)
   const predictions = await model.predict(processedData).array();
   
   return formatRecommendations(predictions[0], userData);
@@ -32,24 +32,67 @@ function formatRecommendations(predictions, userData) {
       description: 'Consider using the Pomodoro Technique: 25 minutes of study followed by a 5-minute break',
       priority: 'medium'
     });
+  }// Subject focus recommendations
+  const subjects = normalizeSubjectData(userData.subjectPerformance);
+  
+  if (subjects.length > 0) {
+    const weakestSubject = subjects.reduce((min, curr) => 
+      (curr.score < min.score) ? curr : min, subjects[0]);
+    
+    if (weakestSubject && weakestSubject.score < 0.6) {
+      recommendations.push({
+        type: 'focus',
+        title: 'Subject Focus',
+        description: `Consider dedicating more time to ${weakestSubject.name || 'your challenging subject'} (performance: ${Math.round(weakestSubject.score * 100)}%)`,
+        priority: 'high'
+      });
+    }
   }
   
-  // Subject focus recommendations
-  const weakestSubject = userData.subjectPerformance
-    .reduce((min, curr) => curr.score < min.score ? curr : min);
-  
-  if (weakestSubject.score < 0.6) {
+  // Add workload balance recommendation if needed
+  if (userData.taskCount > 7) {
     recommendations.push({
-      type: 'focus',
-      title: 'Subject Focus',
-      description: `Consider dedicating more time to ${weakestSubject.name}`,
-      priority: 'high'
+      type: 'workload',
+      title: 'Workload Management',
+      description: 'Consider breaking down your tasks into smaller, manageable chunks',
+      priority: 'medium'
+    });
+  }
+  
+  // Add focus recommendation if score is low
+  if (userData.focusScore < 0.5) {
+    recommendations.push({
+      type: 'environment',
+      title: 'Study Environment',
+      description: 'Try to find a quieter study space or use noise-cancelling headphones to improve focus',
+      priority: 'medium'
     });
   }
   
   return {
     recommendations,
     motivationalQuote: quote,
-    predictedSuccessRate: Math.round(predictions[1] * 100)
+    predictedSuccessRate: Math.round(predictions[0] * 100)
   };
 }
+
+// Helper function to normalize subject performance data
+function normalizeSubjectData(subjectPerformance) {
+  // If it's empty or undefined, return empty array
+  if (!subjectPerformance || !Array.isArray(subjectPerformance)) {
+    return [];
+  }
+  
+  // If it's already an array of objects with score and name
+  if (subjectPerformance.length > 0 && typeof subjectPerformance[0] === 'object') {
+    return subjectPerformance;
+  }
+  
+  // If it's an array of numbers, convert to objects with generic names
+  return subjectPerformance.map((score, index) => ({
+    name: `Subject ${index + 1}`,
+    score: score
+  }));
+}
+
+  

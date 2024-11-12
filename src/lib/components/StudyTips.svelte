@@ -93,6 +93,7 @@
 </script>
 
 <div class="space-y-6">
+  tis
   {#each tips as category}
     <div 
       class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700

@@ -4,9 +4,9 @@ import { generateRecommendations } from '$lib/server/ai/recommendations';
 export async function POST({ request, locals }) {
   const session = await locals.getSession();
   
-  if (!session?.user) {
-    return new Response('Unauthorized', { status: 401 });
-  }
+  // if (!session?.user) {
+  //   return new Response('Unauthorized', { status: 401 });
+  // }
   
   try {
     const userData = await request.json();

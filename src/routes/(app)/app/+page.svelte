@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { tasksStore, profileStore, studySessionsStore } from '$lib/data/index.svelte.js';
+  import { tasksStore, profileStore, studySessionsStore, studyData} from '$lib/data/index.svelte.js';
   import { addNotification } from '$lib/stores/notifications';
   import MotivationalFeatures from '$lib/components/MotivationalFeatures.svelte';
   import AIRecommendations from '$lib/components/AIRecommendations.svelte';
@@ -12,6 +12,16 @@
   
   const tasks = tasksStore.data || [];
   const profile = profileStore.data || {};
+  const userData = $state({ studyPatterns: tasks, 
+          tasks,
+          preferences: {
+            ...$studyData,
+            startTime: $studyData.preferredTimeStart,
+            endTime: $studyData.preferredTimeEnd,
+            preferredSessionLength: $studyData.averageSessionLength,
+            breakFrequency: $studyData.breakFrequency
+          }
+        })
   const studySessions = studySessionsStore.data || [];
   
   let studyTips = $state([]);
@@ -79,7 +89,7 @@
         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
           Welcome back, {profile?.name || 'Student'}!
         </h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
+        <p class="mt-2 text-gray-600 dark:text-gray-400">Here's your personalized study overview for today.
           Let's make today productive
         </p>
       </div>
@@ -163,7 +173,7 @@
     <div class="space-y-6">
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6" in:slide>
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">AI Recommendations</h2>
-        <AIRecommendations userData={{ studyPatterns: tasks, preferences: profile.studyPreferences }} />
+        <AIRecommendations userData />
       </div>
 
       {#if !isPremium}
@@ -185,11 +195,6 @@
  
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" in:fade>
-  <!-- Welcome Card -->
-  <div class="col-span-full bg-white rounded-lg shadow p-6 dark:bg-gray-800  shadow-lg p-6 transition-colors" in:fade>
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome back, {profile?.name || 'Student'}!</h1>
-    <p class="mt-2 text-gray-600 dark:text-gray-300">Here's your personalized study overview for today.</p>
-  </div>
 
   <!-- Priority Tasks -->
   <div class="bg-white rounded-lg shadow p-6">
