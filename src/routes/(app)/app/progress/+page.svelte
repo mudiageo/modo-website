@@ -4,7 +4,7 @@
 
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
-  import { tasksStore, studySessionsStore } from '$lib/data/index.svelte.js';
+  import { tasksStore, studySessionsStore } from '$lib/data/index.svelte.ts';
   import ProgressChart from '$lib/components/ProgressChart.svelte';
   
   let tasks = tasksStore.data || [];

@@ -3,7 +3,7 @@
   import { preventDefault } from 'svelte/legacy';
   import { theme } from '$lib/stores/theme';
   
-  import { settingsStore , studyData } from '$lib/data/index.svelte.js';
+  import { settingsStore , studyData } from '$lib/data/index.svelte.ts';
 
 const settings = settingsStore.data ||{
     theme: 'light',

@@ -2,7 +2,7 @@
   import { preventDefault } from 'svelte/legacy';
 
   import { onMount } from 'svelte';
-  import { profileStore } from '$lib/data/index.svelte.js';
+  import { profileStore } from '$lib/data/index.svelte.ts';
   
   let profile = profileStore.data || {
     name: '',

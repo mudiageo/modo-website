@@ -28,12 +28,21 @@ function createOptimalSchedule(tasks, preferences) {
     schedule.push({
       task: nextTask,
       startTime: new Date(currentTime),
-      duration
+      duration,
+      type: 'study',
     });
     
     // Add break if needed
     if (schedule.length % 2 === 0) {
       currentTime = new Date(currentTime.getTime() + 15 * 60000); // 15-minute break
+      
+      schedule.push({
+      task: {},
+      startTime: new Date(currentTime),
+      duration: 15*6000,
+      type: 'break',
+    });
+    
     }
     
     currentTime = new Date(currentTime.getTime() + duration * 60000);

@@ -4,7 +4,7 @@ import { onMount } from 'svelte';
 import { preventDefault } from 'svelte/legacy';
   import { fade, slide } from 'svelte/transition';
   import { swipe } from '$lib/actions/swipe';
-  import { tasksStore, studyData } from '$lib/data/index.svelte.js';
+  import { tasksStore, studyData } from '$lib/data/index.svelte.ts';
   import { addNotification } from '$lib/stores/notifications';
 
     

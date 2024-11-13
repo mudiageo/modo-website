@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
-  import { tasksStore, profileStore, studySessionsStore, studyData} from '$lib/data/index.svelte.js';
+  import { tasksStore, profileStore, studySessionsStore, studyData} from '$lib/data/index.svelte.ts';
   import { addNotification } from '$lib/stores/notifications';
   import MotivationalFeatures from '$lib/components/MotivationalFeatures.svelte';
   import AIRecommendations from '$lib/components/AIRecommendations.svelte';

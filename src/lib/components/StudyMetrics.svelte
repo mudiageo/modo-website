@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { StudyData } from '$lib/types';
-  import { studyData } from '$lib/data/index.svelte.js';
+  import { studyData } from '$lib/data/index.svelte.ts';
   
   let metrics = $state<StudyData>($studyData);
   

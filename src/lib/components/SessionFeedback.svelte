@@ -2,6 +2,8 @@
   import { fade, slide } from 'svelte/transition';
   import type { StudySession } from '$lib/types';
   
+  let { onSubmit } = $props();
+  
   let feedback = $state<Partial<StudySession>>({
     focusScore: 5,
     mood: 'good',
@@ -22,9 +24,8 @@
     feedback.distractions = feedback.distractions?.filter((_, i) => i !== index);
   }
   
-  function submitFeedback() {
-    // TODO: Handle feedback submission
-    console.log('Session feedback:', feedback);
+  function handleSubmit() {
+    onSubmit?.(feedback);
   }
 </script>
 
@@ -126,7 +127,7 @@
 
     <button
       class="w-full btn-primary"
-      onclick={submitFeedback}
+      onclick={handleSubmit}
     >
       Submit Feedback
     </button>

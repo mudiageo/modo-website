@@ -4,7 +4,7 @@
   import { goto } from '$app/navigation';
   import { signIn } from '@auth/sveltekit/client';
   
-import { profileStore } from '$lib/data/index.svelte.js'
+import { profileStore } from '$lib/data/index.svelte.ts'
 let profile = profileStore.data
 
   let formData = $state({

@@ -1,5 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: The keyword 'interface' is reserved -->
-<!-- @migration-task Error while migrating Svelte code: Cannot use `$props()` more than once -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { user } from '$lib/stores/auth';

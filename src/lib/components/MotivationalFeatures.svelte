@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
-  import { profileStore, progressStore } from '$lib/data/index.svelte.js';
+  import { profileStore, progressStore } from '$lib/data/index.svelte.ts';
   import { getRandomQuote } from '$lib/ai/quotes';
 
   const profile = profileStore.data || {};

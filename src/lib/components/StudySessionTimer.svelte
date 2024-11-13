@@ -1,13 +1,17 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { fade, slide } from 'svelte/transition';
-  import { activeSession, startSession, endSession } from '$lib/data/index.svelte.js';
+  import { activeSession, startSession, endSession } from '$lib/data/index.svelte.ts';
   import type { StudySession } from '$lib/types';
+  
+  let { session, onEnd } = $props();
   
   let timer = $state(0);
   let isBreak = $state(false);
-  let subject = $state('');
   let timerInterval: number;
+  let startTime = $state(new Date());
+  let subject = $state('');
+
   
   onMount(() => {
     if ($activeSession) {
@@ -53,7 +57,10 @@
   function handleEndSession() {
     clearInterval(timerInterval);
     endSession(8, 'good'); // Example values, replace with actual user input
+    onEnd?.();
   }
+
+  
 </script>
 
 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
@@ -107,4 +114,35 @@
       </div>
     </div>
   {/if}
+</div>
+
+
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6" in:slide>
+  <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Active Session</h2>
+  
+  <div class="space-y-6">
+    <div class="text-center">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        {isBreak ? 'Break Time!' : 'Studying'}: {session.task.title}
+      </p>
+      <p class="text-4xl font-bold text-gray-900 dark:text-white mt-2">
+        {formatTime(timer)}
+      </p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+        {isBreak ? 'Next study session in:' : 'Break in:'} {formatTime(isBreak ? 300 - (timer % 300) : 1500 - (timer % 1500))}
+      </p>
+    </div>
+    
+    <div class="flex justify-between items-center">
+      <div class="text-sm text-gray-600 dark:text-gray-400">
+        Started: {startTime.toLocaleTimeString()}
+      </div>
+      <button
+        class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+        onclick={handleEndSession}
+      >
+        End Session
+      </button>
+    </div>
+  </div>
 </div>

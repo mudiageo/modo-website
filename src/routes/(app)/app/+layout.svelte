@@ -8,7 +8,7 @@
   import '../../../app.css';
   import { slide, fade } from 'svelte/transition';
   import { swipe } from '$lib/actions/swipe';
-  import { profileStore } from '$lib/data/index.svelte.js';
+  import { profileStore } from '$lib/data/index.svelte.ts';
   import NotificationToast from '$lib/components/NotificationToast.svelte';
 
   const profile = profileStore.data || {};
