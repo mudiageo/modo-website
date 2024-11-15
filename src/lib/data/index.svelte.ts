@@ -1,27 +1,44 @@
-import { initDB } from '$lib/db/idb'
-import { browser } from '$app/environment'
+import { initDB } from '$lib/db/idb';
+import { browser } from '$app/environment';
 const populateData = async (store) => {
-   const db = await initDB();
-   const value = await db.getAll(store);
-   if (!value) return
-   
-   return  store === 'tasks' || store === 'studySessions' ? value : value[0]
-}
+	const db = await initDB();
+	const value = await db.getAll(store);
+	if (!value) return;
+
+	return store === 'tasks' || store === 'studySessions' ? value : value[0];
+};
+export const getFromStoreWhere = async (store, value) => {
+  const db = await initDB()
+    const tx = db.transaction(store, 'readwrite');
+    
+const data = []
+console.log(tx.store.iterate)
+    for await (const cursor of tx.store.iterate(value)) {
+      const row = { ...cursor.value };
+      data.push(row)
+console.log(data)
+    }
+    await tx.done;
+
+    
+  }
+  
 export const dbStoreData = (store) => {
 	let data = $state([]);
-	
+
 	if (browser) {
-		populateData(store).then(value => {
-				data = value
-		})
+	  getFromStoreWhere("studySessions")
+		populateData(store).then((value) => {
+			data = value;
+		});
 	}
 	return {
 		add: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
 					db.add(store, { ...newData, id: Date.now() });
-					data.push(newData)
-					console.log(data)
+					data.push(newData);
+					console.log(data);
 				});
 			}
 		},
@@ -32,7 +49,7 @@ export const dbStoreData = (store) => {
 			}
 		},
 		get data() {
-		  return data
+			return data;
 		},
 		select: (id) => {
 			return data?.find((value) => value.id === id);
@@ -51,6 +68,21 @@ export const dbStoreData = (store) => {
 		}
 	};
 };
+export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
+  const db = await initDB()
+    const tx = db.transaction(store, 'readwrite');
+    const index = tx.store.index(storeIndex);
+const data = []
+    for await (const cursor of index.iterate(value)){
+      const row = { ...cursor.value };
+      data.push(row)
+    }
+console.log(data)
+    await tx.done;
+    
+  }
+
+
 
 
 export const settingsStore = dbStoreData('settings');
@@ -61,81 +93,80 @@ export const progressStore = dbStoreData('progress');
 export const recommendationsStore = dbStoreData('recommendations');
 export const quotesStore = dbStoreData('quotes');
 
-
- import { writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 const defaultData = {
-  studyTime: 0,
-  taskCount: 0,
-  completionRate: 0,
-  focusScore: 0,
-  subjectPerformance: [],
-  weekdayPatterns: Array(7).fill(0),
-  preferredTimeStart: "09:00",
-  preferredTimeEnd: "17:00",
-  averageSessionLength: 30,
-  taskCompletionRate: 0,
-  studyTimePreference: 12,
-  stressLevel: 5,
-  breakFrequency: 30,
-  subjectStrengths: {}
+	studyTime: 0,
+	taskCount: 0,
+	completionRate: 0,
+	focusScore: 0,
+	subjectPerformance: [],
+	weekdayPatterns: Array(7).fill(0),
+	preferredTimeStart: '09:00',
+	preferredTimeEnd: '17:00',
+	averageSessionLength: 30,
+	taskCompletionRate: 0,
+	studyTimePreference: 12,
+	stressLevel: 5,
+	breakFrequency: 30,
+	subjectStrengths: {}
 };
 
 export const studyData = writable(
-  browser ? JSON.parse(localStorage.getItem('studyData')) || defaultData : defaultData
+	browser ? JSON.parse(localStorage.getItem('studyData')) || defaultData : defaultData
 );
 
-studyData.subscribe(value => {
-  if (browser) {
-    localStorage.setItem('studyData', JSON.stringify(value));
-  }
+studyData.subscribe((value) => {
+	if (browser) {
+		localStorage.setItem('studyData', JSON.stringify(value));
+	}
 });
 
 import type { StudySession } from '$lib/types';
 
 interface ActiveSession {
-  startTime: Date;
-  subject: string;
-  breaks: number;
-  timer: number;
-  isBreak: boolean;
+	startTime: Date;
+	subject: string;
+	breaks: number;
+	timer: number;
+	isBreak: boolean;
 }
 
 export const activeSession = writable<ActiveSession | null>(null);
 export const studySessions = writable<StudySession[]>([]);
 
 export function startSession(subject: string) {
-  activeSession.set({
-    startTime: new Date(),
-    subject,
-    breaks: 0,
-    timer: 0,
-    isBreak: false
-  });
+	activeSession.set({
+		startTime: new Date(),
+		subject,
+		breaks: 0,
+		timer: 0,
+		isBreak: false
+	});
 }
 
 export function endSession(focusScore: number, mood: string, notes?: string) {
-  activeSession.update(session => {
-    if (session) {
-      const endTime = new Date();
-      const duration = Math.floor((endTime.getTime() - session.startTime.getTime()) / 60000);
-      
-      const newSession: StudySession = {
-        id: crypto.randomUUID(),
-        startTime: session.startTime,
-        endTime,
-        duration,
-        subject: session.subject,
-        userId: 'current-user', // Replace with actual user ID
-        createdAt: new Date(),
-        focusScore,
-        breaksTaken: session.breaks,
-        mood: mood as StudySession['mood'],
-        notes
-      };
-      
-      studySessions.update(sessions => [...sessions, newSession]);
-    }
-    return null;
-  });
+	activeSession.update((session) => {
+		if (session) {
+			const endTime = new Date();
+			const duration = Math.floor((endTime.getTime() - session.startTime.getTime()) / 60000);
+
+			const newSession: StudySession = {
+				id: crypto.randomUUID(),
+				startTime: session.startTime,
+				endTime,
+				duration,
+				subject: session.subject,
+				userId: 'current-user', // Replace with actual user ID
+				createdAt: new Date(),
+				focusScore,
+				breaksTaken: session.breaks,
+				mood: mood as StudySession['mood'],
+				notes
+			};
+
+			studySessions.update((sessions) => [...sessions, newSession]);
+		}
+		return null;
+	});
 }

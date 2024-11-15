@@ -5,52 +5,52 @@ import { initializePayment, verifyPayment } from '$lib/server/paystack';
 const prisma = new PrismaClient();
 
 export async function POST({ request, locals }) {
-  const session = await locals.getSession();
-  
-  if (!session?.user) {
-    return new Response('Unauthorized', { status: 401 });
-  }
+	const session = await locals.getSession();
 
-  try {
-    const { email } = session.user;
-    const amount = 5000; // ₦5,000
+	if (!session?.user) {
+		return new Response('Unauthorized', { status: 401 });
+	}
 
-    const transaction = await initializePayment(email, amount);
+	try {
+		const { email } = session.user;
+		const amount = 5000; // ₦5,000
 
-    await prisma.user.update({
-      where: { email },
-      data: {
-        pendingSubscription: true
-      }
-    });
+		const transaction = await initializePayment(email, amount);
 
-    return json({ authorization_url: transaction.authorization_url });
-  } catch (error) {
-    console.error('Subscription initialization failed:', error);
-    return new Response('Failed to initialize subscription', { status: 500 });
-  }
+		await prisma.user.update({
+			where: { email },
+			data: {
+				pendingSubscription: true
+			}
+		});
+
+		return json({ authorization_url: transaction.authorization_url });
+	} catch (error) {
+		console.error('Subscription initialization failed:', error);
+		return new Response('Failed to initialize subscription', { status: 500 });
+	}
 }
 
 export async function GET({ url, locals }) {
-  const session = await locals.getSession();
-  
-  if (!session?.user) {
-    return new Response('Unauthorized', { status: 401 });
-  }
+	const session = await locals.getSession();
 
-  try {
-    const subscriptions = await prisma.payment.findMany({
-      where: {
-        userId: session.user.id
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+	if (!session?.user) {
+		return new Response('Unauthorized', { status: 401 });
+	}
 
-    return json(subscriptions);
-  } catch (error) {
-    console.error('Failed to fetch subscription history:', error);
-    return new Response('Failed to fetch subscription history', { status: 500 });
-  }
+	try {
+		const subscriptions = await prisma.payment.findMany({
+			where: {
+				userId: session.user.id
+			},
+			orderBy: {
+				createdAt: 'desc'
+			}
+		});
+
+		return json(subscriptions);
+	} catch (error) {
+		console.error('Failed to fetch subscription history:', error);
+		return new Response('Failed to fetch subscription history', { status: 500 });
+	}
 }
