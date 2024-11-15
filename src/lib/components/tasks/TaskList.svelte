@@ -82,7 +82,7 @@
 			<div class="flex items-center gap-2">
 				<button
 					class="p-2 text-gray-400 hover:text-primary-600"
-					onclick={() => handleEdut(task)}
+					onclick={() => handleEdit(task)}
 				>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path

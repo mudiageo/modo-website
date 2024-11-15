@@ -208,22 +208,10 @@
 
 
 	<div class="rounded-lg bg-white p-6 shadow-sm">
-		{#if loading}
-			<div class="space-y-4">
-				{#each Array(5) as _}
-					<div class="h-24 animate-pulse rounded-lg bg-gray-100"></div>
-				{/each}
-			</div>
-		{:else if schedule.length === 0}
+		{#if schedule.length === 0}
 			<div class="py-12 text-center">
 				<p class="text-gray-500">No schedule items for this day</p>
 				<button class="btn-primary mt-4">Generate Schedule</button>
-			</div>
-		{:else}
-			<div class="space-y-4" in:fade>
-				{#each schedule as slot}
-					<TimeSlot {slot} on:edit={handleEditSlot} />
-				{/each}
 			</div>
 		{/if}
 	</div>

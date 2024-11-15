@@ -182,52 +182,6 @@ onMount(async () => {
 <!--		<button class="btn-secondary" onclick={prioritizeTasks}> AI Prioritize </button>-->
 <!--	</div>-->
 
-	<!-- Add Task Form -->
-<!--	<div class="card mb-8 rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800" in:slide>-->
-<!--		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Add New Task</h2>-->
-<!--		<form class="space-y-4" onsubmit={preventDefault(addTask)}>-->
-<!--			<div>-->
-<!--				<label for="title" class="label">Task Title</label>-->
-<!--				<input type="text" id="title" bind:value={newTask.title} class="input" required />-->
-<!--			</div>-->
-
-<!--			<div>-->
-<!--				<label for="course" class="label">Course</label>-->
-<!--				<input type="text" id="course" bind:value={newTask.course} class="input" required />-->
-<!--			</div>-->
-
-<!--			<div class="grid grid-cols-2 gap-4">-->
-<!--				<div>-->
-<!--					<label for="dueDate" class="label">Due Date</label>-->
-<!--					<input type="date" id="dueDate" bind:value={newTask.dueDate} class="input" required />-->
-<!--				</div>-->
-
-<!--				<div>-->
-<!--					<label for="priority" class="label">Priority</label>-->
-<!--					<select id="priority" bind:value={newTask.priority} class="input">-->
-<!--						<option value="low">Low</option>-->
-<!--						<option value="medium">Medium</option>-->
-<!--						<option value="high">High</option>-->
-<!--					</select>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			<div>-->
-<!--				<label for="estimatedTime" class="label"> Estimated Time (minutes) </label>-->
-<!--				<input-->
-<!--					type="number"-->
-<!--					id="estimatedTime"-->
-<!--					bind:value={newTask.estimatedTime}-->
-<!--					min="5"-->
-<!--					step="5"-->
-<!--					class="input"-->
-<!--				/>-->
-<!--			</div>-->
-
-<!--			<button type="submit" class="btn-primary w-full"> Add Task </button>-->
-<!--		</form>-->
-<!--	</div>-->
-
 	<!-- Task List -->
 <!--	<div class="card">-->
 <!--		<div class="border-b border-gray-200 dark:border-gray-700">-->

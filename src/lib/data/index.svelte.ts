@@ -12,7 +12,7 @@ export const getFromStoreWhere = async (store, value) => {
     const tx = db.transaction(store, 'readwrite');
     
 const data = []
-console.log(tx.store.iterate)
+console.log(tx.store.iterate())
     for await (const cursor of tx.store.iterate(value)) {
       const row = { ...cursor.value };
       data.push(row)
