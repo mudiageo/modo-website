@@ -1,0 +1,190 @@
+<script>
+	import { onMount } from 'svelte';
+	import { fade, slide } from 'svelte/transition';
+	import { tasksStore, studyData, studySessionsStore } from '$lib/data/index.svelte.ts';
+	import { addNotification } from '$lib/stores/notifications';
+	import StudySessionTimer from '$lib/components/StudySessionTimer.svelte';
+	import SessionFeedback from '$lib/components/SessionFeedback.svelte';
+	import StudyMetrics from '$lib/components/StudyMetrics.svelte';
+
+	import { getStudySessions } from '$lib/db/idb';
+	import { dailyProgress } from '$lib/stores/progress';
+
+	let isStudying = $state(false);
+	let startTime = $state(null);
+	let elapsedTime = $state(0);
+	let currentSession = $state(null);
+	let todaySessions = $state([]);
+	let timer;
+
+	onMount(async () => {
+		const today = new Date().toISOString().split('T')[0];
+		todaySessions = await getStudySessions(today);
+	});
+
+	function startStudySession() {
+		isStudying = true;
+		startTime = new Date();
+		currentSession = {
+			startTime,
+			subject: 'General Study'
+		};
+
+		timer = setInterval(() => {
+			elapsedTime = Math.floor((new Date() - startTime) / 1000);
+		}, 1000);
+	}
+
+	async function endStudySession() {
+		isStudying = false;
+		clearInterval(timer);
+
+		const endTime = new Date();
+		const duration = Math.floor((endTime - startTime) / 1000 / 60); // in minutes
+
+		const session = {
+			...currentSession,
+			endTime,
+			duration
+		};
+
+		studySessionsStore.add(session);
+		todaySessions = [...todaySessions, session];
+
+		// Update daily progress
+		dailyProgress.update((progress) => ({
+			...progress,
+			studyTime: (progress.studyTime || 0) + duration,
+			lastStudyDate: new Date().toISOString().split('T')[0]
+		}));
+
+		currentSession = null;
+		elapsedTime = 0;
+	}
+
+	function formatTime(seconds) {
+		const hours = Math.floor(seconds / 3600);
+		const minutes = Math.floor((seconds % 3600) / 60);
+		const remainingSeconds = seconds % 60;
+
+		return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+	}
+
+	function getTotalStudyTime() {
+		return todaySessions.reduce((total, session) => total + (session.duration || 0), 0);
+	}
+
+	let loading = $state(true);
+	let error = $state(null);
+	let showFeedback = $state(false);
+	let activeSession = $state(null);
+
+	let tasks = tasksStore.data || [];
+	let studySessions = studySessionsStore.data || [];
+
+	function startSession(session) {
+		activeSession = session;
+	}
+
+	function endSession() {
+		showFeedback = true;
+		activeSession = null;
+	}
+
+	function handleFeedbackSubmit(feedback) {
+		studySessionsStore.add({
+			...activeSession,
+			...feedback,
+			endTime: new Date(),
+			completed: true
+		});
+		showFeedback = false;
+		addNotification('Study session completed!', 'success');
+	}
+</script>
+
+<div class="mx-auto max-w-4xl">
+	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Study Session</h1>
+
+	<!-- Timer Card -->
+	<div class="mb-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
+		<div class="text-center">
+			<div class="mb-8 font-mono text-6xl text-primary-600 dark:text-primary-400">
+				{formatTime(elapsedTime)}
+			</div>
+
+			{#if !isStudying}
+				<button class="btn-primary px-8 py-4 text-lg" onclick={startStudySession}>
+					Start Studying
+				</button>
+			{:else}
+				<button class="btn-secondary px-8 py-4 text-lg" onclick={endStudySession}>
+					End Session
+				</button>
+			{/if}
+		</div>
+	</div>
+
+	<!-- Today's Progress -->
+	<div class="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Today's Progress</h2>
+		<div class="grid grid-cols-2 gap-4">
+			<div class="rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
+				<p class="text-sm text-gray-600 dark:text-gray-400">Total Study Time</p>
+				<p class="text-2xl font-semibold text-gray-900 dark:text-white">
+					{Math.floor(getTotalStudyTime() / 60)}h {getTotalStudyTime() % 60}m
+				</p>
+			</div>
+			<div class="rounded-lg bg-gray-50 p-4 dark:bg-gray-700">
+				<p class="text-sm text-gray-600 dark:text-gray-400">Sessions Completed</p>
+				<p class="text-2xl font-semibold text-gray-900 dark:text-white">
+					{todaySessions.length}
+				</p>
+			</div>
+		</div>
+	</div>
+	<!-- Study Session Column -->
+	<div class="space-y-6">
+		{#if activeSession}
+			<StudySessionTimer session={activeSession} onEnd={endSession} />
+		{/if}
+
+		{#if showFeedback}
+			<SessionFeedback onSubmit={handleFeedbackSubmit} />
+		{/if}
+
+		<StudyMetrics />
+	</div>
+	<!-- Session History -->
+	<div class="rounded-lg bg-white shadow dark:bg-gray-800">
+		<div class="p-6">
+			<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Today's Sessions</h2>
+			{#if todaySessions.length > 0}
+				<div class="space-y-4">
+					{#each todaySessions as session}
+						<div
+							class="flex items-center justify-between rounded-lg bg-gray-50 p-4 dark:bg-gray-700"
+						>
+							<div>
+								<p class="font-medium text-gray-900 dark:text-white">{session.subject}</p>
+								<p class="text-sm text-gray-600 dark:text-gray-400">
+									{new Date(session.startTime).toLocaleTimeString()} -
+									{new Date(session.endTime).toLocaleTimeString()}
+								</p>
+							</div>
+							<div class="text-right">
+								<p class="text-lg font-semibold text-primary-600 dark:text-primary-400">
+									{session.duration} min
+								</p>
+							</div>
+						</div>
+					{/each}
+				</div>
+			{:else}
+				<p class="py-4 text-center text-gray-600 dark:text-gray-400">
+					No study sessions recorded today. Start your first session!
+				</p>
+			{/if}
+		</div>
+	</div>
+</div>

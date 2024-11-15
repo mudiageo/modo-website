@@ -89,7 +89,8 @@ const auth = SvelteKitAuth({
 		signIn: '/login'
 	},
 
-	secret: AUTH_SECRET
+	secret: AUTH_SECRET,
+	trustHist:true
 });
 
 // Premium guard middleware
