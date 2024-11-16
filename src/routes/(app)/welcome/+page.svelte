@@ -21,8 +21,19 @@
 >
 	<div class="container mx-auto px-4 py-20">
 		<div class="mx-auto max-w-4xl text-center">
-			<img src={Logo} alt="Modo Logo" class="mx-auto mb-8 h-12" />
-
+			<a href="/" class="text-6xl font-bold text-primary-600 dark:text-primary-400 flez-col text-center">
+			<span>
+			Modo
+			</span>
+			  
+					<span class="flex">
+						<svg class="text-2xl align-center justify-center" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+						</svg>
+						
+					</span>
+				</a>
+		  
 			<h1 class="mb-6 text-5xl font-bold text-gray-900 dark:text-white">
 				Transform Your Study Habits with AI
 			</h1>

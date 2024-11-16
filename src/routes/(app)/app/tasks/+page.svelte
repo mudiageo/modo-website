@@ -12,7 +12,6 @@
 
 	let tasks = tasksStore.data || [];
 	let activeTab = $state('all');
-	let courses = $state([]);
 	let activeFilter = $state('all');
 	let loading = $state(false);
 	let showAddForm = $state(false);
@@ -187,7 +186,7 @@ console.log(e)
 		<button class="btn-primary" onclick={() => (showAddForm = true)}> Add Task </button>
 	</div>
 
-	Task List
+	
 	<div class="card">
 		<div class="border-b border-gray-200 dark:border-gray-700">
 			<nav class="flex" aria-label="Tabs">
@@ -207,16 +206,16 @@ console.log(e)
 		</div>
 
 		<div class="p-6">
-			{#if filteredTasks.length > 0}
 				<div
 					use:dndzone={{ items: filteredTasks, flipDurationMs }}
 					onconsider={handleDndConsider}
 					onfinalize={handleDndFinalize}
 					class="space-y-2"
 				>
+			{#if filteredTasks.length > 0}
 					{#each filteredTasks as task (task.id)}
 						<div
-							class="flex items-center justify-between rounded-lg bg-gray-50 p-4 dark:bg-gray-700"
+							class="flex items-center justify-between rounded-lg bg-gray-50 p-4 dark:bg-gray-700 shadow-sm border border-gray-200 flex items-center gap-4"
 							in:slide|local
 							out:slide|local
 						>
@@ -286,10 +285,10 @@ console.log(e)
 							</div>
 						</div>
 					{/each}
-				</div>
 			{:else}
 				<p class="py-4 text-center text-gray-500 dark:text-gray-400">No tasks found.</p>
 			{/if}
+				</div>
 		</div>
 	</div>
 </div>
@@ -335,7 +334,6 @@ console.log(e)
 
 			<TaskForm
 				{editingTask}
-				{courses}
 				{handleTaskSubmit}
 				handleCancel={() => {
 					showAddForm = false;

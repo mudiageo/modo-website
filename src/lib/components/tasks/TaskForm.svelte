@@ -13,13 +13,13 @@
 		categories: [any];
 	}
 
-	let { editingTask = $bindable(), courses = [], handleTaskSubmit, handleCancel }: Props = $props();
+	let { editingTask = $bindable(), handleTaskSubmit, handleCancel }: Props = $props();
 	let task = $derived(
 		editingTask
 			? editingTask
-			: { title: '', dueDate: '', priority: 'medium', estimatedTime: 30, courses: [], notes: '' }
+			: { title: '', dueDate: '', priority: 'medium', estimatedTime: 30, course: '', notes: '' }
 	);
-	if (profileStore.data) courses = profileStore.data.courses || [];
+	let courses = profileStore.data?.courses || [];
 </script>
 
 <form onsubmit={preventDefault(() => handleTaskSubmit(task))} class="space-y-4">

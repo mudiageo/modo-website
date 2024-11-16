@@ -66,7 +66,7 @@
 	async function loadSchedule() {
 		loading = true;
 		try {
-			getFromStoreIndexWhere('studySessions', 'date', '');
+			getFromStoreIndexWhere('studySessions', 'date', selectedDate.toISOString());
 			const response = await fetch(
 				`/api/schedule?date=${selectedDate.toISOString()}&view=${viewMode}`
 			);

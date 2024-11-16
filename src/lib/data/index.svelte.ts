@@ -16,6 +16,7 @@ export const getFromStoreWhere = async (store, value) => {
 	for await (const cursor of tx.store.iterate(value)) {
 		const row = { ...cursor.value };
 		data.push(row);
+		console.log(cursor.value);
 		console.log(data);
 	}
 	await tx.done;
@@ -28,8 +29,9 @@ export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
 	for await (const cursor of index.iterate(value)) {
 		const row = { ...cursor.value };
 		data.push(row);
-	}
+		console.log(cursor.value);
 	console.log(data);
+	}
 	await tx.done;
 };
 export const dbStoreData = (store) => {
@@ -45,16 +47,16 @@ export const dbStoreData = (store) => {
 		add: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					db.add(store, { ...newData, id: Date.now() });
+					db.add(store, { ...$state.snapshot(newData), id: Date.now() });
 					data.push(newData);
-					console.log(data);
+					console.log(newData);
 				});
 			}
 		},
 		put: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					db.put(store, newData);
+					db.put(store, $state.snapshot(newData));
 					data = [...data, newData];
 					console.log(data);
 				});
@@ -167,7 +169,7 @@ export function endSession(focusScore: number, mood: string, notes?: string) {
 				notes
 			};
 
-			studySessions.update((sessions) => [...sessions, newSession]);
+			studySessionsStore.add(newSession);
 		}
 		return null;
 	});

@@ -14,6 +14,7 @@
 		try {
 			const result = await generateRecommendations(userData);
 			recommendations = result.recommendations;
+			console.log(recommendations)
 			quote = result.motivationalQuote;
 		} catch (error) {
 			console.error('Failed to generate recommendations:', error);
@@ -42,6 +43,7 @@
 
 		<!-- Recommendations -->
 		<div class="space-y-4">
+		  
 			{#each recommendations as rec}
 				<div
 					class="rounded-lg border-l-4 bg-white p-4 shadow-sm

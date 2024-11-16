@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-
+import { slide } from 'svelte/transition'
 	import { user } from '$lib/stores/auth';
 	import { profileStore } from '$lib/data/index.svelte.ts';
 
@@ -57,6 +57,7 @@
 
 	async function savePreferences() {
 		profileStore.data = { ...profileStore.data, ...formData };
+		goto('/app')
 	}
 
 	onMount(() => {
@@ -102,7 +103,7 @@
 			{#if currentStep === 0}
 				<div class="space-y-4">
 					{#each formData.courses as course, i}
-						<div class="flex gap-2">
+						<div class="flex gap-2" in:slide>
 							<input
 								type="text"
 								bind:value={formData.courses[i]}
@@ -129,7 +130,7 @@
 					</button>
 				</div>
 			{:else if currentStep === 1}
-				<div class="space-y-6">
+				<div class="space-y-6" in:slide>
 					<div class="grid grid-cols-2 gap-4">
 						<div>
 							<label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -179,7 +180,7 @@
 					</div>
 				</div>
 			{:else if currentStep === 2}
-				<div class="space-y-6">
+				<div class="space-y-6" in:fade>
 					<div>
 						<label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 							Learning Style
