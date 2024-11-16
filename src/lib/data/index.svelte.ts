@@ -8,26 +8,35 @@ const populateData = async (store) => {
 	return store === 'tasks' || store === 'studySessions' ? value : value[0];
 };
 export const getFromStoreWhere = async (store, value) => {
-  const db = await initDB()
-    const tx = db.transaction(store, 'readwrite');
-    
-const data = []
-console.log(tx.store.iterate())
-    for await (const cursor of tx.store.iterate(value)) {
-      const row = { ...cursor.value };
-      data.push(row)
-console.log(data)
-    }
-    await tx.done;
+	const db = await initDB();
+	const tx = db.transaction(store, 'readwrite');
 
-    
-  }
-  
+	const data = [];
+	console.log(tx.store.iterate());
+	for await (const cursor of tx.store.iterate(value)) {
+		const row = { ...cursor.value };
+		data.push(row);
+		console.log(data);
+	}
+	await tx.done;
+};
+export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
+	const db = await initDB();
+	const tx = db.transaction(store, 'readwrite');
+	const index = tx.store.index(storeIndex);
+	const data = [];
+	for await (const cursor of index.iterate(value)) {
+		const row = { ...cursor.value };
+		data.push(row);
+	}
+	console.log(data);
+	await tx.done;
+};
 export const dbStoreData = (store) => {
 	let data = $state([]);
 
 	if (browser) {
-	  getFromStoreWhere("studySessions")
+		getFromStoreIndexWhere('studySessions', 'date', '');
 		populateData(store).then((value) => {
 			data = value;
 		});
@@ -38,6 +47,15 @@ export const dbStoreData = (store) => {
 				initDB().then((db) => {
 					db.add(store, { ...newData, id: Date.now() });
 					data.push(newData);
+					console.log(data);
+				});
+			}
+		},
+		put: (newData) => {
+			if (browser) {
+				initDB().then((db) => {
+					db.put(store, newData);
+					data = [...data, newData];
 					console.log(data);
 				});
 			}
@@ -68,22 +86,6 @@ export const dbStoreData = (store) => {
 		}
 	};
 };
-export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
-  const db = await initDB()
-    const tx = db.transaction(store, 'readwrite');
-    const index = tx.store.index(storeIndex);
-const data = []
-    for await (const cursor of index.iterate(value)){
-      const row = { ...cursor.value };
-      data.push(row)
-    }
-console.log(data)
-    await tx.done;
-    
-  }
-
-
-
 
 export const settingsStore = dbStoreData('settings');
 export const profileStore = dbStoreData('profile');

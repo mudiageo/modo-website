@@ -13,7 +13,14 @@
 		activeFilter: string | 'all';
 	}
 
-	let { tasks, activeFilter = 'all', handleTaskReorder, handleEdit, handleToggle, handleDelete}: Props = $props();
+	let {
+		tasks,
+		activeFilter = 'all',
+		handleTaskReorder,
+		handleEdit,
+		handleToggle,
+		handleDelete
+	}: Props = $props();
 
 	const flipDurationMs = 300;
 
@@ -50,7 +57,7 @@
 	class="space-y-2"
 >
 	{#each filteredTasks as task (task.id)}
-		<div class="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+		<div class="">
 			<input
 				type="checkbox"
 				checked={task.completed}
@@ -80,10 +87,7 @@
 			</div>
 
 			<div class="flex items-center gap-2">
-				<button
-					class="p-2 text-gray-400 hover:text-primary-600"
-					onclick={() => handleEdit(task)}
-				>
+				<button class="p-2 text-gray-400 hover:text-primary-600" onclick={() => handleEdit(task)}>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -93,10 +97,7 @@
 						/>
 					</svg>
 				</button>
-				<button
-					class="p-2 text-gray-400 hover:text-red-600"
-					onclick={() => handleDelete(task.id)}
-				>
+				<button class="p-2 text-gray-400 hover:text-red-600" onclick={() => handleDelete(task.id)}>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"

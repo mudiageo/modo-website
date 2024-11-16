@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
-	
- let { handlePhase } = $props();
-	
+
+	let { handlePhase } = $props();
+
 	const WORK_TIME = 25 * 60; // 25 minutes in seconds
 	const BREAK_TIME = 5 * 60; // 5 minutes in seconds
 

@@ -3,6 +3,7 @@
 
 	import { goto } from '$app/navigation';
 	import { signIn } from '@auth/sveltekit/client';
+	import { profileStore } from '$lib/data/index.svelte.ts';
 	import Logo from '$lib/images/logo.svg';
 
 	let formData = $state({
@@ -28,6 +29,7 @@
 			});
 
 			if (response.ok) {
+				profileStore.data = { name: formData.name, email: formData.email };
 				goto('/auth/onboarding');
 			} else {
 				error = 'Signup failed. Please try again.';

@@ -2,9 +2,16 @@
 	import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
-  interface Props {
-	 slot: { id: string, startTime: string, endTime: string, title: string, type: 'study' | 'break' | 'practice', subject?: string } 
-}
+	interface Props {
+		slot: {
+			id: string;
+			startTime: string;
+			endTime: string;
+			title: string;
+			type: 'study' | 'break' | 'practice';
+			subject?: string;
+		};
+	}
 	let { slot }: Props = $props();
 	function getTypeStyles(type) {
 		switch (type) {

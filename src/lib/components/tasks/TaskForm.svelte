@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { preventDefault } from 'svelte/legacy';
-import { profileStore } from '$lib/data/index.svelte.js';
-		interface Props {
+	import { profileStore } from '$lib/data/index.svelte.js';
+	interface Props {
 		tasks: {
 			id?: string;
 			title: string;
@@ -12,20 +12,17 @@ import { profileStore } from '$lib/data/index.svelte.js';
 		};
 		categories: [any];
 	}
-	let task = $state({ title: '', dueDate: '', priority: 'medium', estimatedTime: 30, courses: [], notes: '' })
-	
-	let {
-		editingTask = $bindable(),
-		courses = [],
-		handleTaskSubmit,
-		handleCancel
-	}: Props = $props();
 
-	if(profileStore.data) courses = profileStore.data.courses || []
-
+	let { editingTask = $bindable(), courses = [], handleTaskSubmit, handleCancel }: Props = $props();
+	let task = $derived(
+		editingTask
+			? editingTask
+			: { title: '', dueDate: '', priority: 'medium', estimatedTime: 30, courses: [], notes: '' }
+	);
+	if (profileStore.data) courses = profileStore.data.courses || [];
 </script>
 
-<form onsubmit={preventDefault(handleTaskSubmit)} class="space-y-4">
+<form onsubmit={preventDefault(() => handleTaskSubmit(task))} class="space-y-4">
 	<div>
 		<label for="title" class="label">Title</label>
 		<input
@@ -33,7 +30,7 @@ import { profileStore } from '$lib/data/index.svelte.js';
 			id="title"
 			bind:value={task.title}
 			required
-			class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 input"
+			class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
 		/>
 	</div>
 
@@ -45,7 +42,7 @@ import { profileStore } from '$lib/data/index.svelte.js';
 				id="duedate"
 				bind:value={task.dueDate}
 				required
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 input"
+				class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
 			/>
 		</div>
 
@@ -54,7 +51,7 @@ import { profileStore } from '$lib/data/index.svelte.js';
 			<select
 				id="priority"
 				bind:value={task.priority}
-				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 input"
+				class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
 			>
 				<option value="low">Low</option>
 				<option value="medium">Medium</option>
@@ -62,30 +59,31 @@ import { profileStore } from '$lib/data/index.svelte.js';
 			</select>
 		</div>
 	</div>
-<div>
-				<label for="estimatedTime" class="label"> Estimated Time (minutes) </label>
-				<input
-					type="number"
-					id="estimatedTime"
-					bind:value={task.estimatedTime}
-					min="5"
-					step="5"
-					class="input"
-				/>
-			</div>
-			
+	<div>
+		<label for="estimatedTime" class="label"> Estimated Time (minutes) </label>
+		<input
+			type="number"
+			id="estimatedTime"
+			bind:value={task.estimatedTime}
+			min="5"
+			step="5"
+			class="input"
+		/>
+	</div>
+
 	<div>
 		<label for="course" class="label">Course</label>
 		<div class="mt-1 flex rounded-md shadow-sm">
 			<select
 				id="course"
 				bind:value={task.course}
-				class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 input"
+				class="input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
 			>
 				<option value="">Select Course</option>
 				{#each courses as course}
 					<option value={course}>{course}</option>
 				{/each}
+				<option value="CPE272">CPE272</option>
 			</select>
 		</div>
 	</div>
@@ -96,7 +94,7 @@ import { profileStore } from '$lib/data/index.svelte.js';
 			id="notes"
 			bind:value={task.notes}
 			rows="3"
-			class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 input"
+			class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
 		></textarea>
 	</div>
 

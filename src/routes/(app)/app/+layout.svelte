@@ -102,9 +102,7 @@
 	<!-- Main Content -->
 	<div class="md:{isNavOpen ? 'ml-64' : 'ml-20'} min-h-screen transition-all duration-300">
 		<main class="container mx-auto px-4 py-8 max-sm:mb-20 max-sm:mt-16">
-			<div
-				in:fade={{ duration: 200 }}
-			>
+			<div in:fade={{ duration: 200 }}>
 				{@render children()}
 			</div>
 		</main>

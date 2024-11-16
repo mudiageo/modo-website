@@ -14,8 +14,8 @@
 	const navItems = [
 		{ path: '/app', icon: 'home', label: 'Home' },
 		{ path: '/app/tasks', icon: 'task', label: 'Tasks' },
-		{ path: '/app/schedule', icon: 'calendar', label: 'Schedule' },
 		{ path: '/app/study', icon: 'study', label: 'Study' },
+		{ path: '/app/schedule', icon: 'calendar', label: 'Schedule' },
 		{ path: '/app/progress', icon: 'chart', label: 'Progress' }
 	];
 

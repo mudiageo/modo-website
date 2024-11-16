@@ -153,7 +153,7 @@
 			<SessionFeedback onSubmit={handleFeedbackSubmit} />
 		{/if}
 
-		<StudyMetrics />
+		<!--<StudyMetrics />-->
 	</div>
 	<!-- Session History -->
 	<div class="rounded-lg bg-white shadow dark:bg-gray-800">
@@ -188,3 +188,5 @@
 		</div>
 	</div>
 </div>
+
+<StudyMetrics />

@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { profileStore } from '$lib/data/index.svelte.ts';
 
-console.log(profileStore.data)
+	console.log(profileStore.data);
 	let profile = $state(
 		profileStore.data || {
 			name: '',

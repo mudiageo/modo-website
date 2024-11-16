@@ -9,7 +9,7 @@
 	function changeDate(days) {
 		const newDate = new Date(selectedDate);
 		newDate.setDate(selectedDate.getDate() + days);
-		selectedDate = newDate
+		selectedDate = newDate;
 	}
 
 	let formattedDate = $derived(
@@ -24,17 +24,23 @@
 
 <div class="card">
 	<div class="mb-4 flex items-center justify-between">
-		<button class="rounded-full p-2  hover:bg-gray-100 hover:dark:bg-gray-700" onclick={() => changeDate(-1)}>
+		<button
+			class="rounded-full p-2 hover:bg-gray-100 hover:dark:bg-gray-700"
+			onclick={() => changeDate(-1)}
+		>
 			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 			</svg>
 		</button>
 
 		<div class="text-center">
-			<span class="text-lg font-medium text-gray-90 dark:text-white">{formattedDate}</span>
+			<span class="text-gray-90 text-lg font-medium dark:text-white">{formattedDate}</span>
 		</div>
 
-		<button class="rounded-full p-2 hover:bg-gray-100 hover:dark:bg-gray-700" onclick={() => changeDate(1)}>
+		<button
+			class="rounded-full p-2 hover:bg-gray-100 hover:dark:bg-gray-700"
+			onclick={() => changeDate(1)}
+		>
 			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 			</svg>
@@ -46,7 +52,7 @@
 			class="rounded-md px-4 py-2 text-sm font-medium {viewMode === 'daily'
 				? 'bg-primary-100 text-primary-700'
 				: 'hover:bg-gray-100 dark:hover:bg-gray-700'}"
-			onclick={() => viewMode = 'daily'}
+			onclick={() => (viewMode = 'daily')}
 		>
 			Daily
 		</button>
@@ -54,7 +60,7 @@
 			class="rounded-md px-4 py-2 text-sm font-medium {viewMode === 'weekly'
 				? 'bg-primary-100 text-primary-700'
 				: 'hover:bg-gray-100 hover:dark:bg-gray-700'}"
-			onclick={() => viewMode = 'weekly'}
+			onclick={() => (viewMode = 'weekly')}
 		>
 			Weekly
 		</button>
@@ -62,7 +68,7 @@
 			class="rounded-md px-4 py-2 text-sm font-medium {viewMode === 'monthly'
 				? 'bg-primary-100 text-primary-700'
 				: 'hover:bg-gray-100 hover:dark:bg-gray-700'}"
-			onclick={() => viewMode = 'monthly'}
+			onclick={() => (viewMode = 'monthly')}
 		>
 			Monthly
 		</button>

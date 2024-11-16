@@ -1,7 +1,9 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+
 	import { user } from '$lib/stores/auth';
+	import { profileStore } from '$lib/data/index.svelte.ts';
 
 	let currentStep = $state(0);
 	let formData = $state({
@@ -54,7 +56,7 @@
 	}
 
 	async function savePreferences() {
-		//update preferences
+		profileStore.data = { ...profileStore.data, ...formData };
 	}
 
 	onMount(() => {
