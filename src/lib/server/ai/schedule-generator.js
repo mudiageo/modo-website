@@ -23,8 +23,9 @@ function createOptimalSchedule(tasks, preferences) {
 		const duration = Math.min(nextTask.estimatedTime, preferences.preferredSessionLength);
 
 		schedule.push({
+			date: new Date(currentTime).toISOString().slice(0, 10),
 			task: nextTask,
-			startTime: new Date(currentTime),
+			startTime: currentTime,
 			duration,
 			type: 'study'
 		});
@@ -32,10 +33,11 @@ function createOptimalSchedule(tasks, preferences) {
 		// Add break if needed
 		if (schedule.length % 2 === 0) {
 			currentTime = new Date(currentTime.getTime() + 15 * 60000); // 15-minute break
-
+			
 			schedule.push({
+				date: new Date(currentTime).toISOString().slice(0, 10),
 				task: {},
-				startTime: new Date(currentTime),
+				startTime: currentTime,
 				duration: 15 * 6000,
 				type: 'break'
 			});

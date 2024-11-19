@@ -1,13 +1,13 @@
 import { initDB } from '$lib/db/idb';
 import { browser } from '$app/environment';
-const populateData = async (store) => {
+const populateData = async (store:string) => {
 	const db = await initDB();
 	const value = await db.getAll(store);
 	if (!value) return;
 
 	return store === 'tasks' || store === 'studySessions' ? value : value[0];
 };
-export const getFromStoreWhere = async (store, value) => {
+export const getFromStoreWhere = async (store:string, value:string) => {
 	const db = await initDB();
 	const tx = db.transaction(store, 'readwrite');
 
@@ -21,20 +21,19 @@ export const getFromStoreWhere = async (store, value) => {
 	}
 	await tx.done;
 };
-export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
+export const getFromStoreIndexWhere = async (storeName: string, indexName: string, value: string) => {
 	const db = await initDB();
-	const tx = db.transaction(store, 'readwrite');
-	const index = tx.store.index(storeIndex);
+	const tx = db.transaction(storeName, 'readwrite');
+	const index = tx.store.index(indexName);
 	const data = [];
 	for await (const cursor of index.iterate(value)) {
 		const row = { ...cursor.value };
 		data.push(row);
-		console.log(cursor.value);
-	console.log(data);
 	}
 	await tx.done;
+	return data
 };
-export const dbStoreData = (store) => {
+export const dbStoreData = (store: string) => {
 	let data = $state([]);
 
 	if (browser) {
@@ -49,6 +48,18 @@ export const dbStoreData = (store) => {
 				initDB().then((db) => {
 					db.add(store, { ...$state.snapshot(newData), id: Date.now() });
 					data.push(newData);
+					console.log(newData);
+				});
+			}
+		},
+		addMultiple: (newData) => {
+			if (browser) {
+				initDB().then((db) => {
+
+					//const tx = db.transaction(store, 'readwrite');
+					//db.add(store, $state.snapshot(newData) );
+
+					//data.push(newData);
 					console.log(newData);
 				});
 			}

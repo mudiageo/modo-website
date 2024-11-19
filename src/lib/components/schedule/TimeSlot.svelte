@@ -38,7 +38,7 @@
 		<span class="rounded-full bg-white/50 px-2 py-1 text-xs uppercase">{slot.type}</span>
 	</div>
 	<h3 class="font-medium">{slot.title}</h3>
-	{#if slot.subject}
-		<p class="mt-1 text-sm opacity-75">{slot.subject}</p>
+	{#if slot.task?.course}
+		<p class="mt-1 text-sm opacity-75">{slot.task.course}</p>
 	{/if}
 </div>

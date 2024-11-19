@@ -4,14 +4,9 @@
 		viewMode: 'daily' | 'weekly' | 'monthly';
 	}
 
-	let { selectedDate = $bindable(), viewMode = $bindable() }: Props = $props();
+	let { selectedDate = $bindable(), viewMode = $bindable(), changeViewMode, changeDate, onTodayClick  }: Props = $props();
 
-	function changeDate(days) {
-		const newDate = new Date(selectedDate);
-		newDate.setDate(selectedDate.getDate() + days);
-		selectedDate = newDate;
-	}
-
+	
 	let formattedDate = $derived(
 		new Intl.DateTimeFormat('en-US', {
 			weekday: 'long',
@@ -52,7 +47,7 @@
 			class="rounded-md px-4 py-2 text-sm font-medium {viewMode === 'daily'
 				? 'bg-primary-100 text-primary-700'
 				: 'hover:bg-gray-100 dark:hover:bg-gray-700'}"
-			onclick={() => (viewMode = 'daily')}
+			onclick={() => changeViewMode('daily')}
 		>
 			Daily
 		</button>
@@ -60,7 +55,7 @@
 			class="rounded-md px-4 py-2 text-sm font-medium {viewMode === 'weekly'
 				? 'bg-primary-100 text-primary-700'
 				: 'hover:bg-gray-100 hover:dark:bg-gray-700'}"
-			onclick={() => (viewMode = 'weekly')}
+			onclick={() => changeViewMode('weekly')}
 		>
 			Weekly
 		</button>
@@ -68,7 +63,7 @@
 			class="rounded-md px-4 py-2 text-sm font-medium {viewMode === 'monthly'
 				? 'bg-primary-100 text-primary-700'
 				: 'hover:bg-gray-100 hover:dark:bg-gray-700'}"
-			onclick={() => (viewMode = 'monthly')}
+			onclick={() => changeViewMode('monthly')}
 		>
 			Monthly
 		</button>

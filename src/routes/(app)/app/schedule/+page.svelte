@@ -8,6 +8,10 @@
 		getFromStoreIndexWhere
 	} from '$lib/data/index.svelte.ts';
 	import Calendar from '$lib/components/schedule/Calendar.svelte';
+	import CalendarHeader from '$lib/components/calendar/CalendarHeader.svelte';
+  import CalendarSlot from '$lib/components/calendar/CalendarSlot.svelte';
+
+
 	import TimeSlot from '$lib/components/schedule/TimeSlot.svelte';
 
 	import { addNotification } from '$lib/stores/notifications';
@@ -15,18 +19,62 @@
 	let schedule = $state(studySessionsStore.data || []);
 	let selectedDate = $state(new Date());
 	let viewMode = $state('daily');
-	let loading = $state(true);
+	let loading = $state(false);
 	let error = $state(null);
 
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
+	let events = $state([]);
 
 	onMount(async () => {
-		await loadSchedule();
 		if (!schedule) await generateSchedule();
+		events = schedule;
 	});
 
-	async function generateSchedule() {
+
+  function generateMockEvents() {
+    const mockEvents = [];
+    const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Literature', 'History'];
+    const today = new Date();
+    
+    for (let i = 0; i < 10; i++) {
+      const date = new Date(today);
+      date.setDate
+	  (date.getDate() + Math.floor(Math.random() * 14) - 7);
+      
+      mockEvents.push({
+        id: i,
+        title: `${subjects[Math.floor(Math.random() * subjects.length)]} Study`,
+        startTime: new Date(date.setHours(9 + Math.floor(Math.random() * 8))),
+        duration: 30 ,
+        type: Math.random() > 0.3 ? 'study' : 'break'
+      });
+	 
+    }
+    
+    return mockEvents;
+  }
+
+  function navigateDate(direction) {
+    const newDate = new Date(selectedDate);
+    
+    switch (viewMode) {
+      case 'monthly':
+        newDate.setMonth(selectedDate.getMonth() + direction);
+        break;
+      case 'weekly':
+        newDate.setDate(selectedDate.getDate() + (7 * direction));
+        break;
+      case 'daily':
+        newDate.setDate(selectedDate.getDate() + direction);
+        break;
+    }
+    
+    selectedDate = newDate;
+  }
+
+
+	const generateSchedule = async () => {
 		loading = true;
 		error = null;
 		let data = {
@@ -50,37 +98,137 @@
 			if (response.ok) {
 				const { schedule: newSchedule } = await response.json();
 				schedule = newSchedule;
-				studySessionsStore.data = [...studySessions, ...newSchedule];
+				console.log(newSchedule)
+				newSchedule.forEach(session => studySessionsStore.add(session));
 				addNotification('Schedule generated successfully', 'success');
 			} else {
 				throw new Error('Failed to generate schedule');
 			}
 		} catch (err) {
 			error = 'Failed to generate schedule. Please try again.';
-			console.error('Failed to generate schedule:', error);
+			console.error('Failed to generate schedule:', err);
 			addNotification('Failed to generate schedule', 'error');
 		} finally {
 			loading = false;
 		}
 	}
-	async function loadSchedule() {
+	const loadSchedule = async () => {
 		loading = true;
 		try {
-			getFromStoreIndexWhere('studySessions', 'date', selectedDate.toISOString());
-			const response = await fetch(
-				`/api/schedule?date=${selectedDate.toISOString()}&view=${viewMode}`
-			);
-			if (response.ok) {
-				schedule = await response.json();
-			}
+			let sessions = await getFromStoreIndexWhere('studySessions', 'date', selectedDate.toISOString().slice(0, 10));
+			console.log(sessions)
+				schedule = sessions
 		} catch (error) {
 			console.error('Failed to load schedule:', error);
 		} finally {
 			loading = false;
 		}
 	}
+	const changeViewMode = (view) => {
+		viewMode = view
+		loadSchedule()
 
-	async function handleCalendarSync() {
+	}
+
+	const changeDate = (days) => {
+		const newDate = new Date(selectedDate);
+		switch (viewMode) {
+		case 'monthly':
+			newDate.setMonth(selectedDate.getMonth() + days);
+			break;
+		case 'weekly':
+			newDate.setDate(selectedDate.getDate() + (7 * days));
+			break;
+		case 'daily':
+			newDate.setDate(selectedDate.getDate() + days);
+			break;
+		}
+   		selectedDate = newDate;
+		loadSchedule()
+
+	}
+
+	const getDaysInMonth = (date) => {
+    
+		const year = date.getFullYear();
+		const month = date.getMonth();
+		const firstDay = new Date(year, month, 1);
+		const lastDay = new Date(year, month + 1, 0);
+		const days = [];
+		
+		// Add previous month's days
+		const firstDayOfWeek = firstDay.getDay();
+		for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+		const day = new Date(year, month, -i);
+		days.push({ date: day, isCurrentMonth: false });
+		}
+		
+		// Add current month's days
+		for (let i = 1; i <= lastDay.getDate(); i++) {
+		const day = new Date(year, month, i);
+		days.push({ date: day, isCurrentMonth: true });
+		}
+		
+		// Add next month's days
+		const remainingDays = 42 - days.length; // 6 rows × 7 days
+		for (let i = 1; i <= remainingDays; i++) {
+		const day = new Date(year, month + 1, i);
+		days.push({ date: day, isCurrentMonth: false });
+		}
+		
+		return days;
+  }
+
+  const getWeekDays = (date) => {
+    const days = [];
+    const current = new Date(date);
+    current.setDate(current.getDate() - current.getDay());
+    
+    for (let i = 0; i < 7; i++) {
+      days.push(new Date(current));
+      current.setDate(current.getDate() + 1);
+    }
+    
+    return days;
+  }
+
+  const getTimeSlots = () => {
+    const slots = [];
+    for (let hour = 9; hour <= 17; hour++) {
+      slots.push(`${hour.toString().padStart(2, '0')}:00`);
+    }
+    return slots;
+  }
+
+  const formatDate = (date) => {
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'long',
+      year: 'numeric'
+    }).format(date);
+  }
+
+  const isToday = (date) => {
+    const today = new Date();
+    return date.toDateString() === today.toDateString();
+  }
+
+  const getEventsForDate = (date) => {
+    return events.filter(event => 
+      new Date(event.startTime).toDateString() === date.toDateString()
+    );
+  }
+
+  const getEventsForTimeSlot = (date, time) => {
+    const [hours] = time.split(':').map(Number);
+    return events.filter(event => {
+      const eventDate = new Date(event.startTime);
+      return eventDate.toDateString() === date.toDateString() && 
+             eventDate.getHours() === hours;
+    });
+  }
+
+
+	const handleCalendarSync = async () => {
 		try {
 			const calendar = await window.navigator.permissions.query({ name: 'calendar' });
 			if (calendar.state === 'granted') {
@@ -99,12 +247,118 @@
 		}
 	}
 
-	function handleEditSlot(event) {
+	const handleEditSlot = (event) => {
 		// Implement edit functionality
 	}
 </script>
+<div class="max-w-6xl mx-auto px-4">
+	<CalendarHeader
+	  {viewMode}
+	  {selectedDate}
+	  onViewModeChange={(mode) => viewMode = mode}
+	  onNavigate={navigateDate}
+	  onTodayClick={() => selectedDate = new Date()}
+	/>
+	
+			{#if error}
+				<div
+					class="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-200"
+					in:fade
+				>
+					{error}
+				</div>
+			{/if}
+	
+	<Calendar bind:selectedDate bind:viewMode {changeDate} {changeViewMode} onTodayClick={() => selectedDate = new Date()}/>
 
-<div class="mx-auto max-w-4xl space-y-6">
+  
+	<div class="card bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+	  {#if viewMode === 'monthly'}
+		<div class="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
+		  {#each ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as day}
+			<div class="bg-gray-50 dark:bg-gray-800 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300">
+			  <span class="sm:hidden">{day[0]}</span>
+			  <span class="hidden sm:inline">{day}</span>
+			</div>
+		  {/each}
+		  
+		  {#each getDaysInMonth(selectedDate) as { date, isCurrentMonth }}
+			<div
+			  class="min-h-[80px] sm:min-h-[120px] bg-white dark:bg-gray-800 p-1 sm:p-2 
+				{!isCurrentMonth ? 'bg-gray-50 dark:bg-gray-900' : ''}
+				{isToday(date) ? 'border-2 border-primary-500' : ''}"
+			>
+			  <span class="text-sm {
+				isCurrentMonth ? 
+				  'text-gray-900 dark:text-white' : 
+				  'text-gray-400 dark:text-gray-600'
+			  }">
+				{date.getDate()}
+			  </span>
+			  <div class="mt-1 space-y-1 overflow-y-auto max-h-[60px] sm:max-h-[100px]">
+				{#each getEventsForDate(date) as event}
+				  <CalendarSlot {event} view="monthly" />
+				{/each}
+			  </div>
+			</div>
+		  {/each}
+		</div>
+	  {:else if viewMode === 'weekly'}
+		<div class="overflow-x-auto">
+		  <div class="min-w-[800px]">
+			<div class="grid grid-cols-8 gap-px bg-gray-200 dark:bg-gray-700">
+			  <div class="bg-gray-50 dark:bg-gray-800"></div>
+			  {#each getWeekDays(selectedDate) as date}
+				<div class="bg-gray-50 dark:bg-gray-800 p-2 text-center">
+				  <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
+					{date.toLocaleDateString('en-US', { weekday: 'short' })}
+				  </div>
+				  <div class="text-sm {
+					isToday(date) ? 
+					  'text-primary-600 dark:text-primary-400 font-bold' : 
+					  'text-gray-900 dark:text-white'
+				  }">
+					{date.getDate()}
+				  </div>
+				</div>
+			  {/each}
+			  
+			  {#each getTimeSlots() as time}
+				<div class="bg-white dark:bg-gray-800 p-2 text-right">
+				  <span class="text-sm text-gray-500 dark:text-gray-400">{time}</span>
+				</div>
+				{#each getWeekDays(selectedDate) as date}
+				  <div class="bg-white dark:bg-gray-800 p-2 border-t border-gray-100 dark:border-gray-700">
+					{#each getEventsForTimeSlot(date, time) as event}
+					  <CalendarSlot {event} view="weekly" />
+					{/each}
+				  </div>
+				{/each}
+			  {/each}
+			</div>
+		  </div>
+		</div>
+	  {:else}
+		<div class="grid grid-cols-1 gap-px">
+		  {#each getTimeSlots() as time}
+			<div class="flex bg-white dark:bg-gray-800">
+			  <div class="w-20 p-2 text-right border-r border-gray-100 dark:border-gray-700">
+				<span class="text-sm text-gray-500 dark:text-gray-400">{time}</span>
+			  </div>
+			  <div class="flex-1 p-2">
+				{#each getEventsForTimeSlot(selectedDate, time) as event}
+				  <CalendarSlot {event} view="daily" />
+				{/each}
+			  </div>
+			</div>
+		  {/each}
+		</div>
+	  {/if}
+	</div>
+  </div>
+
+  
+  <div class="mx-auto max-w-4xl space-y-6">
 	<div class="grid gap-6 md:grid-cols-3">
 		<!-- Schedule Column -->
 		<div class="space-y-6 md:col-span-2">
@@ -135,7 +389,7 @@
 					{/if}
 					{loading ? 'Generating...' : 'Regenerate Schedule'}
 				</button>
-			-->
+				-->
 				<button class="btn-secondary flex items-center gap-2" onclick={handleCalendarSync}>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
@@ -149,15 +403,6 @@
 				</button>
 			</div>
 
-			{#if error}
-				<div
-					class="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-200"
-					in:fade
-				>
-					{error}
-				</div>
-			{/if}
-			<Calendar bind:selectedDate bind:viewMode />
 			<div class="card">
 				<div class="p-6">
 					{#if loading}
@@ -204,13 +449,4 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-<div class="rounded-lg bg-white p-6 shadow-sm">
-	{#if schedule.length === 0}
-		<div class="py-12 text-center">
-			<p class="text-gray-500">No schedule items for this day</p>
-			<button class="btn-primary mt-4">Generate Schedule</button>
-		</div>
-	{/if}
 </div>

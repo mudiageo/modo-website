@@ -48,6 +48,7 @@
 				if (response.ok) {
 					const data = await response.json();
 					studyTips = data.recommendations;
+					console.log(studyTips)
 					addNotification('AI recommendations updated', 'success');
 				}
 			} catch (error) {

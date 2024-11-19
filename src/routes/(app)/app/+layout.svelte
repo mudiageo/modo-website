@@ -42,7 +42,7 @@
 	>
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-3">
-				<a href="/app/profile" class="text-gray-600 dark:text-gray-300">
+				<a href="/app/profile" class="text-gray-600 dark:text-gray-300" aria-label="Profile">
 					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
@@ -78,7 +78,7 @@
 						</svg>
 					{/if}
 				</button>
-				<a href="/app/settings" class="text-gray-600 dark:text-gray-300">
+				<a href="/app/settings" class="text-gray-600 dark:text-gray-300" aria-label="Settings">
 					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
 							stroke-linecap="round"
