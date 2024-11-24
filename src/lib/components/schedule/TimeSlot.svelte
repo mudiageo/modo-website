@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
-
+import { studySessionsStore } from '$lib/data/index.svelte.ts'
 	interface Props {
 		slot: {
 			id: string;
@@ -31,7 +29,6 @@
 	class="rounded-lg border-2 p-4 {getTypeStyles(
 		slot.type
 	)} cursor-pointer transition-shadow hover:shadow-md"
-	onclick={() => dispatch('edit', slot)}
 >
 	<div class="mb-2 flex items-start justify-between">
 		<span class="text-sm font-medium">{slot.startTime} - {slot.endTime}</span>
@@ -41,4 +38,10 @@
 	{#if slot.task?.course}
 		<p class="mt-1 text-sm opacity-75">{slot.task.course}</p>
 	{/if}
+	<button
+                      class="ml-4 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+                      onclick={() => studySessionsStore.active = slot}
+                    >
+                      Start
+                    </button>
 </div>

@@ -3,44 +3,43 @@
 	import { preventDefault } from 'svelte/legacy';
 	import { theme } from '$lib/stores/theme';
 
-	import { settingsStore, studyData } from '$lib/data/index.svelte.ts';
-
-	const settings = settingsStore.data || {
+	import { settingsStore, coursesStore, studyData } from '$lib/data/index.svelte.ts';
+	
+	const courses = coursesStore.data || []
+	const baseSettings = {
 		theme: 'light',
 		language: 'en',
 		notifications: {
 			email: true,
 			push: true,
 			reminders: true
+		},
+		studyPreferences: {
+			stressLevel: $studyData.stressLevel,
+			focusScore: $studyData.focusScore,
+			breakFrequency: $studyData.breakFrequency,
 		}
 	};
+	const settings = settingsStore.data ? {...settingsStore.data, ...baseSettings} : baseSettings
+	let studyPreferences = {}
 
-	let studyPreferences = $state({
-		stressLevel: $studyData.stressLevel,
-		focusScore: $studyData.focusScore,
-		breakFrequency: $studyData.breakFrequency,
-		subjectStrengths: $studyData.subjectStrengths || {}
-	});
 
-	let newSubject = $state({ name: '', strength: 5 });
+	let newCourse = $state({ name: '', strength: 5 });
 
-	function addSubject() {
-		if (newSubject.name) {
-			studyPreferences.subjectStrengths[newSubject.name] = newSubject.strength / 10;
-			newSubject = { name: '', strength: 5 };
-			updateStudyData();
-		}
+	function addCourse() {
+		if (!newCourse.name)  return
+			coursesStore.add(newCourse)
+			newCourse = { name: '', strength: 5 };
 	}
 
-	function removeSubject(subject) {
-		delete studyPreferences.subjectStrengths[subject];
-		updateStudyData();
+	function removeCourse(course) {
+		coursesStore.delete(course)
 	}
 
 	function updateStudyData() {
 		$studyData = {
 			...$studyData,
-			...studyPreferences
+			...settings.studyPreferences
 		};
 	}
 
@@ -81,12 +80,12 @@
 						type="range"
 						min="1"
 						max="10"
-						bind:value={studyPreferences.stressLevel}
+						bind:value={settings.studyPreferences.stressLevel}
 						onchange={updateStudyData}
 						class="w-full"
 					/>
 					<div class="text-sm text-gray-500 dark:text-gray-400">
-						Current: {studyPreferences.stressLevel}
+						Current: {settings.studyPreferences?.stressLevel}
 					</div>
 				</div>
 
@@ -99,12 +98,12 @@
 						type="range"
 						min="0"
 						max="100"
-						bind:value={studyPreferences.focusScore}
+						bind:value={settings.studyPreferences.focusScore}
 						onchange={updateStudyData}
 						class="w-full"
 					/>
 					<div class="text-sm text-gray-500 dark:text-gray-400">
-						Current: {studyPreferences.focusScore}
+						Current: {settings.studyPreferences?.focusScore}
 					</div>
 				</div>
 
@@ -114,7 +113,7 @@
 						Break Frequency (minutes)
 					</label>
 					<select
-						bind:value={studyPreferences.breakFrequency}
+						bind:value={settings.studyPreferences.breakFrequency}
 						onchange={updateStudyData}
 						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 					>
@@ -125,24 +124,24 @@
 					</select>
 				</div>
 
-				<!-- Subject Strengths -->
+				<!-- Courses -->
 				<div>
 					<label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-						Subject Strengths
+						Courses
 					</label>
 
 					<div class="space-y-2">
-						{#each Object.entries(studyPreferences.subjectStrengths) as [subject, strength]}
+						{#each courses as {id, name, strength}}
 							<div class="flex items-center gap-2">
-								<span class="flex-1 text-gray-700 dark:text-gray-300">{subject}</span>
+								<span class="flex-1 text-gray-700 dark:text-gray-300">{name}</span>
 								<div class="h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
 									<div
 										class="h-2.5 rounded-full bg-primary-600"
-										style="width: {strength * 100}%"
+										style="width: {strength * 10}%"
 									></div>
 								</div>
 								<button
-									onclick={() => removeSubject(subject)}
+									onclick={() => removeCourse(id)}
 									class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
 								>
 									Remove
@@ -154,13 +153,13 @@
 					<div class="mt-2 flex flex-row gap-2">
 						<input
 							type="text"
-							placeholder="Subject name"
-							bind:value={newSubject.name}
-							class="w-100 flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+							placeholder="Course name"
+							bind:value={newCourse.name}
+							class="w-10 flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 						/>
-						<input type="range" min="0" max="10" bind:value={newSubject.strength} class="w-24" />
+						<input type="range" min="0" max="10" bind:value={newCourse.strength} class="w-24" />
 						<button
-							onclick={addSubject}
+							onclick={addCourse}
 							class="rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
 						>
 							Add

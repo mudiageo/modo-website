@@ -14,7 +14,7 @@
 	let activeTab = $state('all');
 	let activeFilter = $state('all');
 	let loading = $state(false);
-	let showAddForm = $state(false);
+	let showTaskForm = $state(false);
 	let editingTask = $state(null);
 	let notes = $state('');
 
@@ -106,35 +106,11 @@
 		}
 	}
 
-	// Prioritize tasks using AI
-	async function prioritizeTasks() {
-		try {
-			const response = await fetch('/api/ai/study-data', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					tasks: filteredTasks,
-					preferences: {
-						subjectStrengths: $studyData.subjectStrengths
-					}
-				})
-			});
-
-			if (response.ok) {
-				const { prioritizedTasks } = await response.json();
-				tasks = prioritizedTasks;
-				tasksStore.data = tasks;
-			}
-		} catch (error) {
-			console.error('Failed to prioritize tasks:', error);
-		}
-	}
-
 	async function handleTaskSubmit(taskData) {
 		try {
 			newTask = taskData;
 			(editingTask) ? updateTask(taskData) : addTask(newTask);
-			showAddForm = false;
+			showTaskForm = false;
 			editingTask = null;
 		} catch (error) {
 			console.error('Failed to save task:', error);
@@ -182,8 +158,7 @@ console.log(e)
 >
 	<div class="mb-8 flex items-center justify-between" in:fade>
 		<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Task Management</h1>
-		<button class="btn-secondary" onclick={prioritizeTasks}> AI Prioritize </button>
-		<button class="btn-primary" onclick={() => (showAddForm = true)}> Add Task </button>
+		<button class="btn-primary" onclick={() => (showTaskForm = true)}> Add Task </button>
 	</div>
 
 	
@@ -257,7 +232,7 @@ console.log(e)
 									class="p-2 text-gray-400 hover:text-primary-600"
 									onclick={() => {
 										editingTask = task;
-										showAddForm = true;
+										showTaskForm = true;
 									}}
 								>
 									<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -322,7 +297,7 @@ console.log(e)
 	</div>
 </div>
 <!-- Task Form Modal -->
-{#if showAddForm}
+{#if showTaskForm}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" in:fade>
 		<div
 			class="card mb-8 w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800"
@@ -336,7 +311,7 @@ console.log(e)
 				{editingTask}
 				{handleTaskSubmit}
 				handleCancel={() => {
-					showAddForm = false;
+					showTaskForm = false;
 					editingTask = null;
 				}}
 			/>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { preventDefault } from 'svelte/legacy';
-	import { profileStore } from '$lib/data/index.svelte.js';
+	import { coursesStore } from '$lib/data/index.svelte.js';
 	interface Props {
 		tasks: {
 			id?: string;
@@ -19,7 +19,7 @@
 			? editingTask
 			: { title: '', dueDate: '', priority: 'medium', estimatedTime: 30, course: '', notes: '' }
 	);
-	let courses = profileStore.data?.courses || [];
+	let courses = coursesStore.data?.map(course => course.name) || [];
 </script>
 
 <form onsubmit={preventDefault(() => handleTaskSubmit(task))} class="space-y-4">

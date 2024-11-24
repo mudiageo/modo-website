@@ -12,6 +12,11 @@ export async function initDB() {
 				taskStore.createIndex('dueDate', 'dueDate');
 				taskStore.createIndex('priority', 'priority');
 			}
+			// Courses store
+			if (!db.objectStoreNames.contains('courses')) {
+				const coursesStore = db.createObjectStore('courses', { keyPath: 'name' });
+				coursesStore.createIndex('strength', 'strength');
+			}
 
 			// Study sessions store
 			if (!db.objectStoreNames.contains('studySessions')) {
@@ -43,12 +48,7 @@ export async function initDB() {
 			if (!db.objectStoreNames.contains('recommendations')) {
 				db.createObjectStore('recommendations');
 			}
-
-			// Schedules store
-			if (!db.objectStoreNames.contains('schedules')) {
-				db.createObjectStore('schedules');
-			}
-
+			
 			// Subscriptions store
 			if (!db.objectStoreNames.contains('subscriptions')) {
 				db.createObjectStore('subscriptions');

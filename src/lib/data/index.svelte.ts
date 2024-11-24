@@ -1,13 +1,13 @@
 import { initDB } from '$lib/db/idb';
 import { browser } from '$app/environment';
-const populateData = async (store:string) => {
+const populateData = async (store) => {
 	const db = await initDB();
 	const value = await db.getAll(store);
 	if (!value) return;
 
-	return store === 'tasks' || store === 'studySessions' ? value : value[0];
+	return store !== 'profile' || store !== 'settings' ? value : value[0];
 };
-export const getFromStoreWhere = async (store:string, value:string) => {
+export const getFromStoreWhere = async (store, value) => {
 	const db = await initDB();
 	const tx = db.transaction(store, 'readwrite');
 
@@ -21,53 +21,44 @@ export const getFromStoreWhere = async (store:string, value:string) => {
 	}
 	await tx.done;
 };
-export const getFromStoreIndexWhere = async (storeName: string, indexName: string, value: string) => {
+export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
 	const db = await initDB();
-	const tx = db.transaction(storeName, 'readwrite');
-	const index = tx.store.index(indexName);
+	const tx = db.transaction(store, 'readwrite');
+	const index = tx.store.index(storeIndex);
 	const data = [];
 	for await (const cursor of index.iterate(value)) {
 		const row = { ...cursor.value };
 		data.push(row);
+		console.log(cursor.value);
+	console.log(data);
 	}
 	await tx.done;
-	return data
 };
-export const dbStoreData = (store: string) => {
+export const dbStoreData = (store, storeKey = "") => {
 	let data = $state([]);
 
 	if (browser) {
 		getFromStoreIndexWhere('studySessions', 'date', '');
 		populateData(store).then((value) => {
-			data = value;
+			console.log(store)
+			console.log(value)
+
+			data = value || data;
 		});
 	}
 	return {
 		add: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					db.add(store, { ...$state.snapshot(newData), id: Date.now() });
+					db.add(store, {id: Date.now(), ...$state.snapshot(newData)});
 					data.push(newData);
-					console.log(newData);
-				});
-			}
-		},
-		addMultiple: (newData) => {
-			if (browser) {
-				initDB().then((db) => {
-
-					//const tx = db.transaction(store, 'readwrite');
-					//db.add(store, $state.snapshot(newData) );
-
-					//data.push(newData);
-					console.log(newData);
 				});
 			}
 		},
 		put: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					db.put(store, $state.snapshot(newData));
+					db.put(store, $state.snapshot(newData), storeKey);
 					data = [...data, newData];
 					console.log(data);
 				});
@@ -76,7 +67,8 @@ export const dbStoreData = (store: string) => {
 		set data(value) {
 			data = value;
 			if (browser) {
-				initDB().then((db) => db.put(store, value));
+			  console.log(storeKey)
+				initDB().then((db) => db.put(store, $state.snapshot(value), storeKey));
 			}
 		},
 		get data() {
@@ -100,10 +92,27 @@ export const dbStoreData = (store: string) => {
 	};
 };
 
-export const settingsStore = dbStoreData('settings');
-export const profileStore = dbStoreData('profile');
+export const settingsStore = dbStoreData('settings', "settings");
+export const profileStore = dbStoreData('profile', "profile");
 export const tasksStore = dbStoreData('tasks');
-export const studySessionsStore = dbStoreData('studySessions');
+export const coursesStore = dbStoreData('courses');
+
+export const studySessionsStore = (() => { 
+  let activeSession = $state(null)
+  
+ const initStore = dbStoreData('studySessions')
+ return {
+   ...initStore,
+   get active (){
+     return activeSession
+   },
+   set active (session){
+     activeSession = session
+   }
+ }
+  
+  
+})();
 export const progressStore = dbStoreData('progress');
 export const recommendationsStore = dbStoreData('recommendations');
 export const quotesStore = dbStoreData('quotes');
@@ -147,41 +156,40 @@ interface ActiveSession {
 	isBreak: boolean;
 }
 
-export const activeSession = writable<ActiveSession | null>(null);
-export const studySessions = writable<StudySession[]>([]);
+ let activeSession = $state<ActiveSession | null>(null);
 
-export function startSession(subject: string) {
-	activeSession.set({
+
+export function startSession(courde: string) {
+	activeSession = {
 		startTime: new Date(),
-		subject,
+		course,
 		breaks: 0,
 		timer: 0,
 		isBreak: false
-	});
+	};
 }
 
 export function endSession(focusScore: number, mood: string, notes?: string) {
-	activeSession.update((session) => {
-		if (session) {
+
+		if (activeSession) {
 			const endTime = new Date();
-			const duration = Math.floor((endTime.getTime() - session.startTime.getTime()) / 60000);
+			const duration = Math.floor((endTime.getTime() - activeSession.startTime.getTime()) / 60000);
 
 			const newSession: StudySession = {
 				id: crypto.randomUUID(),
-				startTime: session.startTime,
+				startTime: activeSession.startTime,
 				endTime,
 				duration,
-				subject: session.subject,
-				userId: 'current-user', // Replace with actual user ID
+				course: activeSession.course,
 				createdAt: new Date(),
 				focusScore,
-				breaksTaken: session.breaks,
+				breaksTaken: activeSession.breaks,
 				mood: mood as StudySession['mood'],
 				notes
 			};
 
 			studySessionsStore.add(newSession);
 		}
-		return null;
-	});
+		activeSession = null
 }
+ 

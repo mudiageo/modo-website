@@ -16,33 +16,45 @@
 	let currentSession = $state(null);
 	let todaySessions = $state([]);
 	let timer;
+let loading = $state(true);
+	let error = $state(null);
+	let showFeedback = $state(false);
+	let activeSession = studySessionsStore.active || null
+	let tasks = tasksStore.data || [];
+	let studySessions = studySessionsStore.data || [];
 
 	onMount(async () => {
 		const today = new Date().toISOString().split('T')[0];
 		todaySessions = await getStudySessions(today);
 	});
 
-	function startStudySession() {
+	function startStudySession(course = "General Study", session ) {
+	 
+
 		isStudying = true;
 		startTime = new Date();
 		currentSession = {
 			startTime,
-			subject: 'General Study'
+			course
 		};
-
+	    activeSession = session || currentSession;
+console.log(activeSession)
 		timer = setInterval(() => {
 			elapsedTime = Math.floor((new Date() - startTime) / 1000);
 		}, 1000);
 	}
 
-	async function endStudySession() {
+	async function endStudySession(session) {
 		isStudying = false;
+		showFeedback = true;
+		activeSession = null;
+		
 		clearInterval(timer);
 
 		const endTime = new Date();
 		const duration = Math.floor((endTime - startTime) / 1000 / 60); // in minutes
 
-		const session = {
+		session = session || {
 			...currentSession,
 			endTime,
 			duration
@@ -73,23 +85,8 @@
 	function getTotalStudyTime() {
 		return todaySessions.reduce((total, session) => total + (session.duration || 0), 0);
 	}
-
-	let loading = $state(true);
-	let error = $state(null);
-	let showFeedback = $state(false);
-	let activeSession = $state(null);
-
-	let tasks = tasksStore.data || [];
-	let studySessions = studySessionsStore.data || [];
-
-	function startSession(session) {
-		activeSession = session;
-	}
-
-	function endSession() {
-		showFeedback = true;
-		activeSession = null;
-	}
+	
+	
 
 	function handleFeedbackSubmit(feedback) {
 		studySessionsStore.add({
@@ -107,6 +104,8 @@
 	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Study Session</h1>
 
 	<!-- Timer Card -->
+	<StudySessionTimer session={activeSession} onStart={startStudySession} onEnd={endStudySession} />
+		
 	<div class="mb-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
 		<div class="text-center">
 			<div class="mb-8 font-mono text-6xl text-primary-600 dark:text-primary-400">
@@ -145,9 +144,6 @@
 	</div>
 	<!-- Study Session Column -->
 	<div class="space-y-6">
-		{#if activeSession}
-			<StudySessionTimer session={activeSession} onEnd={endSession} />
-		{/if}
 
 		{#if showFeedback}
 			<SessionFeedback onSubmit={handleFeedbackSubmit} />
@@ -166,7 +162,7 @@
 							class="flex items-center justify-between rounded-lg bg-gray-50 p-4 dark:bg-gray-700"
 						>
 							<div>
-								<p class="font-medium text-gray-900 dark:text-white">{session.subject}</p>
+								<p class="font-medium text-gray-900 dark:text-white">{session.course}</p>
 								<p class="text-sm text-gray-600 dark:text-gray-400">
 									{new Date(session.startTime).toLocaleTimeString()} -
 									{new Date(session.endTime).toLocaleTimeString()}

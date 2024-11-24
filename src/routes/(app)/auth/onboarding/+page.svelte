@@ -1,13 +1,12 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-import { slide } from 'svelte/transition'
+import { fade, slide } from 'svelte/transition'
 	import { user } from '$lib/stores/auth';
-	import { profileStore } from '$lib/data/index.svelte.ts';
+	import { coursesStore, settingsStore } from '$lib/data/index.svelte.ts';
 
 	let currentStep = $state(0);
 	let formData = $state({
-		courses: [''],
 		studyPreferences: {
 			startTime: '09:00',
 			endTime: '17:00',
@@ -33,13 +32,22 @@ import { slide } from 'svelte/transition'
 		}
 	];
 
-	function addCourse() {
-		formData.courses = [...formData.courses, ''];
-	}
+	const courses = coursesStore.data || ['']
 
-	function removeCourse(index) {
-		formData.courses = formData.courses.filter((_, i) => i !== index);
-	}
+
+	
+	let newCourse = $state({ name: '', strength: 5 });
+
+function addCourse() {
+	if (!newCourse.name)  return
+		coursesStore.add(newCourse)
+		newCourse = { name: '', strength: 5 };
+}
+
+function removeCourse(course) {
+	coursesStore.delete(course)
+}
+
 
 	async function nextStep() {
 		if (currentStep < steps.length - 1) {
@@ -56,8 +64,8 @@ import { slide } from 'svelte/transition'
 	}
 
 	async function savePreferences() {
-		profileStore.data = { ...profileStore.data, ...formData };
-		goto('/app')
+		settingsStore.data = formData;
+	  	goto('/app')
 	}
 
 	onMount(() => {
@@ -101,34 +109,50 @@ import { slide } from 'svelte/transition'
 
 			<!-- Step Content -->
 			{#if currentStep === 0}
+			
 				<div class="space-y-4">
-					{#each formData.courses as course, i}
-						<div class="flex gap-2" in:slide>
+						<div class="space-y-2">
+							{#each courses as {id, name, strength}, i}
+								<div class="flex items-center gap-2">
+									<span class="flex-1 text-gray-700 dark:text-gray-300">{name}</span>
+									<div class="h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
+										<div
+											class="h-2.5 rounded-full bg-primary-600"
+											style="width: {strength * 10}%"
+										></div>
+									</div>
+							
+									
+									<button
+										type="button"
+										onclick={() => removeCourse(id)}
+										class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+									>
+										Remove
+									</button>
+								
+								</div>
+							{/each}
+						</div>
+	
+						<div class="mt-2 flex flex-row gap-2" in:slide>
 							<input
 								type="text"
-								bind:value={formData.courses[i]}
 								placeholder="Course name"
-								class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+								bind:value={newCourse.name}
+								class="w-100 flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 							/>
-							{#if i > 0}
-								<button
-									type="button"
-									onclick={() => removeCourse(i)}
-									class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-								>
-									Remove
-								</button>
-							{/if}
+						
+							<input type="range" min="0" max="10" bind:value={newCourse.strength} class="w-24" />
+							<button
+								onclick={addCourse}
+								class="rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+							>
+								Add
+							</button>
 						</div>
-					{/each}
-					<button
-						type="button"
-						onclick={addCourse}
-						class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300"
-					>
-						Add Course
-					</button>
-				</div>
+					</div>
+				
 			{:else if currentStep === 1}
 				<div class="space-y-6" in:slide>
 					<div class="grid grid-cols-2 gap-4">

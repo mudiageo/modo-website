@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
 	import {
@@ -9,7 +9,9 @@
 	} from '$lib/data/index.svelte.ts';
 	import Calendar from '$lib/components/schedule/Calendar.svelte';
 	import CalendarHeader from '$lib/components/calendar/CalendarHeader.svelte';
-  import CalendarSlot from '$lib/components/calendar/CalendarSlot.svelte';
+	import CalendarSlot from '$lib/components/calendar/CalendarSlot.svelte';
+	import SlotModal from './SlotModal.svelte';
+
 
 
 	import TimeSlot from '$lib/components/schedule/TimeSlot.svelte';
@@ -18,13 +20,24 @@
 
 	let schedule = $state(studySessionsStore.data || []);
 	let selectedDate = $state(new Date());
+	let currentDate = $state(selectedDate);
+
 	let viewMode = $state('daily');
 	let loading = $state(false);
+	let selectedSlot = $state(null);
+	let showSlotModal = $state(false);
 	let error = $state(null);
+
+	let currentView = $state(viewMode)
+
 
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
 	let events = $state([]);
+
+	const HOUR_HEIGHT = 60; // pixels per hour
+    const DAY_START = 6; // 6 AM
+    const DAY_END = 22; // 10 PM
 
 	onMount(async () => {
 		if (!schedule) await generateSchedule();
@@ -32,28 +45,28 @@
 	});
 
 
-  function generateMockEvents() {
-    const mockEvents = [];
-    const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Literature', 'History'];
-    const today = new Date();
+//   function generateMockEvents() {
+//     const mockEvents = [];
+//     const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Literature', 'History'];
+//     const today = new Date();
     
-    for (let i = 0; i < 10; i++) {
-      const date = new Date(today);
-      date.setDate
-	  (date.getDate() + Math.floor(Math.random() * 14) - 7);
+//     for (let i = 0; i < 10; i++) {
+//       const date = new Date(today);
+//       date.setDate
+// 	  (date.getDate() + Math.floor(Math.random() * 14) - 7);
       
-      mockEvents.push({
-        id: i,
-        title: `${subjects[Math.floor(Math.random() * subjects.length)]} Study`,
-        startTime: new Date(date.setHours(9 + Math.floor(Math.random() * 8))),
-        duration: 30 ,
-        type: Math.random() > 0.3 ? 'study' : 'break'
-      });
+//       mockEvents.push({
+//         id: i,
+//         title: `${subjects[Math.floor(Math.random() * subjects.length)]} Study`,
+//         startTime: new Date(date.setHours(9 + Math.floor(Math.random() * 8))),
+//         duration: 30 ,
+//         type: Math.random() > 0.3 ? 'study' : 'break'
+//       });
 	 
-    }
+//     }
     
-    return mockEvents;
-  }
+//     return mockEvents;
+//   }
 
   function navigateDate(direction) {
     const newDate = new Date(selectedDate);
@@ -199,6 +212,71 @@
     }
     return slots;
   }
+  const getSlotStyle = (event) => {
+  const eventTime = new Date(event.startTime)
+    const startHour = eventTime.getHours() + (eventTime.getMinutes() / 60);
+    const top = (startHour - DAY_START) * HOUR_HEIGHT;
+    const height = (event.task?.duration / 60) * HOUR_HEIGHT;
+    
+    return `
+      top: ${top}px;
+      height: ${height}px;
+      ${currentView === 'week' ? 'width: calc(100% - 8px);' : ''}
+    `;
+  }
+
+  const getDateRange = () => {
+    const dates = [];
+    const start = new Date(currentDate);
+    
+    if (currentView === 'day') {
+      dates.push(new Date(start));
+    } else if (currentView === '3day') {
+      for (let i = 0; i < 3; i++) {
+        dates.push(new Date(start.setDate(start.getDate() + (i === 0 ? 0 : 1))));
+      }
+      
+    } else {
+      // Week view
+      start.setDate(start.getDate() - start.getDay());
+      for (let i = 0; i < 7; i++) {
+        dates.push(new Date(start.setDate(start.getDate() + (i === 0 ? 0 : 1))));
+      }
+    }
+    
+    return dates;
+  }
+
+
+  const handleSlotEvent = (slotEvent, eventValue) => {
+	console.log(slotEvent)
+//eventValue = slot || updatedSlot || eventId
+switch (slotEvent) {
+	case "click":
+
+		selectedSlot = eventValue; // eventValue is slot 
+		showSlotModal = true;
+		break;
+		case "update":
+			events = events.map(e => e.id === eventValue.id ? eventValue : e); // eventValue is updatedSlot
+			showSlotModal = false;
+			break;
+			case "delete":
+			events = events.filter(e => e.id !== eventValue); //eventValue is eventId
+    showSlotModal = false;
+				break;
+
+	default:
+		break;
+}
+	
+  }
+
+
+
+  const formatTime = date => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+
 
   const formatDate = (date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -212,11 +290,7 @@
     return date.toDateString() === today.toDateString();
   }
 
-  const getEventsForDate = (date) => {
-    return events.filter(event => 
-      new Date(event.startTime).toDateString() === date.toDateString()
-    );
-  }
+  const getEventsForDate = (date) => events.filter(event => new Date(event.startTime).toDateString() === date.toDateString());
 
   const getEventsForTimeSlot = (date, time) => {
     const [hours] = time.split(':').map(Number);
@@ -246,11 +320,8 @@
 			console.error('Calendar sync failed:', error);
 		}
 	}
-
-	const handleEditSlot = (event) => {
-		// Implement edit functionality
-	}
 </script>
+
 <div class="max-w-6xl mx-auto px-4">
 	<CalendarHeader
 	  {viewMode}
@@ -260,14 +331,14 @@
 	  onTodayClick={() => selectedDate = new Date()}
 	/>
 	
-			{#if error}
-				<div
-					class="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-200"
-					in:fade
-				>
-					{error}
-				</div>
-			{/if}
+	{#if error}
+		<div
+			class="rounded-lg bg-red-50 p-4 text-red-800 dark:bg-red-900 dark:text-red-200"
+			in:fade
+		>
+			{error}
+		</div>
+	{/if}
 	
 	<Calendar bind:selectedDate bind:viewMode {changeDate} {changeViewMode} onTodayClick={() => selectedDate = new Date()}/>
 
@@ -296,8 +367,8 @@
 				{date.getDate()}
 			  </span>
 			  <div class="mt-1 space-y-1 overflow-y-auto max-h-[60px] sm:max-h-[100px]">
-				{#each getEventsForDate(date) as event}
-				  <CalendarSlot {event} view="monthly" />
+				{#each getEventsForDate(date) as slot}
+				  <CalendarSlot {slot} {handleSlotEvent} view="monthly" />
 				{/each}
 			  </div>
 			</div>
@@ -329,8 +400,8 @@
 				</div>
 				{#each getWeekDays(selectedDate) as date}
 				  <div class="bg-white dark:bg-gray-800 p-2 border-t border-gray-100 dark:border-gray-700">
-					{#each getEventsForTimeSlot(date, time) as event}
-					  <CalendarSlot {event} view="weekly" />
+					{#each getEventsForTimeSlot(date, time) as slot}
+					  <CalendarSlot {slot} {handleSlotEvent} view="weekly" />
 					{/each}
 				  </div>
 				{/each}
@@ -346,8 +417,8 @@
 				<span class="text-sm text-gray-500 dark:text-gray-400">{time}</span>
 			  </div>
 			  <div class="flex-1 p-2">
-				{#each getEventsForTimeSlot(selectedDate, time) as event}
-				  <CalendarSlot {event} view="daily" />
+				{#each getEventsForTimeSlot(selectedDate, time) as slot}
+				  <CalendarSlot {slot} {handleSlotEvent} view="daily" />
 				{/each}
 			  </div>
 			</div>
@@ -364,7 +435,7 @@
 		<div class="space-y-6 md:col-span-2">
 			<div class="flex items-center justify-between">
 				<h1 class="text-2xl font-bold text-gray-900 dark:text-white">Your Study Schedule</h1>
-				<!--	<button
+				<button
 					class="btn-primary btn-sm flex items-center gap-2"
 					onclick={generateSchedule}
 					disabled={loading}
@@ -389,7 +460,7 @@
 					{/if}
 					{loading ? 'Generating...' : 'Regenerate Schedule'}
 				</button>
-				-->
+				<!--
 				<button class="btn-secondary flex items-center gap-2" onclick={handleCalendarSync}>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
@@ -401,6 +472,7 @@
 					</svg>
 					Sync Calendar
 				</button>
+				-->
 			</div>
 
 			<div class="card">
@@ -414,7 +486,7 @@
 					{:else if schedule.length > 0}
 						<div class="space-y-4" in:fade>
 							{#each schedule as slot}
-								<TimeSlot {slot} on:edit={handleEditSlot} />
+								<TimeSlot {slot} />
 							{/each}
 						</div>
 					{:else}
@@ -450,3 +522,13 @@
 		</div>
 	</div>
 </div>
+
+
+
+{#if showSlotModal}
+  <SlotModal
+    slot={selectedSlot}
+    onClose={() => showSlotModal = false}
+    {handleSlotEvent}
+  />
+{/if}
