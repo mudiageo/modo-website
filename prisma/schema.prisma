@@ -15,7 +15,7 @@ model Account {
   providerAccountId String
   refresh_token      String?
   access_token       String?
-  expires_at        DateTime?
+  expires_at        Int?
   user              User      @relation(fields: [userId], references: [id])
 
   token_type    String?
