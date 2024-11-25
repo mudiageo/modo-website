@@ -10,7 +10,6 @@ import { sequence } from '@sveltejs/kit/hooks';
 const prisma = new PrismaClient();
 
 const adapter = PrismaAdapter(prisma);
-
 // Security headers middleware
 const securityHeaders = async ({ event, resolve }) => {
 	const response = await resolve(event);
@@ -69,16 +68,16 @@ const auth = SvelteKitAuth({
 		//     return token;
 		//   },
 		async session({ session, user }) {
+			console.log(user)
+			console.log(session)
 			if (session?.user) {
 				session.user.id = user.id;
 
-				const getUser = await adapter.getUser(user.id);
-				if (!getUser) await createUser;
 				const dbUser = await prisma.user.findUnique({
 					where: { id: user.id },
 					select: { premium: true, premiumUntil: true }
 				});
-
+console.log(dbUser)
 				session.user.premium = dbUser?.premium || false;
 				session.user.premiumUntil = dbUser?.premiumUntil;
 			}
