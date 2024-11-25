@@ -33,7 +33,7 @@
 
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
-	let events = $state([]);
+	let events = $state(studySessionsStore.data || []);
 
 	const HOUR_HEIGHT = 60; // pixels per hour
     const DAY_START = 6; // 6 AM
@@ -42,6 +42,7 @@
 	onMount(async () => {
 		if (!schedule) await generateSchedule();
 		events = schedule;
+		loadSchedule()
 	});
 
 
@@ -130,6 +131,7 @@
 		try {
 			let sessions = await getFromStoreIndexWhere('studySessions', 'date', selectedDate.toISOString().slice(0, 10));
 			console.log(sessions)
+			events = sessions
 				schedule = sessions
 		} catch (error) {
 			console.error('Failed to load schedule:', error);
@@ -295,7 +297,7 @@ switch (slotEvent) {
   const getEventsForTimeSlot = (date, time) => {
     const [hours] = time.split(':').map(Number);
     return events.filter(event => {
-      const eventDate = new Date(event.startTime);
+       const eventDate = new Date(event.startTime);
       return eventDate.toDateString() === date.toDateString() && 
              eventDate.getHours() === hours;
     });

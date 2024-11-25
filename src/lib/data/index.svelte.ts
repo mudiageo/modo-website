@@ -30,9 +30,10 @@ export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
 		const row = { ...cursor.value };
 		data.push(row);
 		console.log(cursor.value);
-	console.log(data);
+		console.log(data);
 	}
 	await tx.done;
+	return data
 };
 export const dbStoreData = (store, storeKey = "") => {
 	let data = $state([]);

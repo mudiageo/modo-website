@@ -77,7 +77,7 @@
 			<select
 				id="course"
 				bind:value={task.course}
-				class="input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+				class="input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 			>
 				<option value="">Select Course</option>
 				{#each courses as course}
@@ -94,7 +94,7 @@
 			id="notes"
 			bind:value={task.notes}
 			rows="3"
-			class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+			class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
 		></textarea>
 	</div>
 

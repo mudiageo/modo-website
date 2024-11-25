@@ -16,10 +16,10 @@
 	let currentSession = $state(null);
 	let todaySessions = $state([]);
 	let timer;
-let loading = $state(true);
+	let loading = $state(true);
 	let error = $state(null);
 	let showFeedback = $state(false);
-	let activeSession = studySessionsStore.active || null
+	let activeSession = $state(studySessionsStore.active || null)
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
 
@@ -28,8 +28,7 @@ let loading = $state(true);
 		todaySessions = await getStudySessions(today);
 	});
 
-	function startStudySession(course = "General Study", session ) {
-	 
+	function startStudySession(course = "General Study", session ) {	 
 
 		isStudying = true;
 		startTime = new Date();
@@ -37,8 +36,9 @@ let loading = $state(true);
 			startTime,
 			course
 		};
-	    activeSession = session || currentSession;
-console.log(activeSession)
+	    studySessionsStore.active = session || currentSession;
+	console.log("activeSession")
+	console.log(studySessionsStore.active)
 		timer = setInterval(() => {
 			elapsedTime = Math.floor((new Date() - startTime) / 1000);
 		}, 1000);
@@ -47,7 +47,7 @@ console.log(activeSession)
 	async function endStudySession(session) {
 		isStudying = false;
 		showFeedback = true;
-		activeSession = null;
+		studySessionsStore.active = null;
 		
 		clearInterval(timer);
 
@@ -89,8 +89,8 @@ console.log(activeSession)
 	
 
 	function handleFeedbackSubmit(feedback) {
-		studySessionsStore.add({
-			...activeSession,
+		studySessionsStore.put({
+			...studySessionsStore.active,
 			...feedback,
 			endTime: new Date(),
 			completed: true
@@ -104,9 +104,9 @@ console.log(activeSession)
 	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Study Session</h1>
 
 	<!-- Timer Card -->
-	<StudySessionTimer session={activeSession} onStart={startStudySession} onEnd={endStudySession} />
+	<StudySessionTimer session={studySessionsStore.active} onStart={startStudySession} onEnd={endStudySession} />
 		
-	<div class="mb-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
+	<!-- <div class="mb-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
 		<div class="text-center">
 			<div class="mb-8 font-mono text-6xl text-primary-600 dark:text-primary-400">
 				{formatTime(elapsedTime)}
@@ -122,7 +122,7 @@ console.log(activeSession)
 				</button>
 			{/if}
 		</div>
-	</div>
+	</div> -->
 
 	<!-- Today's Progress -->
 	<div class="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">

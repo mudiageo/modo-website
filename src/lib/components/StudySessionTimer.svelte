@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
-	import { studySessionsStore, startSession, endSession } from '$lib/data/index.svelte.ts';
+	import { studySessionsStore, coursesStore, endSession } from '$lib/data/index.svelte.ts';
 	import type { StudySession } from '$lib/types';
 
 	let { session, onStart, onEnd } = $props();
@@ -11,13 +11,16 @@
 	let timerInterval: number;
 	let startTime = $state(new Date());
 	let course = $state('');
-let activeSession = studySessionsStore.active || {}
+	let courses = coursesStore.data?.map(course => course.name) || [];
+	
 	onMount(() => {
-		if (activeSession) {
-			timer = activeSession.timer || 0;
-			isBreak = activeSession.isBreak;
-			course = activeSession.course;
-			startTimer();
+		if (studySessionsStore.active) {
+			console.log("studystudySessionsStore.active")
+			console.log(studySessionsStore.active)
+			timer = studySessionsStore.active.timer || 0;
+			isBreak = studySessionsStore.active.isBreak;
+			course = studySessionsStore.active.course;
+		//	startTimer();
 		}
 	});
 
@@ -32,14 +35,14 @@ let activeSession = studySessionsStore.active || {}
 				// 25 minutes
 				isBreak = true;
 				timer = 0;
-				if(activeSession) 	activeSession = { ...activeSession, isBreak: true, breaks: activeSession.breaks + 1 }
+				if(studySessionsStore.active) 	studySessionsStore.active = { ...studySessionsStore.active, isBreak: true, breaks: studySessionsStore.active.breaks + 1 }
 		
 		
 			} else if (isBreak && timer % 300 === 0) {
 				// 5 minutes
 				isBreak = false;
 				timer = 0;
-				if(activeSession) 	activeSession = { ...activeSession, isBreak: false }
+				if(studySessionsStore.active) 	studySessionsStore.active = { ...studySessionsStore.active, isBreak: false }
 		
 			}
 		}, 1000);
@@ -53,7 +56,9 @@ let activeSession = studySessionsStore.active || {}
 
 	function handleStartSession() {
 		if (course) {
+		  
 			onStart(course, session);
+			console.log(studySessionsStore.active)
 			startTimer();
 		}
 	}
@@ -62,24 +67,30 @@ let activeSession = studySessionsStore.active || {}
 		clearInterval(timerInterval);
 		endSession(8, 'good'); // Example values, replace with actual user input
 		onEnd?.();
+		timer = 0
 	}
 </script>
 
 <div class="rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800" in:slide>
 	<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Study Session</h2>
-{activeSession}vhh
-	{#if !activeSession}
+
+	{#if !studySessionsStore.active}
 		<div class="space-y-4" in:fade>
 			<div>
-				<label for="course" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-					Course
-				</label>
-				<input
-					type="text"
-					id="course"
-					bind:value={course}
-					class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-				/>
+				<label for="course" class="label">Course</label>
+				<div class="mt-1 flex rounded-md shadow-sm">
+					<select
+						id="course"
+						bind:value={course}
+						class="input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+					>
+						<option value="">Select Course</option>
+						{#each courses as course}
+							<option value={course}>{course}</option>
+						{/each}
+						<option value="CPE272">CPE272</option>
+					</select>
+				</div>
 			</div>
 			<button class="btn-primary w-full" onclick={handleStartSession} disabled={!course}>
 				Start Sessiont
