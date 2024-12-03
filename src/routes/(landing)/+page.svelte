@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { fade, slide } from 'svelte/transition';
 
 	let isVisible = $state(false);
 
@@ -41,7 +42,7 @@
 						? 'translate-y-0 opacity-100'
 						: 'translate-y-10 opacity-0'}"
 				>
-					<a href="/signup" class="btn-primary">Get Started Free</a>
+					<a href="/welcome" class="btn-primary">Get Started Free</a>
 					<a href="/about" class="btn-secondary">Learn More</a>
 				</div>
 			</div>
@@ -53,7 +54,7 @@
 		<div class="container mx-auto px-4">
 			<h2 class="mb-12 text-center text-3xl font-bold">Key Features</h2>
 			<div class="grid gap-8 md:grid-cols-3">
-				<div class="rounded-lg bg-white p-6 shadow-lg">
+				<div class="rounded-lg bg-white p-6 shadow-lg" transition:slide="{{delay: 250, duration: 300, easing: quintOut }}">
 					<h3 class="mb-4 text-xl font-semibold">AI Study Planner</h3>
 					<p class="text-gray-600">
 						Get personalized study schedules based on your learning style and goals.
@@ -76,7 +77,7 @@
 	</section>
 
 	<!-- CTA Section -->
-	<section class="bg-primary-600 py-20 text-white">
+	<section class="bg-primary-600 py-20 text-white" transition:fade="{{delay: 250, duration: 300}}">
 		<div class="container mx-auto px-4 text-center">
 			<h2 class="mb-6 text-3xl font-bold">Ready to Transform Your Study Habits?</h2>
 			<p class="mb-8 text-xl">

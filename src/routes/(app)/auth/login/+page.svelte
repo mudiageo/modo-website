@@ -2,7 +2,7 @@
 	import { preventDefault } from 'svelte/legacy';
 
 	import { goto } from '$app/navigation';
-	import { signIn } from '@auth/sveltekit/client';
+	import { signIn } from 'svelte-guardian';
 	import Logo from '$lib/images/logo.svg';
 
 	let email = $state('');
@@ -15,13 +15,16 @@
 			const result = await signIn('credentials', {
 				email,
 				password,
-				redirect: false
+				redirect: false,
+				callbackUrl: '/auth/onboarding'
 			});
+			console.log(result)
+			console.log(await result.json())
 
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-				goto('/app');
+				//goto('/app');
 			}
 		} catch (e) {
 			error = 'An error occurred. Please try again.';
@@ -113,7 +116,7 @@
 				<div class="mt-6">
 					<button
 						type="button"
-						onclick={() => signIn('google')}
+						onclick={() => signIn('google', {callbackUrl: '/auth/onboarding'})}
 						class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
 					>
 						<svg class="mr-2 h-5 w-5" viewBox="0 0 24 24">

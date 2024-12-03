@@ -68,11 +68,10 @@
 						{/if}
 					</button>
 					<a
-						href="/login"
-						class="text-gray-600 transition-colors hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400"
-						>Login</a
+						href="/welcome"
+						class="text-gray-600 transition-colors hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 btn-primary"
+						>Go to app</a
 					>
-					<a href="/signup" class="btn-primary">Sign Up</a>
 				</div>
 
 				<!-- Mobile Menu Button -->
@@ -97,8 +96,7 @@
 					<a href="/features" class="block py-2 text-gray-600 dark:text-gray-300">Features</a>
 					<a href="/pricing" class="block py-2 text-gray-600 dark:text-gray-300">Pricing</a>
 					<a href="/about" class="block py-2 text-gray-600 dark:text-gray-300">About</a>
-					<a href="/login" class="block py-2 text-gray-600 dark:text-gray-300">Login</a>
-					<a href="/signup" class="btn-primary block text-center">Sign Up</a>
+					<a href="/welcome" class="btn-primary block text-center">Go to app</a>
 				</div>
 			{/if}
 		</nav>
