@@ -2,7 +2,7 @@
 	import { preventDefault } from 'svelte/legacy';
 
 	import { goto } from '$app/navigation';
-	import { signIn } from '@auth/sveltekit/client';
+	import { signIn } from 'svelte-guardian/client';
 
 	let email = $state('');
 	let password = $state('');
