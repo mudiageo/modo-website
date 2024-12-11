@@ -2,18 +2,7 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { handle as authHandle, middleware } from '$lib/auth';
 
 
-//  const dbUser = await prisma.user.findUnique({
-// 						where: { id: user.id },
-// 						select: { premium: true, premiumUntil: true }
-// 					});
-// 					session.user.premium = dbUser?.premium || false;
-// 					session.user.premiumUntil = dbUser?.premiumUntil;
-// 				}
-// 				return session;
-// 			}
-// 		},
 
-// 		secret: AUTH_SECRET,
 // 		trustHost: true
 
 // 	Premium guard middleware

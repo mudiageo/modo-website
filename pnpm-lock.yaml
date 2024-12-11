@@ -27,8 +27,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1
       svelte-guardian:
-        specifier: 0.1.1
-        version: 0.1.1(@sveltejs/kit@2.8.0(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(prisma@5.22.0)(svelte@5.1.12)
+        specifier: 0.1.6
+        version: 0.1.6(@sveltejs/kit@2.8.0(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(prisma@5.22.0)(svelte@5.1.12)
     devDependencies:
       '@playwright/test':
         specifier: ^1.45.3
@@ -1471,8 +1471,8 @@ packages:
   node-addon-api@5.1.0:
     resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
 
-  node-addon-api@8.3.0:
-    resolution: {integrity: sha512-8VOpLHFrOQlAH+qA0ZzuGRlALRA6/LVh8QJldbrC4DY0hXoMP0l4Acq8TzFC018HztWiRqyCEj2aTWY2UvnJUg==}
+  node-addon-api@8.2.2:
+    resolution: {integrity: sha512-9emqXAKhVoNrQ792nLI/wpzPpJ/bj/YXxW0CvAau1+RdGBcCRF1Dmz7719zgVsQNrzHl9Tzn3ImZ4qWFarWL0A==}
     engines: {node: ^18 || ^20 || >= 21}
 
   node-fetch@2.6.13:
@@ -1944,8 +1944,8 @@ packages:
       svelte:
         optional: true
 
-  svelte-guardian@0.1.1:
-    resolution: {integrity: sha512-svqSUQzP7YkBRvj3u9Bzzr3oXNB8Tj7nrFZS8Oo/Q9hefKeCyFjmCnGJF9Da/HN9mXLQLQjSstzhKXGK0rQyuA==}
+  svelte-guardian@0.1.6:
+    resolution: {integrity: sha512-j76249SE/sVXIR2Sz/kRebnV0eyHJ5QRkfOstKuom/yjakjq1s5xgQSWSYaNIMCja/YS7z59+KVw+Ifl7it6lw==}
     peerDependencies:
       svelte: ^5.0.0
 
@@ -2819,7 +2819,7 @@ snapshots:
   argon2@0.41.1:
     dependencies:
       '@phc/format': 1.0.0
-      node-addon-api: 8.3.0
+      node-addon-api: 8.2.2
       node-gyp-build: 4.8.4
 
   argparse@1.0.10:
@@ -3510,7 +3510,7 @@ snapshots:
 
   node-addon-api@5.1.0: {}
 
-  node-addon-api@8.3.0: {}
+  node-addon-api@8.2.2: {}
 
   node-fetch@2.6.13:
     dependencies:
@@ -3912,7 +3912,7 @@ snapshots:
     optionalDependencies:
       svelte: 5.1.12
 
-  svelte-guardian@0.1.1(@sveltejs/kit@2.8.0(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(prisma@5.22.0)(svelte@5.1.12):
+  svelte-guardian@0.1.6(@sveltejs/kit@2.8.0(@sveltejs/vite-plugin-svelte@4.0.0(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(svelte@5.1.12)(vite@5.4.10(@types/node@22.9.0)))(prisma@5.22.0)(svelte@5.1.12):
     dependencies:
       '@auth/core': 0.37.4
       '@auth/prisma-adapter': 2.7.4(@prisma/client@5.22.0(prisma@5.22.0))

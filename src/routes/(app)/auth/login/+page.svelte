@@ -2,7 +2,8 @@
 	import { preventDefault } from 'svelte/legacy';
 
 	import { goto } from '$app/navigation';
-	import { signIn } from 'svelte-guardian';
+	import { page } from '$app/stores';
+	import { signIn } from 'svelte-guardian/client';
 	import Logo from '$lib/images/logo.svg';
 
 	let email = $state('');
@@ -24,7 +25,9 @@
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-				//goto('/app');
+			  if($page.data)
+			  console.log($page.data)
+				goto('/app');
 			}
 		} catch (e) {
 			error = 'An error occurred. Please try again.';
