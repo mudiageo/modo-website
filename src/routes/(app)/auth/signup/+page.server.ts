@@ -1,4 +1,7 @@
 import { redirect } from '@sveltejs/kit';
+import type { Actions } from './$types';
+import { PrismaClient } from '@prisma/client';
+import { createUser } from '$lib/auth';
 
 export const load = async (event) => {
 	const session = await event.locals.auth();
@@ -12,3 +15,33 @@ export const load = async (event) => {
 		session
 	};
 };
+
+const prisma = new PrismaClient();
+
+export const actions = {
+	default: async ({ request }) => {
+		console.log('signup action');
+		const data = await request.formData();
+		const name = data.get('name');
+		const email = data.get('email');
+		const password = data.get('password');
+		const confirmPassword = data.get('confirmPassword');
+
+		if (password !== confirmPassword) return { success: false, error: 'Passwords do not match' };
+
+		try {
+			const result = await createUser({
+				email,
+				name,
+				role: 'user',
+				password
+			});
+
+			return result
+		} catch (error) {
+			console.error('Signup failed:', error);
+			return { success: false, error: "Signup failed" };
+		}
+		// TODO log the user in
+	}
+} satisfies Actions;

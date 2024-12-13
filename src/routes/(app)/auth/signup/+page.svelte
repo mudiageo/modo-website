@@ -1,10 +1,12 @@
-<script>
+<script lang="ts">
 	import { preventDefault } from 'svelte/legacy';
-
+	import type { PageData, ActionData } from './$types';
 	import { goto } from '$app/navigation';
 	import { signIn } from 'svelte-guardian/client';
+
+	let { data, form }: { data: PageData; form: ActionData } = $props();
+
 	import { profileStore } from '$lib/data/index.svelte.ts';
-	import Logo from '$lib/images/logo.svg';
 
 	let formData = $state({
 		name: '',
@@ -15,36 +17,19 @@
 
 	let error = $state('');
 
-	async function handleSubmit() {
-		if (formData.password !== formData.confirmPassword) {
-			error = 'Passwords do not match';
-			return;
-		}
 
-		try {
-			const response = await fetch('/api/auth/signup', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(formData)
-			});
-
-			if (response.ok) {
+			if (form.success) {
 				profileStore.data = { name: formData.name, email: formData.email };
 				goto('/auth/onboarding');
-			} else {
-				error = 'Signup failed. Please try again.';
 			}
-		} catch (e) {
-			error = 'An error occurred. Please try again.';
-		}
-	}
+	
 </script>
 
 <div
 	class="flex min-h-screen flex-col justify-center bg-gray-50 py-12 dark:bg-gray-900 sm:px-6 lg:px-8"
 >
 	<div class="sm:mx-auto sm:w-full sm:max-w-md">
-		<img src={Logo} alt="StudyAI Logo" class="mx-auto h-12" />
+		<img src="/favicon-512x512.png" alt="Modo" class="mx-auto h-12" />
 		<h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
 			Create your account
 		</h2>
@@ -55,6 +40,11 @@
 			{#if error}
 				<div class="mb-4 rounded-md bg-red-50 p-4 text-red-700 dark:bg-red-900 dark:text-red-100">
 					{error}
+				</div>
+			{/if}
+			{#if form?.error}
+				<div class="mb-4 rounded-md bg-red-50 p-4 text-red-700 dark:bg-red-900 dark:text-red-100">
+					{form?.error}
 				</div>
 			{/if}
 
