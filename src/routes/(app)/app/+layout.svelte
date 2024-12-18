@@ -13,22 +13,29 @@
 	import BottomNav from '$lib/components/layout/BottomNav.svelte';
 	import NotificationToast from '$lib/components/NotificationToast.svelte';
 
+
+  import FloatingActionButton from '$lib/components/shared/FloatingActionButton.svelte';
+  
+  let isNavOpen = $state(false);
+  
+  onMount(async () => {
+    if (browser) {
+      if (!$user) {
+        //window.location.href = '/login';
+        // return;
+      }
+      await initDB();
+    }
+  });
+
+
 	const profile = profileStore.data || {};
 
 	/** @type {children: import('svelte').Snippet} */
 	let { children } = $props();
 
-	let isNavOpen = $state(false);
 
-	onMount(async () => {
-		if (browser) {
-			if (!$user) {
-				//window.location.href = '/login';
-				// return;
-			}
-			await initDB();
-		}
-	});
+
 
 	function toggleTheme() {
 		$theme = $theme === 'light' ? 'dark' : 'light';

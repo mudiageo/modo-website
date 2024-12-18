@@ -20,20 +20,24 @@ const prisma = new PrismaClient();
 
 export const actions = {
 	default: async ({ request }) => {
-		console.log('signup action');
+
 		const data = await request.formData();
+		console.log(data)
 		const name = data.get('name');
 		const email = data.get('email');
 		const password = data.get('password');
 		const confirmPassword = data.get('confirmPassword');
-
+console.log("sign up data", {
+	email,
+	name,
+	password
+})
 		if (password !== confirmPassword) return { success: false, error: 'Passwords do not match' };
 
 		try {
 			const result = await createUser({
 				email,
 				name,
-				role: 'user',
 				password
 			});
 

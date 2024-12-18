@@ -1,28 +1,55 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
 	import type { PageData, ActionData } from './$types';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores'
+
 	import { signIn } from 'svelte-guardian/client';
+	import { enhance, applyAction } from '$app/forms';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	import { profileStore } from '$lib/data/index.svelte.ts';
 
 	let formData = $state({
-		name: '',
+		name: 'new person',
 		email: '',
 		password: '',
 		confirmPassword: ''
 	});
-
+	let user = form?.user
 	let error = $state('');
 
 
-			if (form.success) {
-				profileStore.data = { name: formData.name, email: formData.email };
-				goto('/auth/onboarding');
+			if (form?.success) {
+
+console.log({ name: user.name, email: user.email })
+				profileStore.data = { name: user.name, email: user.email };
+		
+	handleSignIn()
+				//goto('/auth/onboarding');
 			}
-	
+			async function handleSignIn() {
+		try {
+			const result = await signIn('credentials', {
+				email: formData.email,
+				password: formData.password,
+				redirect: false,
+				callbackUrl: '/auth/onboarding'
+			});
+			console.log(result)
+			console.log(await result.json())
+
+			if (result?.error) {
+				error = 'Invalid email or password';
+			} else {
+			  if($page.data)
+			  console.log($page.data)
+			
+			}
+		} catch (e) {
+			error = 'An error occurred. Please try again.';
+		}
+	}
 </script>
 
 <div
@@ -48,7 +75,24 @@
 				</div>
 			{/if}
 
-			<form class="space-y-6" onsubmit={preventDefault(handleSubmit)}>
+			<form class="space-y-6" method="POST" use:enhance={
+			({ formData }) => {
+
+				const password = formData.get('password');
+				const confirmPassword = formData.get('confirmPassword');
+
+		if (password !== confirmPassword) return  error = 'Passwords do not match' ;
+
+				return async ({ result }) => {
+					console.log(resullt)
+					// `result` is an `ActionResult` object
+					if (result.type === 'redirect') {
+						goto(result.location);
+					} else {
+						await applyAction(result);
+					}
+				};
+			}}>
 				<div>
 					<label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 						Name
@@ -56,6 +100,7 @@
 					<input
 						type="text"
 						id="name"
+						name="name"
 						bind:value={formData.name}
 						required
 						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -69,6 +114,7 @@
 					<input
 						type="email"
 						id="email"
+						name="email"
 						bind:value={formData.email}
 						required
 						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -82,6 +128,7 @@
 					<input
 						type="password"
 						id="password"
+						name="password"
 						bind:value={formData.password}
 						required
 						minlength="8"
@@ -99,6 +146,7 @@
 					<input
 						type="password"
 						id="confirmPassword"
+						name="confirmPassword"
 						bind:value={formData.confirmPassword}
 						required
 						minlength="8"

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
+	import { page } from '$app/stores'
 	import {
 		tasksStore,
 		studyData,
@@ -29,7 +30,7 @@
 	let error = $state(null);
 
 	let currentView = $state(viewMode)
-
+let isCreating = $state(false);
 
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
@@ -40,6 +41,10 @@
     const DAY_END = 22; // 10 PM
 
 	onMount(async () => {
+		if ($page.url.searchParams.get('new') === 'true') {
+	  isCreating = true;
+  }
+
 		if (!schedule) await generateSchedule();
 		events = schedule;
 		loadSchedule()
