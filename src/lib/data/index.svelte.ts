@@ -194,3 +194,9 @@ export function endSession(focusScore: number, mood: string, notes?: string) {
 		activeSession = null
 }
  
+
+
+
+
+// Notes
+export const activeNote = $state(null)

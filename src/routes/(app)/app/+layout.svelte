@@ -114,7 +114,7 @@
 			</div>
 		</main>
 	</div>
-
+<FloatingActionButton />
 	<BottomNav />
 
 	<!-- Notifications -->

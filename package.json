@@ -45,6 +45,7 @@
 		"chart.js": "^4.4.6",
 		"chartjs": "^0.3.24",
 		"idb": "^8.0.0",
+		"marked": "^15.0.4",
 		"paystack": "^2.0.1",
 		"svelte-guardian": "^0.1.13"
 	},

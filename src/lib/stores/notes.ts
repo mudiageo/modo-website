@@ -1,10 +1,8 @@
-import { writable } from 'svelte/store';
-import { browser } from '$app/environment';
-import { dbStoreData } from '$lib/data';
+
+import { dbStoreData } from '$lib/data/index.svelte.ts';
 
 export const notesStore = dbStoreData('notes');
 
-export const activeNote = writable(null);
 
 export function createNote(note) {
   notesStore.add({
