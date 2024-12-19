@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { browser } from '$app/environment';
-	import { user } from '$lib/stores/auth';
 	import { theme } from '$lib/stores/theme';
 	import { initDB } from '$lib/db/idb';
 	import '../../../app.css';
@@ -19,13 +18,8 @@
   let isNavOpen = $state(false);
   
   onMount(async () => {
-    if (browser) {
-      if (!$user) {
-        //window.location.href = '/login';
-        // return;
-      }
-      await initDB();
-    }
+    if (browser) await initDB();
+    
   });
 
 

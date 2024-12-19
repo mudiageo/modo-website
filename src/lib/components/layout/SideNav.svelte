@@ -1,6 +1,6 @@
-<script>
-	import { user } from '$lib/stores/auth';
-	import { page } from '$app/stores';
+<script lang="ts">
+
+import { page } from '$app/stores';
 
 	let { isNavOpen = $bindable() } = $props();
 	const navItems = [
@@ -131,8 +131,7 @@
 				class="flex w-full items-center rounded-lg px-4 py-2 text-gray-600
             transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
 				onclick={() => {
-					user.set(null);
-					window.location.href = '/login';
+// TODO logout				window.location.href = '/login';
 				}}
 			>
 				<svg

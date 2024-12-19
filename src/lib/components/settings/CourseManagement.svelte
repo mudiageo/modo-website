@@ -1,6 +1,6 @@
 <script>
   import { fade, slide } from 'svelte/transition';
-  import { profileStore } from '$lib/data';
+  import { profileStore } from '$lib/data/index.svelte.ts';
   
   let courses = $state(profileStore.data?.courses || []);
   let newCourse = $state({
