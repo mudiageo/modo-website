@@ -9,14 +9,6 @@
 
   let activeTab = $state('general');
 
-  
-
-
-
-
-
-
-
 	import { settingsStore, coursesStore, studyData } from '$lib/data/index.svelte.ts';
 	
 	const courses = coursesStore.data || []

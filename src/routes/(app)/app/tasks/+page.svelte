@@ -144,7 +144,7 @@ console.log(e)
 	}
 
 	function handleDndFinalize(e) {
-		comsole.log(e)
+		console.log(e)
 		handleTaskReorder(tasks);
 	}
 </script>

@@ -1,47 +1,104 @@
 <script>
+import { preventDefault } from 'svelte/legacy'
   import { fade, slide } from 'svelte/transition';
-  import { profileStore } from '$lib/data/index.svelte.ts';
+  import { coursesStore } from '$lib/data/index.svelte.ts';
   
-  let courses = $state(profileStore.data?.courses || []);
+  let courses = $state(coursesStore.data || []);
+  
   let newCourse = $state({
     name: '',
     code: '',
     description: '',
-    difficulty: 'medium'
+    strength: 5
   });
-
-  function addCourse() {
-    if (!newCourse.name) return;
+  
+  let showCourseForm = $state(false)
+  let editingCourse = $state(false)
+  
+  const addCourse = () => {
     
-    courses = [...courses, { ...newCourse, id: Date.now() }];
-    profileStore.data = { ...profileStore.data, courses };
-    
-    newCourse = {
-      name: '',
-      code: '',
-      description: '',
-      difficulty: 'medium'
-    };
-  }
+    		if (!newCourse.name || !newCourse.code)  return
+    	
+			coursesStore.add({id: crypto.randomUUID(), ...newCourse})
+			newCourse = {
+        name: '',
+        code: '',
+        description: '',
+        strength: 5
+      };
+      showCourseForm = false
+	}
 
-  function removeCourse(id) {
-    courses = courses.filter(course => course.id !== id);
-    profileStore.data = { ...profileStore.data, courses };
-  }
+	const removeCourse = (course) => {
+		coursesStore.delete(course)
+	}
 
-  function updateCourse(id, updates) {
-    courses = courses.map(course => 
-      course.id === id ? { ...course, ...updates } : course
-    );
-    profileStore.data = { ...profileStore.data, courses };
-  }
+  const updateCourse = course => {
+    coursesStore.put(course)
+    }
 </script>
 
 <div class="space-y-6">
   <div class="bg-white rounded-lg shadow p-6">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Add New Course</h2>
-    <form class="space-y-4" on:submit|preventDefault={addCourse}>
+   	<button class="btn-primary" onclick={() => (showCourseForm = true)}> Add Coyrse </button>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Courses</h2>
+    {#if courses.length === 0}
+      <p class="text-gray-500 text-center py-4">No courses added yet.</p>
+    {:else}
+      <div class="space-y-4">
+        {#each courses as course (course.id)}
+          <div 
+            class="border rounded-lg p-4"
+            in:slide|local
+            out:slide|local
+          >
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-medium text-gray-900">{course.name}</h3>
+                {#if course.code}
+                  <p class="text-sm text-gray-500">{course.code}</p>
+                {/if}
+              </div>
+              <button
+                class="text-red-600 hover:text-red-800"
+                onclick={() => removeCourse(course.id)}
+              >
+                Remove
+              </button>
+            </div>
+            {#if course.description}
+              <p class="text-sm text-gray-600 mt-2">{course.description}</p>
+            {/if}
+            <div class="mt-2 flex items-center gap-2">
+              <span class="text-sm text-gray-500">Strength:</span>
+              		<input type="range" min="0" max="10" bind:value={course.strength}
+              		onchange={() => updateCourse({ ...course, strength: course.strength })}
+              		/>
+            </div>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
+</div>
+<!-- Course Form Modal -->
+{#if showCourseForm}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" in:fade>
+		<div
+			class="card mb-8 w-full max-w-md rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800"
+			in:slide
+		>
+			<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+				{editingCourse ? 'Edit' : 'Add'} Course
+			</h2>
+ <form class="space-y-4" onsubmit={preventDefault(addCourse)}>
+
       <div>
+
         <label for="courseName" class="block text-sm font-medium text-gray-700">Course Name</label>
         <input
           type="text"
@@ -73,66 +130,16 @@
       </div>
 
       <div>
-        <label for="difficulty" class="block text-sm font-medium text-gray-700">Difficulty Level</label>
-        <select
-          id="difficulty"
-          bind:value={newCourse.difficulty}
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-        >
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
+        <label for="strength" class="block text-sm font-medium text-gray-700">Strength Level</label>
+        	<input type="range" min="0" max="10" bind:value={newCourse.strength}
+          />
+          
       </div>
-
-      <button type="submit" class="btn-primary w-full">Add Course</button>
-    </form>
-  </div>
-
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Courses</h2>
-    {#if courses.length === 0}
-      <p class="text-gray-500 text-center py-4">No courses added yet.</p>
-    {:else}
-      <div class="space-y-4">
-        {#each courses as course (course.id)}
-          <div 
-            class="border rounded-lg p-4"
-            in:slide|local
-            out:slide|local
-          >
-            <div class="flex justify-between items-start">
-              <div>
-                <h3 class="font-medium text-gray-900">{course.name}</h3>
-                {#if course.code}
-                  <p class="text-sm text-gray-500">{course.code}</p>
-                {/if}
-              </div>
-              <button
-                class="text-red-600 hover:text-red-800"
-                on:click={() => removeCourse(course.id)}
-              >
-                Remove
-              </button>
-            </div>
-            {#if course.description}
-              <p class="text-sm text-gray-600 mt-2">{course.description}</p>
-            {/if}
-            <div class="mt-2 flex items-center gap-2">
-              <span class="text-sm text-gray-500">Difficulty:</span>
-              <select
-                bind:value={course.difficulty}
-                on:change={() => updateCourse(course.id, { difficulty: course.difficulty })}
-                class="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring-primary-500"
-              >
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-              </select>
-            </div>
-          </div>
-        {/each}
-      </div>
-    {/if}
-  </div>
-</div>
+<button type="button" class="btn-secondary" onclick={ showCourseForm = false}> Cancel </button>
+		<button type="submit" class="btn-primary">
+			{editingCourse ? 'Update' : 'Add'} Course
+		</button>
+   </form>
+		</div>
+	</div>
+{/if}
