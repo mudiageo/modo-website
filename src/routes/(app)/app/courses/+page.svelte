@@ -1,15 +1,21 @@
 <script>
+
 import { preventDefault } from 'svelte/legacy'
+
   import { fade, slide } from 'svelte/transition';
   import { coursesStore } from '$lib/data/index.svelte.ts';
   
   let courses = $state(coursesStore.data || []);
   
   let newCourse = $state({
-    name: '',
-    code: '',
-    description: '',
-    strength: 5
+      name: '',
+      code: '',
+      description: '',
+      outline: {
+        title: '',
+        topics: []
+      },
+      strength: 5
   });
   
   let showCourseForm = $state(false)
@@ -20,19 +26,22 @@ import { preventDefault } from 'svelte/legacy'
     		if (!newCourse.name || !newCourse.code)  return
     	
 			coursesStore.add({id: crypto.randomUUID(), ...newCourse})
-			newCourse = {
-        name: '',
-        code: '',
-        description: '',
-        strength: 5
-      };
+			resetNewCourse()
       showCourseForm = false
 	}
 
 	const removeCourse = (course) => {
 		coursesStore.delete(course)
 	}
-
+  const resetNewCourse = () => {
+    newCourse = {
+        name: '',
+        code: '',
+        description: '',
+        outline: {},
+        strength: 5
+      };
+  }
   const updateCourse = course => {
     coursesStore.update(course)
     }
@@ -56,10 +65,12 @@ import { preventDefault } from 'svelte/legacy'
           >
             <div class="flex justify-between items-start">
               <div>
+                <a href="courses/{course.id}">
                 <h3 class="font-medium text-gray-900">{course.name}</h3>
                 {#if course.code}
                   <p class="text-sm text-gray-500">{course.code}</p>
                 {/if}
+                </a>
               </div>
               <button
                 class="text-red-600 hover:text-red-800"

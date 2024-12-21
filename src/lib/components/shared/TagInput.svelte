@@ -1,6 +1,6 @@
 <script lang="s">
   /** @type {Array} */
-  let { tags = [] } = $props();
+  let { tags = $bindable([]) } = $props();
   
   let input = $state('');
 

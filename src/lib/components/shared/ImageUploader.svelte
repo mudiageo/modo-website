@@ -2,7 +2,7 @@
   import { compressImage } from '$lib/utils/images';
   
   /** @type {Array} */
-  let { images = [], maxSize = 5 } = $props(); // maxSize in MB
+  let { images = $bindable([]), maxSize = 5 } = $props(); // maxSize in MB
   
   let dragOver = $state(false);
   let error = $state('');

@@ -90,3 +90,44 @@ export interface Progress {
 	mood: string;
 	subjects: Record<string, number>;
 }
+
+// Courses Types
+export interface CourseOutline {
+  id: string;
+  title: string;
+  description?: string;
+  topics: CourseTopic[];
+}
+
+export interface CourseTopic {
+  id: string;
+  title: string;
+  description?: string;
+  estimatedHours: number;
+  subtopics?: CourseTopic[];
+  completed?: boolean;
+}
+
+export interface Course {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+  strength: number;
+  estimatedHours: number;
+  outline?: CourseOutline;
+  suggestedTasks?: SuggestedTask[];
+  progress?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SuggestedTask {
+  id: string;
+  title: string;
+  description?: string;
+  estimatedTime: number;
+  priority: 'low' | 'medium' | 'high';
+  topic?: string;
+  dueOffset?: number; // days from course start
+}

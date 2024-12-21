@@ -79,6 +79,11 @@
 						</svg>
 					{/if}
 				</button>
+				<a href="/app/courses" class="text-gray-600 dark:text-gray-300" aria-label="Courses">
+C	</a>
+<a href="/app/notes" class="text-gray-600 dark:text-gray-300" aria-label="Notes">
+N	</a>
+
 				<a href="/app/settings" class="text-gray-600 dark:text-gray-300" aria-label="Settings">
 					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path

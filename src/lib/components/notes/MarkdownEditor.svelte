@@ -2,7 +2,7 @@
   import { marked } from 'marked';
   
   /** @type {string} */
-  let { content = '' } = $props();
+  let { content = $bindable('') } = $props();
   
   let isPreview = $state(false);
   let parsedContent = $derived(marked(content));

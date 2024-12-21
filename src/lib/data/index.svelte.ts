@@ -59,8 +59,12 @@ export const dbStoreData = (store, storeKey = "") => {
 		update: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
+				  console.log(newData)
+				  
+				  console.log(data)
 					db.put(store, {id: Date.now(), ...$state.snapshot(newData)});
-					data = data.map( obj => obj.id === newData.id ? newData : obj)
+					data = data.map(obj => obj.id === newData.id ? newData : obj)
+				  console.log(data)
 				});
 			}
 		},

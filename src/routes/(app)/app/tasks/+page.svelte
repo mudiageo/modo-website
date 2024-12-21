@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { preventDefault } from 'svelte/legacy';
 	import { fade, slide } from 'svelte/transition';
+	import { page } from '$app/stores'
 	import { swipe } from '$lib/actions/swipe';
 	import { dndzone } from 'svelte-dnd-action';
 	import { tasksStore, studyData } from '$lib/data/index.svelte.ts';
@@ -25,7 +26,11 @@
 		priority: 'medium',
 		estimatedTime: 30
 	});
-
+  onMount(() => {
+    if ($page.url.searchParams.get('new') === 'true') {
+      showTaskForm = true;
+    }
+  });
 	async function addTask() {
 		if (!newTask.title || !newTask.course || !newTask.dueDate) {
 			addNotification('Please fill in all required fields', 'warning');
