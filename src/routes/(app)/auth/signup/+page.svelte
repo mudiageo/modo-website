@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 
 	import { signIn } from 'svelte-guardian/client';
 	import { enhance, applyAction } from '$app/forms';
@@ -42,8 +42,8 @@ console.log({ name: user.name, email: user.email })
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-			  if($page.data)
-			  console.log($page.data)
+			  if(page.data)
+			  console.log(page.data)
 			
 			}
 		} catch (e) {

@@ -4,6 +4,7 @@
 	import { theme } from '$lib/stores/theme';
 
 	
+  import Sidenav from './Sidenav.svelte';
   import NotificationManagement from '$lib/components/settings/NotificationManagement.svelte';
   import CourseManagement from '$lib/components/settings/CourseManagement.svelte';
 
@@ -58,6 +59,7 @@
 
 <div class="max-w-4xl mx-auto">
 	<h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Settings</h1>
+  <Sidenav />
   
 	<!-- Settings Navigation -->
 	<div class="mb-8 border-b border-gray-200">

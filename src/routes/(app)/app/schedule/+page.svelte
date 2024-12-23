@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 	import {
 		tasksStore,
 		studyData,
@@ -41,7 +41,7 @@ let isCreating = $state(false);
     const DAY_END = 22; // 10 PM
 
 	onMount(async () => {
-		if ($page.url.searchParams.get('new') === 'true') {
+		if (page.url.searchParams.get('new') === 'true') {
 	  isCreating = true;
   }
 

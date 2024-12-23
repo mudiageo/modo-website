@@ -8,6 +8,7 @@
 	import { slide, fade } from 'svelte/transition';
 	import { swipe } from '$lib/actions/swipe';
 	import { profileStore } from '$lib/data/index.svelte.ts';
+	import Icon from '$lib/icons/Icon.svelte'
 	import SideNav from '$lib/components/layout/SideNav.svelte';
 	import BottomNav from '$lib/components/layout/BottomNav.svelte';
 	import NotificationToast from '$lib/components/NotificationToast.svelte';
@@ -28,12 +29,20 @@
 	/** @type {children: import('svelte').Snippet} */
 	let { children } = $props();
 
-
-
-
 	function toggleTheme() {
 		$theme = $theme === 'light' ? 'dark' : 'light';
 	}
+
+  import { clickOutside } from '$lib/actions/clickOutside';
+  
+  let isOpen = $state(false);
+  
+  const menuItems = [
+    { label: 'Courses', href: '/app/courses', icon: 'book' },
+    { label: 'Notes', href: '/app/notes', icon:'note' },
+    { label: 'Settings', href: '/app/settings', icon: 'cog'},
+    { label: 'Help', href: '/app/help', icon: 'help' }
+  ];
 </script>
 
 <div class="min-h-screen bg-gray-50 transition-colors duration-200 dark:bg-gray-900">
@@ -44,62 +53,63 @@
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-3">
 				<a href="/app/profile" class="text-gray-600 dark:text-gray-300" aria-label="Profile">
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-						/>
-					</svg>
+					<span class="h-6 w-6">
+						<Icon icon='user'	/>
+					</span>
 				</a>
 				<span class="font-medium text-gray-900 dark:text-white">
 					Hi, {profile?.name?.split(' ')[0] || 'User'}
 				</span>
 			</div>
+	
+
 			<div class="flex items-center gap-4">
 				<button onclick={toggleTheme} class="text-gray-600 dark:text-gray-300">
-					{#if $theme === 'dark'}
-						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-							/>
-						</svg>
-					{:else}
-						<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-							/>
-						</svg>
-					{/if}
+				  <span class="h-6 w-6">
+			    
+					<Icon icon={$theme === 'dark' ? 'dark' : 'light'} />
+					
+			
+				  </span>
 				</button>
-				<a href="/app/courses" class="text-gray-600 dark:text-gray-300" aria-label="Courses">
-C	</a>
-<a href="/app/notes" class="text-gray-600 dark:text-gray-300" aria-label="Notes">
-N	</a>
+		
+				
+			<button
+    class="flex items-center p-2 rounded-full hover:bg-gray-100"
+    onclick={() => isOpen = !isOpen}
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+    </svg>
+  </button>
 
-				<a href="/app/settings" class="text-gray-600 dark:text-gray-300" aria-label="Settings">
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-						/>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-						/>
-					</svg>
-				</a>
+  {#if isOpen}
+    <div
+      class="absolute top-10 right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
+      use:clickOutside={() => isOpen = false}
+      in:fade={{ duration: 100 }}
+      out:fade={{ duration: 100 }}
+    >
+      <div class="py-1" role="menu">
+        {#each menuItems as item}
+          <a
+            href={item.href}
+            class="flex  px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300"
+            role="menuitem"
+          >
+        <span class="h-6 w-6 mr-2 flex items-center">
+<Icon icon={item.icon}/>
+
+     </span>
+        <span class="flex items-center">
+          
+        {item.label}
+        </span>  
+          </a>
+        {/each}
+      </div>
+    </div>
+  {/if}
 			</div>
 		</div>
 	</header>

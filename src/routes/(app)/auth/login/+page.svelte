@@ -2,7 +2,7 @@
 	import { preventDefault } from 'svelte/legacy';
 
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { signIn } from 'svelte-guardian/client';
 	import Logo from '$lib/images/logo.svg';
 
@@ -25,8 +25,8 @@
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-			  if($page.data)
-			  console.log($page.data)
+			  if(page.data)
+			  console.log(page.data)
 				goto('/app');
 			}
 		} catch (e) {

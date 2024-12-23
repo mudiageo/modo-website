@@ -13,7 +13,7 @@
 	import PremiumBanner from '$lib/components/PremiumBanner.svelte';
 	import { fade, slide } from 'svelte/transition';
 	import { theme } from '$lib/stores/theme';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	const tasks = tasksStore.data || [];
 	const profile = profileStore.data || {};
@@ -31,7 +31,7 @@
 	const studySessions = studySessionsStore.data || [];
 
 	let studyTips = $state([]);
-	let isPremium = $state($page.data.session?.user?.premium || false);
+	let isPremium = $state(page.data.session?.user?.premium || false);
 
 	onMount(async () => {
 		if (browser) {

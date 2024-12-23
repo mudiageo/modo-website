@@ -1,9 +1,9 @@
 <script>
 	import { fade, slide } from 'svelte/transition';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let { studyData } = $props();
-	let isPremium = $state($page.data.session?.user?.premium || false);
+	let isPremium = $state(page.data.session?.user?.premium || false);
 
 	let tips = $state([
 		{

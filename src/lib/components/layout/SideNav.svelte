@@ -1,6 +1,6 @@
 <script lang="ts">
 
-import { page } from '$app/stores';
+import { page } from '$app/state';
 
 	let { isNavOpen = $bindable() } = $props();
 	const navItems = [
@@ -51,7 +51,7 @@ import { page } from '$app/stores';
 					href={item.path}
 					class="flex items-center rounded-lg px-4 py-2 text-gray-600 transition-colors
               hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700
-              {$page.url.pathname === item.path
+              {page.url.pathname === item.path
 						? 'bg-primary-50 text-primary-600 dark:bg-primary-900 dark:text-primary-400'
 						: ''}"
 				>
@@ -103,7 +103,7 @@ import { page } from '$app/stores';
 					href="/app/settings"
 					class="flex items-center rounded-lg px-4 py-2 text-gray-600 transition-colors
               hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700
-              {$page.url.pathname === "/app/settings"
+              {page.url.pathname === "/app/settings"
 						? 'bg-primary-50 text-primary-600 dark:bg-primary-900 dark:text-primary-400'
 						: ''}"
 				>

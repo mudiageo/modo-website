@@ -3,9 +3,9 @@
 
 	import PaystackButton from '$lib/components/PaystackButton.svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
-	let session = $state($page.data.session);
+	let session = $state(page.data.session);
 
 	function handleSuccess() {
 		goto('/app?subscription=success');
@@ -227,7 +227,7 @@
 					class="w-full rounded-lg bg-white px-6 py-3 font-semibold text-primary-600 transition-colors hover:bg-primary-50"
 					onclick={handleSubscribe}
 				>
-					{$page.data.session?.user?.premium ? 'Manage Subscription' : 'Subscribe Now'}
+					{page.data.session?.user?.premium ? 'Manage Subscription' : 'Subscribe Now'}
 				</button>
 			</div>
 		</div>

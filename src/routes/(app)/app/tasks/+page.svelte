@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { preventDefault } from 'svelte/legacy';
 	import { fade, slide } from 'svelte/transition';
-	import { page } from '$app/stores'
+	import { page } from '$app/state'
 	import { swipe } from '$lib/actions/swipe';
 	import { dndzone } from 'svelte-dnd-action';
 	import { tasksStore, studyData } from '$lib/data/index.svelte.ts';
@@ -27,7 +27,7 @@
 		estimatedTime: 30
 	});
   onMount(() => {
-    if ($page.url.searchParams.get('new') === 'true') {
+    if (page.url.searchParams.get('new') === 'true') {
       showTaskForm = true;
     }
   });
