@@ -1,4 +1,4 @@
-<script lng="ts">
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import { preventDefault } from 'svelte/legacy';
 	import { theme } from '$lib/stores/theme';
@@ -55,6 +55,36 @@
 		updateStudyData();
 	}
 </script>
+
+<div class="space-y-8">
+  <div>
+    <h1 class="text-2xl font-bold text-gray-900">General Settings</h1>
+    <p class="mt-1 text-sm text-gray-500">Manage your app preferences and account settings.</p>
+  </div>
+
+  <!-- Theme Settings -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Theme</h2>
+    <select
+      bind:value={$theme}
+      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+    >
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+      <option value="system">System Default</option>
+    </select>
+  </div>
+
+  <!-- Study Preferences -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-lg font-medium text-gray-900 mb-4">Study Preferences</h2>
+    <div class="space-y-4">
+      <!-- Add study preference controls here -->
+    </div>
+  </div>
+</div>
+
+
 
 
 <div class="max-w-4xl mx-auto">

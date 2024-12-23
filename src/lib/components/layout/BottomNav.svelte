@@ -4,7 +4,6 @@
 	import { page } from '$app/state';
 	import Icon from '$lib/icons/Icon.svelte';
 	import { Spring } from 'svelte/motion';
-	import { cubicOut } from 'svelte/easing';
 
 	// Animation store for the active indicator
 	const activeTabPosition = new Spring(0, {
@@ -19,15 +18,14 @@
 		{ path: '/app/schedule', icon: 'calendar', label: 'Schedule' },
 	   {
       label: 'Courses',
-      href: '/app/courses',
+      path: '/app/courses',
       icon: 'book'
     },
     {
       label: 'Notes',
-      href: '/app/notes',
+      path: '/app/notes',
       icon: 'note'
     },
-    { path: '/app/progress', icon: 'chart', label: 'Progress' }
 	];
 
 	// Update active indicator position
@@ -48,7 +46,8 @@
 		style="width: {100 / navItems.length}%; transform: translateX({activeTabPosition.current * 100}%);"
 	></div>
 
-	<div class="relative grid h-16 grid-cols-7">
+	<div class="relative grid h-16 grid-cols-6">
+
 		{#each navItems as {path, label, icon}, i}
 			<a
 				href={path}
@@ -75,7 +74,7 @@
 		{/each}
 	</div>
 </nav>
->
+
 
 <style>
 	nav {
