@@ -14,7 +14,7 @@
     },
     { 
       label: 'Courses',
-      href: '/app/settings/courses',
+      href: '/app/courses',
       icon: 'book'
     },
     { 

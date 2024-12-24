@@ -4,7 +4,7 @@ import { preventDefault } from 'svelte/legacy'
 
   import { fade, slide } from 'svelte/transition';
   import { coursesStore } from '$lib/data/index.svelte.ts';
-  
+  import { slugify } from '$lib/utils'
   let courses = $state(coursesStore.data || []);
   
   let newCourse = $state({
@@ -25,7 +25,7 @@ import { preventDefault } from 'svelte/legacy'
     
     		if (!newCourse.name || !newCourse.code)  return
     	
-			coursesStore.add({id: crypto.randomUUID(), ...newCourse})
+			coursesStore.add({id: slugify(newCourse.code), ...newCourse})
 			resetNewCourse()
       showCourseForm = false
 	}

@@ -7,6 +7,7 @@
     onSave: Function;
     generateTasks: Function;
   }
+  let editingTask = $state(null)
   let { tasks = $bindable(), onSave, generateTasks }: Props = $props();
   
   const addTask = () => {
@@ -20,6 +21,7 @@
         dueOffset: 7
       }
     ];
+    editingTask = tasks[tasks.length - 1].id;
   }
   
   const removeTask = (id: string) => {
@@ -43,7 +45,7 @@
       class="text-sm text-primary-600 hover:text-primary-700"
       onclick={generateTasks}
     >
-      Generate tasks based on outline
+      Generate tasks from outline
     </button>
   </div>
 
@@ -54,6 +56,7 @@
         in:slide|local
         out:slide|local
       >
+    {#if editingTask === task.id}
         <div class="grid gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Task Title</label>
@@ -110,7 +113,25 @@
             </div>
           </div>
         </div>
+        {:else}
+        
+             <div>
+              <h4 class="font-medium text-gray-900">{task.title}</h4>
+              {#if task.description}
+                <p class="text-sm text-gray-600 mt-1">{task.description}</p>
+              {/if}
+              <p class="text-sm text-gray-500 mt-1">
+                Prioruty: {task.priority}
+              </p>
+              <p class="text-sm text-gray-500 mt-1">
+                Estimated Time: {task.estimatedTime} hours
+              </p>
+              <p class="text-sm text-gray-500 mt-1">
+                Due After: {task.dueOffset} days
+              </p>
+            </div>
 
+{/if}
         <div class="mt-4 flex justify-end">
           <button
             type="button"
@@ -120,17 +141,8 @@
             Remove Task
           </button>
         </div>
+        
       </div>
     {/each}
-  </div>
-
-  <div class="flex justify-end">
-    <button 
-      type="button" 
-      class="btn-primary"
-      onclick={() => onSave(tasks)}
-    >
-      Save Tasks
-    </button>
   </div>
 </div>

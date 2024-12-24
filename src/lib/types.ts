@@ -116,7 +116,6 @@ export interface Course {
   strength: number;
   estimatedHours: number;
   outline?: CourseOutline;
-  suggestedTasks?: SuggestedTask[];
   progress?: number;
   createdAt: string;
   updatedAt: string;

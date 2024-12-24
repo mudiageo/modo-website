@@ -19,7 +19,7 @@
 			? editingTask
 			: { title: '', dueDate: '', priority: 'medium', estimatedTime: 30, course: '', notes: '' }
 	);
-	let courses = coursesStore.data?.map(course => course.name) || [];
+	let courses = coursesStore.data || [];
 </script>
 
 <form onsubmit={preventDefault(() => handleTaskSubmit(task))} class="space-y-4">
@@ -81,7 +81,7 @@
 			>
 				<option value="">Select Course</option>
 				{#each courses as course}
-					<option value={course}>{course}</option>
+					<option value={course.id}>{course.name} - {course.code}</option>
 				{/each}
 				<option value="CPE272">CPE272</option>
 			</select>

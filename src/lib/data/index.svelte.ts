@@ -91,6 +91,9 @@ export const dbStoreData = (store, storeKey = "") => {
 		select: (id) => {
 			return data?.find((value) => value.id === id);
 		},
+		selectWhere: (field, value) => {
+			return data?.find(obj => obj[field] === value);
+		},
 		delete: (id) => {
 			if (browser) {
 				initDB().then((db) => db.delete(store, id));

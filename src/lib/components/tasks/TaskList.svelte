@@ -7,7 +7,7 @@
 			title: string;
 			deadline: string;
 			priority: 'high' | 'medium' | 'low';
-			category: string;
+			course: string;
 			completed: boolean;
 		}>;
 		activeFilter: string | 'all';

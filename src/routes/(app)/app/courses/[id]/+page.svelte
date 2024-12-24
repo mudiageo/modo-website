@@ -2,13 +2,13 @@
   import CourseOutlineEditor from '../CourseOutlineEditor.svelte';
   import SuggestedTasksEditor from '../SuggestedTasksEditor.svelte';
   import CourseProgress from '../CourseProgress.svelte';
-  import { coursesStore } from '$lib/data/index.svelte.ts'
+  import { coursesStore, tasksStore } from '$lib/data/index.svelte.ts'
   import { calculateEstimatedHours, calculateCourseProgress, generateSuggestedTasks } from '$lib/utils/course';
   
   let { data } = $props();
   let course = $state(data.course || {});
   
-  let tasks = $state(course.suggestedTasks || generateSuggestedTasks(course))
+  let tasks = $state(tasksStore.selectWhere("course", course.code) || [])
   
   async function handleOutlineSave(outline) {
     course.outline = outline;
@@ -18,11 +18,6 @@
     coursesStore.update(course)
     
   }
-  
-  async function handleTasksSave(tasks) {
-    course.suggestedTasks = tasks;
-    coursesStore.update(course)
-  }
 </script>
 
 <div class="space-y-8">
@@ -30,11 +25,6 @@
   <CourseOutlineEditor outline={course.outline} onSave={handleOutlineSave} />
   <SuggestedTasksEditor 
     {tasks}
-    generateTasks={() => {
-    console.log(tasks)
-      tasks = [ ...tasks, ...generateSuggestedTasks(course)]
-      console.log(tasks)
-    }}
-    onSave={handleTasksSave} 
+    generateTasks={() => generateSuggestedTasks(course)}
   />
 </div>
