@@ -1,4 +1,4 @@
-<script lang="s">
+<script lang="ts">
 
  interface Props {
     label: String;

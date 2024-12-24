@@ -13,7 +13,7 @@
     <button
       type="button"
       class="text-sm text-gray-600 hover:text-gray-900"
-      on:click={() => isPreview = !isPreview}
+      onclick={() => isPreview = !isPreview}
     >
       {isPreview ? 'Edit' : 'Preview'}
     </button>

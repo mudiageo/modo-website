@@ -65,7 +65,7 @@
         <div class="bg-white rounded-lg shadow">
           <button
             class="w-full px-6 py-4 flex items-center justify-between"
-            on:click={() => toggleTopic(topic.id)}
+            onclick={() => toggleTopic(topic.id)}
           >
             <div>
               <h4 class="text-left font-medium text-gray-900">{topic.title}</h4>

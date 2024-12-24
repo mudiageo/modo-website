@@ -78,6 +78,7 @@
 				<button
 					class="rounded-lg p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 md:hidden"
 					onclick={() => (isMenuOpen = !isMenuOpen)}
+					aria-label="Mobile menu button"
 				>
 					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path

@@ -28,7 +28,7 @@
     <h1 class="text-2xl font-bold text-gray-900">Notes</h1>
     <button
       class="btn-primary"
-      on:click={() => isCreating = true}
+      onclick={() => isCreating = true}
     >
       New Note
     </button>

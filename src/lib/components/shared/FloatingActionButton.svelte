@@ -29,7 +29,7 @@
       {#each actions as action}
         <button
           class="group flex items-center"
-          on:click={() => {
+          onclick={() => {
             isOpen = false;
             action.onClick();
           }}
@@ -59,7 +59,7 @@
   <!-- Main FAB -->
   <button
     class="w-16 h-16 bg-primary-600 rounded-full shadow-lg flex items-center justify-center text-white hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-    on:click={() => isOpen = !isOpen}
+    onclick={() => isOpen = !isOpen}
   >
     <svg 
       class="w-8 h-8 transform transition-transform duration-200 {isOpen ? 'rotate-45' : ''}" 

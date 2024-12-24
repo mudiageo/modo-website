@@ -1,9 +1,14 @@
 <script lang="ts">
     import { page } from '$app/state';
     import Sidenav from './Sidenav.svelte';
+  interface Props {
+    children?: import('svelte').Snippet;
+  }
+
+  let { children }: Props = $props();
   
     // Only show content on desktop if we're at the root settings path
-    $: showContent = page.url.pathname === '/app/settings' || !page.url.pathname.startsWith('/app/settings/');
+    let showContent = $derived(page.url.pathname === '/app/settings' || !page.url.pathname.startsWith('/app/settings/'));
   </script>
   
   <div class="min-h-screen">
@@ -17,7 +22,7 @@
       <Sidenav />
       {#if showContent}
         <div class="py-8 px-4">
-          <slot />
+          {@render children?.()}
         </div>
       {/if}
     </div>

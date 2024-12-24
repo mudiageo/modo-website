@@ -4,11 +4,8 @@
 	import { theme } from '$lib/stores/theme';
 
 	
-  import Sidenav from './Sidenav.svelte';
   import NotificationManagement from '$lib/components/settings/NotificationManagement.svelte';
-  import CourseManagement from '$lib/components/settings/CourseManagement.svelte';
 
-  let activeTab = $state('general');
 
 	import { settingsStore, coursesStore, studyData } from '$lib/data/index.svelte.ts';
 	
@@ -85,79 +82,6 @@
 </div>
 
 
-
-
-<div class="max-w-4xl mx-auto">
-	<h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Settings</h1>
-  <Sidenav />
-  
-	<!-- Settings Navigation -->
-	<div class="mb-8 border-b border-gray-200">
-	  <nav class="-mb-px flex space-x-8" aria-label="Settings">
-		<button
-		  class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm
-			{activeTab === 'general' ? 
-			  'border-primary-500 text-primary-600' : 
-			  'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
-		  onclick={() => activeTab = 'general'}
-		>
-		  General
-		</button>
-		
-		<button
-		  class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm
-			{activeTab === 'notifications' ? 
-			  'border-primary-500 text-primary-600' : 
-			  'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
-		  onclick={() => activeTab = 'notifications'}
-		>
-		  Notifications
-		</button>
-		
-		<button
-		  class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm
-			{activeTab === 'courses' ? 
-			  'border-primary-500 text-primary-600' : 
-			  'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}"
-		  onclick={() => activeTab = 'courses'}
-		>
-		  Courses
-		</button>
-	  </nav>
-	</div>
-  
-	<!-- Settings Content -->
-	<div class="space-y-8">
-	  {#if activeTab === 'general'}
-		<!-- Theme Settings -->
-		<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-		  <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Theme</h2>
-		  <select
-			bind:value={$theme}
-			class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500"
-		  >
-			<option value="light">Light</option>
-			<option value="dark">Dark</option>
-			<option value="system">System Default</option>
-		  </select>
-		</div>
-  
-		<!-- Study Preferences -->
-		<div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-		  <h2 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Study Preferences</h2>
-		  
-		  <div class="space-y-4">
-			<!-- Existing study preferences content -->
-		  </div>
-		</div>
-	  {:else if activeTab === 'notifications'}
-		<NotificationManagement />
-	  {:else if activeTab === 'courses'}
-		<CourseManagement />
-	  {/if}
-	</div>
-  </div>
-
 <div class="mx-auto max-w-4xl">
 	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
 
@@ -182,10 +106,11 @@
 			<div class="space-y-4">
 				<!-- Stress Level -->
 				<div>
-					<label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<label for="stress-level" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 						Stress Level (1-10)
 					</label>
 					<input
+						id="stress-level"
 						type="range"
 						min="1"
 						max="10"
@@ -200,10 +125,11 @@
 
 				<!-- Focus Score -->
 				<div>
-					<label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<label for="focus-score" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 						Focus Score (0-100)
 					</label>
 					<input
+						id="focus-score"
 						type="range"
 						min="0"
 						max="100"
@@ -218,10 +144,11 @@
 
 				<!-- Break Frequency -->
 				<div>
-					<label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<label for="break-frequency" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 						Break Frequency (minutes)
 					</label>
 					<select
+						id="break-frequency"
 						bind:value={settings.studyPreferences.breakFrequency}
 						onchange={updateStudyData}
 						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
@@ -235,9 +162,9 @@
 
 				<!-- Courses -->
 				<div>
-					<label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<span class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
 						Courses
-					</label>
+					</span>
 
 					<div class="space-y-2">
 						{#each courses as {id, name, strength}}
@@ -285,7 +212,7 @@
 			<div class="space-y-4">
 				<div class="flex items-center justify-between">
 					<div>
-						<label class="font-medium text-gray-700 dark:text-gray-300">Email Notifications</label>
+						<span class="font-medium text-gray-700 dark:text-gray-300">Email Notifications</span>
 						<p class="text-sm text-gray-500 dark:text-gray-400">
 							Receive study reminders via email
 						</p>

@@ -50,7 +50,7 @@
 			</div>
 
 			<div>
-				<label class="block text-sm font-medium text-gray-700">Study Preferences</label>
+				<span class="block text-sm font-medium text-gray-700">Study Preferences</span>
 				<div class="mt-2 grid grid-cols-2 gap-4">
 					<div>
 						<label for="startTime" class="block text-sm text-gray-500">Start Time</label>

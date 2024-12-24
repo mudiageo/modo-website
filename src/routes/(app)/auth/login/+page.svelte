@@ -4,8 +4,8 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { signIn } from 'svelte-guardian/client';
-	import Logo from '$lib/images/logo.svg';
 
+	
 	let email = $state('');
 	let password = $state('');
 	let error = $state('');
@@ -39,7 +39,7 @@
 	class="flex min-h-screen flex-col justify-center bg-gray-50 py-12 dark:bg-gray-900 sm:px-6 lg:px-8"
 >
 	<div class="sm:mx-auto sm:w-full sm:max-w-md">
-		<img src={Logo} alt="Modo Logo" class="mx-auto h-12" />
+		<img src="/favicon-512x512.png" alt="Modo" class=" flex gap-3 mx-auto h-12" />
 		<h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
 			Sign in to your account
 		</h2>

@@ -53,14 +53,14 @@
     <button 
       type="button" 
       class="btn-secondary"
-      on:click={onCancel}
+      onclick={onCancel}
     >
       Cancel
     </button>
     <button 
       type="button" 
       class="btn-primary"
-      on:click={handleSave}
+      onclick={handleSave}
     >
       Save Note
     </button>

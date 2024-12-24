@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import { user } from '$lib/stores/auth';
 	import '../../../app.css';
-	import Logo from '$lib/images/logo.svg';
 
 	onMount(() => {
 		if ($user) {
@@ -22,17 +21,17 @@
 	<div class="container mx-auto px-4 py-20">
 		<div class="mx-auto max-w-4xl text-center">
 			<a href="/" class="text-6xl font-bold text-primary-600 dark:text-primary-400 flez-col text-center">
-			<span>
-			Modo
-			</span>
-			  
+				<div class="flex items-center justify-center">
 					<span class="flex">
-						<svg h="20" w="15" class="align-center justify-center" viewBox="0 0 24 24" fill="currentColor">
-							<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-						</svg>
-						
+
+					<img src="/favicon-512x512.png" alt="Modo" class=" flex gap-3 mx-auto h-12" />
+					
+						odo
 					</span>
-				</a>
+					
+				</div>		
+			  
+		</a>
 		  
 			<h1 class="mb-6 text-5xl font-bold text-gray-900 dark:text-white">
 				Transform Your Study Habits with AI

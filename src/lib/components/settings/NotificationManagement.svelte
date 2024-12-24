@@ -65,7 +65,7 @@
             <button
               type="button"
               class="btn-primary"
-              on:click={requestPermission}
+              onclick={requestPermission}
             >
               Enable Notifications
             </button>
@@ -88,7 +88,7 @@
             class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {notificationSettings.tasks.enabled ? 'bg-primary-600' : 'bg-gray-200'}"
             role="switch"
             aria-checked={notificationSettings.tasks.enabled}
-            on:click={() => {
+            onclick={() => {
               notificationSettings.tasks.enabled = !notificationSettings.tasks.enabled;
               updateSettings();
             }}
@@ -108,7 +108,7 @@
               <label class="block text-sm font-medium text-gray-700">Remind me before</label>
               <select
                 bind:value={notificationSettings.tasks.before}
-                on:change={updateSettings}
+                onchange={updateSettings}
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               >
                 <option value={15}>15 minutes</option>
@@ -123,7 +123,7 @@
                 type="checkbox"
                 id="taskSound"
                 bind:checked={notificationSettings.tasks.sound}
-                on:change={updateSettings}
+                onchange={updateSettings}
                 class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               />
               <label for="taskSound" class="ml-2 block text-sm text-gray-900">
@@ -143,7 +143,7 @@
             class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {notificationSettings.schedule.enabled ? 'bg-primary-600' : 'bg-gray-200'}"
             role="switch"
             aria-checked={notificationSettings.schedule.enabled}
-            on:click={() => {
+            onclick={() => {
               notificationSettings.schedule.enabled = !notificationSettings.schedule.enabled;
               updateSettings();
             }}
@@ -163,7 +163,7 @@
               <label class="block text-sm font-medium text-gray-700">Remind me before</label>
               <select
                 bind:value={notificationSettings.schedule.before}
-                on:change={updateSettings}
+                onchange={updateSettings}
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               >
                 <option value={5}>5 minutes</option>
@@ -177,7 +177,7 @@
                 type="checkbox"
                 id="scheduleSound"
                 bind:checked={notificationSettings.schedule.sound}
-                on:change={updateSettings}
+                onchange={updateSettings}
                 class="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               />
               <label for="scheduleSound" class="ml-2 block text-sm text-gray-900">
@@ -197,7 +197,7 @@
             class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 {notificationSettings.studyReminders.enabled ? 'bg-primary-600' : 'bg-gray-200'}"
             role="switch"
             aria-checked={notificationSettings.studyReminders.enabled}
-            on:click={() => {
+            onclick={() => {
               notificationSettings.studyReminders.enabled = !notificationSettings.studyReminders.enabled;
               updateSettings();
             }}
@@ -217,7 +217,7 @@
               <label class="block text-sm font-medium text-gray-700">Reminder Frequency</label>
               <select
                 bind:value={notificationSettings.studyReminders.frequency}
-                on:change={updateSettings}
+                onchange={updateSettings}
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               >
                 <option value="daily">Daily</option>
@@ -231,7 +231,7 @@
               <input
                 type="time"
                 bind:value={notificationSettings.studyReminders.time}
-                on:change={updateSettings}
+                onchange={updateSettings}
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               />
             </div>

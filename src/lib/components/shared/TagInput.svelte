@@ -28,7 +28,7 @@
         <button
           type="button"
           class="text-primary-600 hover:text-primary-800"
-          on:click={() => removeTag(i)}
+          onclick={() => removeTag(i)}
         >
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -41,7 +41,7 @@
   <input
     type="text"
     bind:value={input}
-    on:keydown={addTag}
+    onkeydown={addTag}
     placeholder="Add tags (press Enter or comma to add)"
     class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
   />
