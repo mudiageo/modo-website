@@ -130,3 +130,80 @@ export interface SuggestedTask {
   topic?: string;
   dueOffset?: number; // days from course start
 }
+
+export interface GameState {
+	points: number;
+	level: number;
+	streak: number;
+	achievements: Achievement[];
+	activeChallenges: Challenge[];
+}
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  condition: string;
+  points: number;
+  unlockedAt?: string;
+}
+export interface Stats {
+	completedTasks: number;
+	studyHours: number;
+	currentStreak: number;
+
+}
+
+export interface Streak {
+  currentStreak: number;
+  longestStreak: number;
+  lastStudyDate: string;
+}
+
+export interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  goal: number;
+  progress: number;
+  reward: number;
+  startDate: string;
+  endDate: string;
+  completed: boolean;
+}
+
+
+
+//Resources types
+export interface Resource {
+  id: string;
+  type: 'pdf' | 'video' | 'flashcard';
+  title: string;
+  description?: string;
+  url: string;
+  courseId?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Annotation {
+  id: string;
+  resourceId: string;
+  page?: number;
+  timestamp?: number;
+  content: string;
+  color: string;
+  position?: { x: number; y: number };
+  createdAt: string;
+}
+
+export interface Flashcard {
+  id: string;
+  front: string;
+  back: string;
+  resourceId: string;
+  lastReviewed?: string;
+  nextReview?: string;
+  difficulty: number;
+}

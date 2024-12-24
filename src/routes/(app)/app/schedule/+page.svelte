@@ -51,28 +51,7 @@ let isCreating = $state(false);
 	});
 
 
-//   function generateMockEvents() {
-//     const mockEvents = [];
-//     const subjects = ['Mathematics', 'Physics', 'Chemistry', 'Literature', 'History'];
-//     const today = new Date();
-    
-//     for (let i = 0; i < 10; i++) {
-//       const date = new Date(today);
-//       date.setDate
-// 	  (date.getDate() + Math.floor(Math.random() * 14) - 7);
-      
-//       mockEvents.push({
-//         id: i,
-//         title: `${subjects[Math.floor(Math.random() * subjects.length)]} Study`,
-//         startTime: new Date(date.setHours(9 + Math.floor(Math.random() * 8))),
-//         duration: 30 ,
-//         type: Math.random() > 0.3 ? 'study' : 'break'
-//       });
-	 
-//     }
-    
-//     return mockEvents;
-//   }
+
 
   function navigateDate(direction) {
     const newDate = new Date(selectedDate);

@@ -6,10 +6,10 @@
 	import { Spring } from 'svelte/motion';
 
 	// Animation store for the active indicator
-	const activeTabPosition = new Spring(0, {
+	const activeTabPosition = $state(new Spring(0, {
 		stiffness: 0.2,
 		damping: 0.8
-	});
+	}));
 
 	const navItems = [
 		{ path: '/app', icon: 'home', label: 'home' },

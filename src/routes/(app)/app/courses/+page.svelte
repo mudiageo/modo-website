@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 
 import { preventDefault } from 'svelte/legacy'
 
@@ -45,7 +45,45 @@ import { preventDefault } from 'svelte/legacy'
   const updateCourse = course => {
     coursesStore.update(course)
     }
+  
+    import { gamificationStore, addPoints } from '$lib/data/gamification.svelte.ts';
+  
+    let gameState = $state<GameState>(gamificationStore.data || {
+  points: 0,
+  level: 1,
+  streak: 0,
+  achievements: [],
+  activeChallenges: []
+});
+
+
+
+    function completeCourseTopic(topic) {
+    topic.completed = true;
+    
+    // Add points for completing a topic
+    addPoints(20);
+    
+    // Check if course is completed
+    const allTopicsCompleted = course.outline.topics.every(t => t.completed);
+    if (allTopicsCompleted) {
+      addPoints(100); // Bonus points for completing course
+    }
+  }
 </script>
+
+<!-- Add to course progress section -->
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h3 class="font-medium text-gray-900">{course.name}</h3>
+    <p class="text-sm text-gray-600">Progress: {calculateProgress(course)}%</p>
+  </div>
+  <span class="text-sm font-medium text-primary-600">
+    +20 points per topic
+  </span>
+</div>
+```
+
 
 <div class="space-y-6">
 	<button class="btn-primary" onclick={() => (showCourseForm = true)}> Add Course </button>
