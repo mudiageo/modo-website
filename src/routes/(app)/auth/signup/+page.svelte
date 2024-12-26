@@ -84,7 +84,7 @@ console.log({ name: user.name, email: user.email })
 		if (password !== confirmPassword) return  error = 'Passwords do not match' ;
 
 				return async ({ result }) => {
-					console.log(resullt)
+					console.log(result)
 					// `result` is an `ActionResult` object
 					if (result.type === 'redirect') {
 						goto(result.location);
