@@ -7,12 +7,12 @@
   const streak = $state(accomplishments.streak || {
 
   currentStreak: 0,
-  longestStreak: 0,
+  longestStreak: 4,
   lastStudyDate: ''
 })
   let streakClass = $derived(streak.currentStreak >= 7 ? 'text-primary-600' :
                    streak.currentStreak >= 3 ? 'text-amber-600' :
-                   'text-gray-600');
+                   'text-gray-600 dark:text-white');
 </script>
 
 <div class="flex items-center gap-2" in:slide>
@@ -23,6 +23,6 @@
   </svg>
   <div>
     <p class="font-medium {streakClass}">{streak.currentStreak} Day Streak</p>
-    <p class="text-xs text-gray-500">Best: {streak.longestStreak} days</p>
+    <p class="text-xs text-gray-500 dark:text-white">Best: {streak.longestStreak} days</p>
   </div>
 </div>

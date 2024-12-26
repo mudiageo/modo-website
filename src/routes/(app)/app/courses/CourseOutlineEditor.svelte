@@ -73,7 +73,7 @@
 
 <div class="space-y-6">
   <div class="flex justify-between items-center">
-    <h3 class="text-lg font-semibold text-gray-900">Course Outline</h3>
+    <h3 class="text-lg font-semibold text-gray-900  dark:text-white">Course Outline</h3>
     <button 
       type="button"
       class="text-sm text-primary-600 hover:text-primary-700"
@@ -99,32 +99,32 @@
               <input
                 type="text"
                 bind:value={topic.title}
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                class="input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                 placeholder="Topic title"
               />
               <textarea
                 bind:value={topic.description}
                 rows="2"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                class="input block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                 placeholder="Topic description"
               ></textarea>
               <div class="flex items-center gap-2">
-                <label class="text-sm text-gray-700">Estimated Hours:</label>
+                <label class="label text-sm text-gray-700">Estimated Hours:</label>
                 <input
                   type="number"
                   bind:value={topic.estimatedHours}
                   min="1"
-                  class="w-20 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                  class="input w-20 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                 />
               </div>
             </div>
           {:else}
             <div>
-              <h4 class="font-medium text-gray-900">{topic.title}</h4>
+              <h4 class="font-medium text-gray-900 dark:text-white">{topic.title}</h4>
               {#if topic.description}
-                <p class="text-sm text-gray-600 mt-1">{topic.description}</p>
+                <p class="text-sm text-gray-600 dark:text-white mt-1">{topic.description}</p>
               {/if}
-              <p class="text-sm text-gray-500 mt-1">
+              <p class="text-sm text-gray-500 dark:text-gray-50 mt-1">
                 Estimated: {topic.estimatedHours} hours
               </p>
             </div>
@@ -163,14 +163,14 @@
                   <input
                     type="text"
                     bind:value={subtopic.title}
-                    class="rounded-md border-gray-300 shadow-sm flex focus:border-primary-500 focus:ring-primary-500"
+                    class="input rounded-md border-gray-300 shadow-sm flex focus:border-primary-500 focus:ring-primary-500"
                     placeholder="Subtopic title"
                   />
                   <input
                     type="number"
                     bind:value={subtopic.estimatedHours}
                     min="1"
-                    class="w-20 rounded-md border-gray-300 shadow-sm flex focus:border-primary-500 focus:ring-primary-500"
+                    class="input w-20 rounded-md border-gray-300 shadow-sm flex focus:border-primary-500 focus:ring-primary-500"
                   />
                       {:else}
             <p

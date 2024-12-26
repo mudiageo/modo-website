@@ -115,19 +115,20 @@ import RewardPopup from '$lib/components/gamification/RewardPopup.svelte'
 
   
 </script>
-{showReward}
+
 {#if showReward}
 <RewardPopup title={reward.title} points={reward.points} message={reward.message} visible={showReward}/>
 {/if}
-<div class="space-y-6">
+<div>
   <!-- Overall Progress -->
-  <div class="bg-white rounded-lg shadow p-6">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
     
 <!-- Add to course progress section -->
 <div class="flex items-center justify-between mb-4">
   <div>
-    <h3 class="font-medium text-gray-900">{course.name}</h3>
-    <p class="text-sm text-gray-600">Progress: {course.progress}%</p>
+    <h1 class="font-medium text-3xl text-gray-900 dark:text-white">{course.name}</h1>
+    <h3 class="font-medium text-xl text-gray-900 dark:text-white">{course.code}</h3>
+    <p class="text-sm text-2xl text-gray-600 dark:text-white">Progress: {course.progress}%</p>
   </div>
   <span class="text-sm font-medium text-primary-600">
     +20 points per topic
@@ -135,7 +136,7 @@ import RewardPopup from '$lib/components/gamification/RewardPopup.svelte'
 </div>
 
     <div class="flex items-center justify-between mb-4">
-      <h3 class="text-lg font-semibold text-gray-900">Course Progress</h3>
+      <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-200">Course Progress</h3>
       <span class="text-2xl font-bold text-primary-600">{course.progress}%</span>
     </div>
     
@@ -150,12 +151,12 @@ import RewardPopup from '$lib/components/gamification/RewardPopup.svelte'
     
     <div class="grid grid-cols-2 gap-4 text-center">
       <div>
-        <p class="text-sm text-gray-600">Estimated Hours</p>
-        <p class="text-lg font-semibold text-gray-900">{course.estimatedHours}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-200">Estimated Hours</p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{course.estimatedHours}</p>
       </div>
       <div>
-        <p class="text-sm text-gray-600">Topics Completed</p>
-        <p class="text-lg font-semibold text-gray-900">
+        <p class="text-sm text-gray-600 dark:text-gray-200">Topics Completed</p>
+        <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">
           {course.outline?.topics?.filter(t => calculateTopicProgress(t) === 100).length || 0} / 
           {course.outline?.topics.length || 0}
         </p>
@@ -165,15 +166,15 @@ import RewardPopup from '$lib/components/gamification/RewardPopup.svelte'
 
   <!-- Topics Progress -->
   {#if course.outline?.topics}
-    <div class="space-y-4">
+    <div class="space-y-4 mt-4">
       {#each course.outline.topics as topic (topic.id)}
-        <div class="bg-white rounded-lg shadow">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
             <label class="flex items-center">
                     <input
                       type="checkbox"
                       bind:checked={topic.completed}
                     onchange={() => handleTopicCheck(topic)}
-                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                      class="input h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                     />
                   </label>
           <button
@@ -182,8 +183,8 @@ import RewardPopup from '$lib/components/gamification/RewardPopup.svelte'
           >
             <div>
              
-              <h4 class="text-left font-medium text-gray-900">{topic.title}</h4>
-              <p class="text-sm text-gray-600">
+              <h4 class="text-left font-medium text-gray-900 dark:text-gray-100">{topic.title}</h4>
+              <p class="text-sm text-gray-600 dark:text-gray-100">
                 Progress: {calculateTopicProgress(topic)}%
               </p>
             </div>

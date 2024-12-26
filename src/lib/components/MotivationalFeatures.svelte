@@ -28,19 +28,19 @@
 
 <div class="space-y-8">
 	<!-- Daily Quote -->
-	<div class="rounded-lg bg-gradient-to-r from-primary-50 to-white p-6 shadow-sm" in:fade>
-		<h2 class="mb-2 text-lg font-semibold text-gray-900">Daily Inspiration</h2>
-		<blockquote class="italic text-gray-700">"{quote.text}"</blockquote>
-		<p class="mt-2 text-sm text-gray-600">— {quote.author}</p>
+	<div class="rounded-lg bg-gradient-to-r from-primary-50 to-white dark:from-gray-900 dark:to-gray-800 p-6 shadow-sm" in:fade>
+		<h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-200">Daily Inspiration</h2>
+		<blockquote class="italic text-gray-700 dark:text-gray-100">"{quote.text}"</blockquote>
+		<p class="mt-2 text-sm text-gray-600 dark:text-gray-50">— {quote.author}</p>
 	</div>
 
 	<!-- Achievements -->
-	<div class="rounded-lg bg-white p-6 shadow-sm" in:slide>
-		<h2 class="mb-4 text-lg font-semibold text-gray-900">Your Achievements</h2>
+	<div class="rounded-lg bg-white dark:bg-gray-900 p-6 shadow-sm" in:slide>
+		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Your Achievements</h2>
 		<div class="grid grid-cols-2 gap-4 md:grid-cols-3">
 			{#each achievements as achievement}
 				<div
-					class="flex flex-col items-center rounded-lg bg-gray-50 p-4
+					class="flex flex-col items-center rounded-lg bg-gray-50 dark:bg-gray-800 p-4
           {achievement.earned ? 'border-2 border-primary-200' : 'opacity-50'}"
 				>
 					<div class="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100">
@@ -67,15 +67,15 @@
 							{/if}
 						</svg>
 					</div>
-					<h3 class="text-center text-sm font-medium text-gray-900">{achievement.title}</h3>
+					<h3 class="text-center text-sm font-medium text-gray-900 dark:text-white">{achievement.title}</h3>
 				</div>
 			{/each}
 		</div>
 	</div>
 
 	<!-- Study Streak -->
-	<div class="rounded-lg bg-white p-6 shadow-sm" in:slide>
-		<h2 class="mb-4 text-lg font-semibold text-gray-900">Study Streak</h2>
+	<div class="rounded-lg bg-white dark:bg-gray-900 p-6 shadow-sm" in:slide>
+		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Study Streak</h2>
 		<div class="flex items-center justify-between">
 			<div class="flex-1">
 				<div class="h-2 rounded-full bg-gray-200">
@@ -84,25 +84,25 @@
 						style="width: {(progress.streakDays / 7) * 100}%"
 					></div>
 				</div>
-				<div class="mt-2 flex justify-between text-sm text-gray-600">
+				<div class="mt-2 flex justify-between text-sm text-gray-600 dark:text-white">
 					<span>0 days</span>
 					<span>7 days</span>
 				</div>
 			</div>
 			<div class="ml-4 text-center">
-				<p class="text-3xl font-bold text-primary-600">{progress.streakDays}</p>
-				<p class="text-sm text-gray-600">days</p>
+				<p class="text-3xl font-bold text-primary-600 dark:text-white">{progress.streakDays}</p>
+				<p class="text-sm text-gray-600 dark:text-white">days</p>
 			</div>
 		</div>
 	</div>
 
 	<!-- Social Features -->
-	<div class="rounded-lg bg-white p-6 shadow-sm" in:slide>
-		<h2 class="mb-4 text-lg font-semibold text-gray-900">Study Community</h2>
-		<p class="py-8 text-center text-gray-600">
+	<div class="rounded-lg bg-white dark:bg-gray-900 p-6 shadow-sm" in:slide>
+		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Study Community</h2>
+		<p class="py-8 text-center text-gray-600 dark:text-white">
 			Coming soon! Connect with fellow students, share study tips, and motivate each other.
 		</p>
-		<button class="btn-secondary w-full cursor-not-allowed opacity-50" disabled>
+		<button class="btn-secondary dark:text-white w-full cursor-not-allowed opacity-50" disabled>
 			Join Community
 		</button>
 	</div>

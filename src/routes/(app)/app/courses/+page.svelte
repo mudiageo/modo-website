@@ -54,10 +54,10 @@ import { preventDefault } from 'svelte/legacy'
 	<button class="btn-primary" onclick={() => (showCourseForm = true)}> Add Course </button>
   
 
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Courses</h2>
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+    <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-4">Your Courses</h2>
     {#if courses.length === 0}
-      <p class="text-gray-500 text-center py-4">No courses added yet.</p>
+      <p class="text-gray-500 dark:text-white text-center py-4">No courses added yet.</p>
     {:else}
       <div class="space-y-4">
         {#each courses as course (course.id)}
@@ -69,9 +69,9 @@ import { preventDefault } from 'svelte/legacy'
             <div class="flex justify-between items-start">
               <div>
                 <a href="courses/{course.id}">
-                <h3 class="font-medium text-gray-900">{course.name}</h3>
+                <h3 class="font-medium text-gray-900 dark:text-white">{course.name}</h3>
                 {#if course.code}
-                  <p class="text-sm text-gray-500">{course.code}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-100">{course.code}</p>
                 {/if}
                 </a>
               </div>
@@ -83,10 +83,10 @@ import { preventDefault } from 'svelte/legacy'
               </button>
             </div>
             {#if course.description}
-              <p class="text-sm text-gray-600 mt-2">{course.description}</p>
+              <p class="text-sm text-gray-600 mt-2 dark:text-gray-100">{course.description}</p>
             {/if}
             <div class="mt-2 flex items-center gap-2">
-              <span class="text-sm text-gray-500">Strength:</span>
+              <span class="text-sm text-gray-500 dark:text-white">Strength:</span>
               		<input type="range" min="0" max="10" bind:value={course.strength}
               		onchange={() => updateCourse({ ...course, strength: course.strength })}
               		/>
@@ -111,38 +111,38 @@ import { preventDefault } from 'svelte/legacy'
 
       <div>
 
-        <label for="courseName" class="block text-sm font-medium text-gray-700">Course Name</label>
+        <label for="courseName" class="label block text-sm font-medium text-gray-700">Course Name</label>
         <input
           type="text"
           id="courseName"
           bind:value={newCourse.name}
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
           required
         />
       </div>
 
       <div>
-        <label for="courseCode" class="block text-sm font-medium text-gray-700">Course Code</label>
+        <label for="courseCode" class="label block text-sm font-medium text-gray-700">Course Code</label>
         <input
           type="text"
           id="courseCode"
           bind:value={newCourse.code}
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
         />
       </div>
 
       <div>
-        <label for="courseDescription" class="block text-sm font-medium text-gray-700">Description</label>
+        <label for="courseDescription" class="label block text-sm font-medium text-gray-700">Description</label>
         <textarea
           id="courseDescription"
           bind:value={newCourse.description}
           rows="3"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
         ></textarea>
       </div>
 
       <div>
-        <label for="strength" class="block text-sm font-medium text-gray-700">Strength Level</label>
+        <label for="strength" class="label block text-sm font-medium text-gray-700">Strength Level</label>
         	<input type="range" min="0" max="10" bind:value={newCourse.strength}
           />
           

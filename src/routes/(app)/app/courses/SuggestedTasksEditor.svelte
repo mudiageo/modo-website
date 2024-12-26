@@ -84,31 +84,31 @@ newTask
     {#if editingTask === task.id}
         <div class="grid gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700">Task Title</label>
+            <label class="label block text-sm font-medium text-gray-700">Task Title</label>
             <input
               type="text"
               bind:value={task.title}
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               placeholder="Task title"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700">Description</label>
+            <label class="label block text-sm font-medium text-gray-700">Description</label>
             <textarea
               bind:value={task.description}
               rows="2"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               placeholder="Task description"
             ></textarea>
           </div>
 
           <div class="grid grid-cols-3 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700">Priority</label>
+              <label class="label block text-sm font-medium text-gray-700">Priority</label>
               <select
                 bind:value={task.priority}
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -117,18 +117,18 @@ newTask
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">Est. Time (min)</label>
+              <label class="label block text-sm font-medium text-gray-700">Est. Time (min)</label>
               <input
                 type="number"
                 bind:value={task.estimatedTime}
                 min="5"
                 step="5"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
               />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">Due Date: </label>
+              <label class="label block text-sm font-medium text-gray-700">Due Date: </label>
               <input
 				type="date"
 				id="duedate"
