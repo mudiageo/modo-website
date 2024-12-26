@@ -1,11 +1,18 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
-  import { achievements, streak } from '$lib/stores/achievements';
+  import { achievementsStore } from '$lib/data/achievements.svelte.ts';
   import AchievementBadge from '$lib/components/gamification/AchievementBadge.svelte';
   import StreakCounter from '$lib/components/gamification/StreakCounter.svelte';
   import ChallengeCard from '$lib/components/gamification/ChallengeCard.svelte';
   import LevelProgress from '$lib/components/gamification/LevelProgress.svelte';
 
+  let accomplishments = $state(achievementsStore.data || {})
+  const achievements = $state(accomplishments.achievements || [])
+  const streak = $state(accomplishments.streak || {
+  currentStreak: 0,
+  longestStreak: 0,
+  lastStudyDate: ''
+})
   let points = $state(0);
   let activeChallenges = $state([
     {
@@ -59,7 +66,7 @@
   <div>
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Your Achievements</h2>
     <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
-      {#each $achievements as achievement (achievement.id)}
+      {#each achievements as achievement (achievement.id)}
         <AchievementBadge {achievement} />
       {/each}
     </div>

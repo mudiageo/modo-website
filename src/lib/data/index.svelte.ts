@@ -92,7 +92,12 @@ export const dbStoreData = (store, storeKey = "") => {
 			return data?.find((value) => value.id === id);
 		},
 		selectWhere: (field, value) => {
+		  console.log(value)
 			return data?.find(obj => obj[field] === value);
+		},
+		selectMultipleWhere: (field, value) => {
+		  console.log(value)
+			return data?.filter(obj => obj[field] === value);
 		},
 		delete: (id) => {
 			if (browser) {

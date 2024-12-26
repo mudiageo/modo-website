@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Annotation } from '$lib/types';
-  import { addAnnotation } from '$lib/stores/resources';
+  import { addAnnotation } from '$lib/data/resources.svelte.ts';
   
   interface Props {
     url: string;

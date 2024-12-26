@@ -50,7 +50,7 @@
     const stats = {
       totalStudyHours: calculateTotalStudyHours(),
       completedTasks: tasks.filter(t => t.completed).length,
-      currentStreak: $gameState.streak
+      currentStreak: gameState.streak
     };
     
     const newAchievements = checkAchievements(stats);
@@ -59,7 +59,7 @@
     });
     
     // Update study marathon challenge
-    const studyChallenge = $gameState.activeChallenges.find(c => c.id === 'study_marathon');
+    const studyChallenge = gameState.activeChallenges.find(c => c.id === 'study_marathon');
     if (studyChallenge) {
       updateChallenge('study_marathon', stats.totalStudyHours);
     }
@@ -144,7 +144,7 @@
 <div class="flex items-center justify-between mb-4">
   <h2 class="text-lg font-semibold text-gray-900">Your Study Schedule</h2>
   <div class="flex items-center gap-2">
-    <span class="text-sm text-gray-600">Current Streak: {$gameState.streak} days</span>
+    <span class="text-sm text-gray-600">Current Streak: {gameState.streak} days</span>
     <button 
       class="btn-primary"
       onclick={startStudySession}

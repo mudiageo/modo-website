@@ -1,8 +1,10 @@
 <script lang="ts">
   import { fade, slide } from 'svelte/transition';
-  import { resources, addResource } from '$lib/stores/resources';
+  import { resourcesStore, addResource } from '$lib/data/resources.svelte.ts';
   import PDFViewer from '$lib/components/resources/PDFViewer.svelte';
   import FlashcardDeck from '$lib/components/resources/FlashcardDeck.svelte';
+
+  let resources = $state<Resource[]>(resourcesStore.data?.resources || []);
 
   let uploadingFile = $state(false);
   let newResource = $state({
@@ -64,7 +66,7 @@
 
   <!-- Resource Grid -->
   <div class="grid md:grid-cols-2 gap-6">
-    {#each $resources as resource (resource.id)}
+    {#each resources as resource (resource.id)}
       <div 
         class="bg-white rounded-lg shadow-sm p-6"
         in:fade|local
@@ -93,7 +95,7 @@
       </div>
     {/each}
 
-    {#if $resources.length === 0}
+    {#if resources.length === 0}
       <div class="col-span-2 text-center py-12 text-gray-500">
         No resources added yet. Click "Add Resource" to get started.
       </div>

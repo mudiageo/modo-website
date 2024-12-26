@@ -1,7 +1,15 @@
 <script lang="ts">
-  import { streak } from '$lib/stores/achievements';
+  import { achievementsStore } from '$lib/data/achievements.svelte.ts';
   import { slide } from 'svelte/transition';
   
+  const accomplishments = $state(achievementsStore.data || {})
+
+  const streak = $state(accomplishments.streak || {
+
+  currentStreak: 0,
+  longestStreak: 0,
+  lastStudyDate: ''
+})
   let streakClass = $derived(streak.currentStreak >= 7 ? 'text-primary-600' :
                    streak.currentStreak >= 3 ? 'text-amber-600' :
                    'text-gray-600');

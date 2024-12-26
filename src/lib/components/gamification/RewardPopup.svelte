@@ -1,13 +1,11 @@
 <script lang="ts">
   import { fade, fly } from 'svelte/transition';
   
-  let { title, points, message } = $props<{
+  let { title, points, message, visible = $bindable() } = $props<{
     title: string;
     points: number;
     message: string;
   }>();
-  
-  let visible = $state(true);
   
   setTimeout(() => {
     visible = false;
@@ -16,7 +14,7 @@
 
 {#if visible}
   <div
-    class="fixed bottom-4 right-4 bg-primary-600 text-white p-4 rounded-lg shadow-lg"
+    class="fixed bottom-10 right-10 bg-primary-600 text-white p-4 rounded-lg shadow-lg z-100"
     in:fly={{ y: 20, duration: 300 }}
     out:fade
   >

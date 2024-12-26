@@ -8,7 +8,7 @@
 		studyData
 	} from '$lib/data/index.svelte.ts';
 	import { addNotification } from '$lib/stores/notifications';
-	import { gameState } from '$lib/data/gamification.svelte.ts';
+	import { gamificationStore } from '$lib/data/gamification.svelte.ts';
 	import StreakCounter from '$lib/components/gamification/StreakCounter.svelte';
 	import ChallengeCard from '$lib/components/gamification/ChallengeCard.svelte';
 	import MotivationalFeatures from '$lib/components/MotivationalFeatures.svelte';
@@ -18,15 +18,22 @@
 	
 	import { page } from '$app/state';
 
-  
+  let gameState = $state(gamificationStore.data || {
+    points: 0,
+    level: 1,
+    streak: 0,
+    achievements: [],
+    activeChallenges: []
+  });
+
   
   // Show most relevant challenge
-  let topChallenge = $derived($gameState.activeChallenges
-    .filter(c => !c.completed)
+  let topChallenge = $derived(gameState.activeChallenges
+    ?.filter(c => !c.completed)
     .sort((a, b) => (b.progress / b.goal) - (a.progress / a.goal))[0]);
 
 	const tasks = tasksStore.data || [];
-	const profile = profileStore.data || {};
+	const profile = $state(profileStore.data || {});
 	const userData = $state({
 		studyPatterns: tasks,
 		tasks,
@@ -95,63 +102,27 @@
 		return streak;
 	}
 </script>
+<svelte:head>
+	<title>Dashboard - Modo</title>
+</svelte:head>
 
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  <!-- Welcome Card with Streak -->
-  <div class="col-span-full bg-white rounded-lg shadow p-6">
+<div class="space-y-6">
+	<!-- Welcome Section -->
+	<div class="rounded-lg bg-white p-6 shadow-lg transition-colors dark:bg-gray-800" in:fade>
+		<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center"> 
+		<!-- Welcome Card with Streak -->
+
     <div class="flex justify-between items-center">
       <div>
         <h1 class="text-2xl font-bold text-gray-900">Welcome back, {profile?.name || 'Student'}!</h1>
-        <p class="mt-2 text-gray-600">Level {$gameState.level} • {$gameState.points} points</p>
+        <p class="mt-2 text-gray-600">Level {gameState.level} • {gameState.points || 0} points</p>
       </div>
       <StreakCounter />
-    </div>
   </div>
 
-  <!-- Priority Tasks -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Priority Tasks</h2>
-    {#if tasks?.length > 0}
-      <ul class="space-y-3">
-        {#each tasks.slice(0, 3) as task}
-          <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <span class="text-gray-700">{task.title}</span>
-            <span class="text-sm text-gray-500">{task.dueDate}</span>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      <p class="text-gray-500">No priority tasks at the moment.</p>
-    {/if}
-  </div>
-
-  <!-- Study Progress -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Today's Progress</h2>
-    <div class="space-y-4">
-      <div class="relative pt-1">
-        <div class="flex mb-2 items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold inline-block text-primary-600">
-              Study Progress
-            </span>
-          </div>
-          <div class="text-right">
-            <span class="text-xs font-semibold inline-block text-primary-600">
-              30%
-            </span>
-          </div>
-        </div>
-        <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-primary-100">
-          <div
-            style="width: 30%"
-            class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-600"
-          ></div>
-        </div>
-      </div>
-    </div>
-  </div>
+	</div>
+	</div>
 
   <!-- Active Challenge -->
   {#if topChallenge}
@@ -160,31 +131,6 @@
       <ChallengeCard challenge={topChallenge} />
     </div>
   {/if}
-</div>
-
-<svelte:head>
-	<title>Dashboard - Modo</title>
-</svelte:head>
-
-<div class="space-y-6">
-	<!-- Welcome Section -->
-	<div class="rounded-lg bg-white p-6 shadow-lg transition-colors dark:bg-gray-800" in:fade>
-		<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-			<div>
-				<h1 class="text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
-					Welcome back, {profile?.name || 'Student'}!
-				</h1>
-				<p class="mt-2 text-gray-600 dark:text-gray-400">
-					Here's your personalized study overview for today. Let's make today productive
-				</p>
-			</div>
-			<div class="flex gap-4">
-				<a href="/app/tasks" class="btn-primary"> Add Task </a>
-				<a href="/app/schedule" class="btn-secondary"> View Schedule </a>
-			</div>
-		</div>
-	</div>
-
 	<!-- Stats Overview -->
 	<div class="grid grid-cols-2 gap-4 md:grid-cols-4" in:fade={{ delay: 200 }}>
 		<div class="rounded-lg bg-white p-4 shadow dark:bg-gray-800">

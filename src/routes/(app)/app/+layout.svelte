@@ -26,7 +26,7 @@
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('/service-worker.js');
 		}
-		await setupNotificationsifications();
+		await setupNotifications();
 
   });
 

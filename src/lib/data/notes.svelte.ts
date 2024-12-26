@@ -1,5 +1,7 @@
 
+
 import { dbStoreData } from '$lib/data/index.svelte.ts';
+
 
 export const notesStore = dbStoreData('notes');
 

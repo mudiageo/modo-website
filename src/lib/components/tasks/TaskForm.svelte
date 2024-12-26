@@ -5,9 +5,9 @@
 		tasks: {
 			id?: string;
 			title: string;
-			deadline: string;
+			dueDate: string;
 			priority: string;
-			category: string;
+			course: string;
 			notes: string;
 		};
 		categories: [any];
@@ -81,7 +81,7 @@
 			>
 				<option value="">Select Course</option>
 				{#each courses as course}
-					<option value={course.id}>{course.name} - {course.code}</option>
+					<option value={course.code}>{course.name} - {course.code}</option>
 				{/each}
 				<option value="CPE272">CPE272</option>
 			</select>

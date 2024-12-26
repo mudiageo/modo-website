@@ -16,7 +16,9 @@
     let isOpen = $state(false);
   
     const menuItems = [
-        { label: 'Courses', href: '/app/courses', icon: 'book' },
+        { label: 'Courses', href: '/app/courses', icon: 'cap' },
+        { label: 'Achievements', href: '/app/achievements', icon: 'trophy' },
+        { label: 'Resources', href: '/app/resources', icon: 'folder' },
         { label: 'Notes', href: '/app/notes', icon:'note' },
         { label: 'Settings', href: '/app/settings', icon: 'cog'},
         { href: '/app/progress', icon: 'chart', label: 'Progress' },

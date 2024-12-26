@@ -14,12 +14,12 @@
 	const navItems = [
 		{ path: '/app', icon: 'home', label: 'home' },
 		{ path: '/app/tasks', icon: 'task', label: 'tasks' },
-		{ path: '/app/study', icon: 'book', label: 'Study' },
+		{ path: '/app/study', icon: 'clock', label: 'Study' },
 		{ path: '/app/schedule', icon: 'calendar', label: 'Schedule' },
 	   {
       label: 'Courses',
       path: '/app/courses',
-      icon: 'book'
+      icon: 'diploma'
     },
     {
       label: 'Notes',

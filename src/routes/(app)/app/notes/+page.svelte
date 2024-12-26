@@ -5,7 +5,7 @@
 
   import { fade, slide } from 'svelte/transition';
   import NoteEditor from '$lib/components/notes/NoteEditor.svelte';
-  import { notesStore, searchNotes } from '$lib/stores/notes';
+  import { notesStore, searchNotes } from '$lib/data/notes.svelte.ts';
   
   let isCreating = $state(false);
   let searchQuery = $state('');

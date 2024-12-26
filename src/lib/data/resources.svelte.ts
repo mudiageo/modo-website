@@ -1,24 +1,20 @@
 import { browser } from '$app/environment';
+
 import { dbStoreData } from '$lib/data/index.svelte.ts';
+
 import type { Resource, Annotation, Flashcard } from '$lib/types';
 
-let resources = $state<Resource[]>([]);
-let annotations = $state<Annotation[]>([]);
-let flashcards = $state<Flashcard[]>([]);
+ export const resourcesStore = dbStoreData('resources');
+ 
+ let resources = $state<Resource[]>(resourcesStore.data?.resources || []);
+ let annotations = $state<Annotation[]>(resourcesStore.data?.annotations || []);
+ let flashcards = $state<Flashcard[]>(resourcesStore.data?.flashcards || []);
 
-// Load initial data
-if (browser) {
-  const stored = dbStoreData('resources').data;
-  if (stored) {
-    resources = stored.resources || [];
-    annotations = stored.annotations || [];
-    flashcards = stored.flashcards || [];
-  }
-}
+
 
 function saveToDb() {
   if (browser) {
-    dbStoreData('resources').data = { resources, annotations, flashcards };
+    resourcesStore.data = { resources, annotations, flashcards };
   }
 }
 
@@ -57,9 +53,3 @@ export function addFlashcard(flashcard: Omit<Flashcard, 'id'>) {
   saveToDb();
   return newFlashcard;
 }
-
-export {
-  resources,
-  annotations,
-  flashcards
-};

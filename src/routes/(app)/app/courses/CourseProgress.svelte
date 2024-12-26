@@ -2,10 +2,24 @@
   import type { Course, CourseTopic } from '$lib/types';
   import { slide } from 'svelte/transition';
   import { SvelteSet } from 'svelte/reactivity'
-  
+  import { gamificationStore, addPoints
+  } from '$lib/data/gamification.svelte.ts';
+  import { coursesStore } from '$lib/data/index.svelte.ts';
+import RewardPopup from '$lib/components/gamification/RewardPopup.svelte'
   /** @type {Course} */
   let { course } = $props();
   
+  let reward = $state({})
+  let showReward = $state(false)
+  let gameState = $state(gamificationStore.data || {
+
+    points: 0,
+
+    level: 1,
+    streak: 0,
+    achievements: [],
+    activeChallenges: []
+  });
   let expandedTopics = $state<Set<string>>(new SvelteSet());
   
   function toggleTopic(id: string) {
@@ -20,15 +34,106 @@
     if (!topic.subtopics?.length) {
       return topic.completed ? 100 : 0;
     }
-    
     const completed = topic.subtopics?.filter(st => st.completed).length;
-    return Math.round((completed / topic.subtopics.length) * 100);
-  }
-</script>
+    const progress = Math.round((completed / topic.subtopics.length) * 100);
 
+    return progress;
+  }
+  
+
+
+
+  function calculateCourseProgress(): number {
+    if (!course.outline || !course.outline.topics || course.outline.topics.length === 0) {
+    return course.completed ? 100 : 0;
+    }
+    let totalTopics = course.outline?.topics?.length;
+      
+  let weightedProgressSum = 0;
+
+  course.outline.topics.forEach(topic => {
+    const topicProgress = calculateTopicProgress(topic);
+    weightedProgressSum += topicProgress;
+  });
+
+  return Math.round(weightedProgressSum / totalTopics);
+
+  }
+  const handleTopicCheck = (topic) => {
+    
+      course.outline.topics = course.outline.topics.map((currentTopic) => {
+      if(currentTopic.id !== topic.id) return currentTopic
+      // Check each subtopic, and change complete prop as needed
+      if(currentTopic.subtopics){
+    currentTopic.subtopics = currentTopic.subtopics?.map(subtopic => {
+      subtopic.completed = topic.completed ? true : false
+      return subtopic
+    })
+      }
+    
+    return currentTopic
+    })
+   
+    course.progress = calculateCourseProgress()
+    if(course.progress === 100) completeCourseTopic(topic)
+  coursesStore.update(course)
+
+  }
+   const checkIfTopicComplete = () => {
+     
+    course.outline.topics = course.outline.topics.map((topic) => {
+    if(calculateTopicProgress(topic) === 100) {
+      completeCourseTopic(topic)
+    topic.completed = true;
+      } else {
+    topic.completed = false;
+      }
+    return topic
+    })
+    course.progress = calculateCourseProgress()
+  coursesStore.update(course)
+  
+  }
+  
+  
+    function completeCourseTopic(topic) {
+    // Add points for completing a topic
+    addPoints(20);
+    reward = {title: "Completed topic", points : 20, message:"Welldone! Keep up the goodnwork"}
+    showReward = true
+    // Check if course is completed
+    const allTopicsCompleted = course.outline.topics.every(t => t.completed);
+    if (allTopicsCompleted) {
+     addPoints(100); // Bonus points for completing course
+     reward = {title: "Completed Course", points : 100, message:"Welldone! Keep up the goodnwork. Here are some bonus points"} 
+    showReward = true
+ 
+    }
+  }
+ 
+
+
+  
+</script>
+{showReward}
+{#if showReward}
+<RewardPopup title={reward.title} points={reward.points} message={reward.message} visible={showReward}/>
+{/if}
 <div class="space-y-6">
   <!-- Overall Progress -->
   <div class="bg-white rounded-lg shadow p-6">
+    
+<!-- Add to course progress section -->
+<div class="flex items-center justify-between mb-4">
+  <div>
+    <h3 class="font-medium text-gray-900">{course.name}</h3>
+    <p class="text-sm text-gray-600">Progress: {course.progress}%</p>
+  </div>
+  <span class="text-sm font-medium text-primary-600">
+    +20 points per topic
+  </span>
+</div>
+
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-lg font-semibold text-gray-900">Course Progress</h3>
       <span class="text-2xl font-bold text-primary-600">{course.progress}%</span>
@@ -63,11 +168,20 @@
     <div class="space-y-4">
       {#each course.outline.topics as topic (topic.id)}
         <div class="bg-white rounded-lg shadow">
+            <label class="flex items-center">
+                    <input
+                      type="checkbox"
+                      bind:checked={topic.completed}
+                    onchange={() => handleTopicCheck(topic)}
+                      class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                    />
+                  </label>
           <button
             class="w-full px-6 py-4 flex items-center justify-between"
             onclick={() => toggleTopic(topic.id)}
           >
             <div>
+             
               <h4 class="text-left font-medium text-gray-900">{topic.title}</h4>
               <p class="text-sm text-gray-600">
                 Progress: {calculateTopicProgress(topic)}%
@@ -92,6 +206,7 @@
                     <input
                       type="checkbox"
                       bind:checked={subtopic.completed}
+                      onchange={ checkIfTopicComplete}
                       class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                     />
                   </label>

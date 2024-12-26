@@ -1,38 +1,63 @@
  <script lang="ts">
   import type { SuggestedTask } from '$lib/types';
   import { fade, slide } from 'svelte/transition';
-   
+   import Icon from '$lib/icons/Icon.svelte'
+   import { tasksStore } from '$lib/data/index.svelte.ts';
+	import { addNotification } from '$lib/stores/notifications';
+
   interface Props {
-    tasks: SuggestedTask[];
+    course: Course;
     onSave: Function;
     generateTasks: Function;
   }
   let editingTask = $state(null)
-  let { tasks = $bindable(), onSave, generateTasks }: Props = $props();
-  
-  const addTask = () => {
-    tasks = [
-      ...tasks,
-      {
+  let {  course, onSave, generateTasks }: Props = $props();
+  let tasks = $state(tasksStore.selectMultipleWhere("course", course.code) || [])
+const newTask = $state({
         id: crypto.randomUUID(),
         title: '',
+        course: course.code,
         estimatedTime: 30,
         priority: 'medium',
-        dueOffset: 7
-      }
+        dueDate: 7
+      })
+  
+  function addTask() {
+    tasks = [
+      ...tasks,
+newTask
     ];
     editingTask = tasks[tasks.length - 1].id;
-  }
+		
+		const task = {
+			...newTask,
+			createdAt: new Date().toISOString(),
+			status: 'pending'
+		};
+
+		tasksStore.add(task);
+	}
+	function updateTask(task) {
+	  editingTask = editingTask === task.id ? null : task.id
+		tasksStore.put(task);
+	}
+	function removeTask(id) {
+		try {
+			tasksStore.delete(id);
+			addNotification('Task deleted successfully', 'success');
+		} catch (error) {
+			console.error('Failed to delete task:', error);
+			addNotification('Failed to delete task', 'error');
+		}
+	}
+
   
-  const removeTask = (id: string) => {
-    tasks = tasks.filter(t => t.id !== id);
-  }
   
 </script>
 
 <div class="space-y-6">
   <div class="flex justify-between items-center">
-    <h3 class="text-lg font-semibold text-gray-900">Suggested Tasks</h3>
+    <h3 class="text-lg font-semibold text-gray-900">Tasks</h3>
     <button 
       type="button"
       class="text-sm text-primary-600 hover:text-primary-700"
@@ -103,13 +128,15 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700">Due After (days)</label>
+              <label class="block text-sm font-medium text-gray-700">Due Date: </label>
               <input
-                type="number"
-                bind:value={task.dueOffset}
-                min="1"
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-              />
+				type="date"
+				id="duedate"
+				bind:value={task.dueDate}
+				required
+				class="input mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+			/>
+            
             </div>
           </div>
         </div>
@@ -127,18 +154,28 @@
                 Estimated Time: {task.estimatedTime} hours
               </p>
               <p class="text-sm text-gray-500 mt-1">
-                Due After: {task.dueOffset} days
+                Due Date: {task.dueDate} 
               </p>
             </div>
 
 {/if}
-        <div class="mt-4 flex justify-end">
+ 
+        <div class="mt-4 flex justify-start">
+            <button
+              type="button"
+              class="text-gray-600 hover:text-gray-900 mr-5"
+              onclick={() => updateTask(task)}
+            >
+            
+                  <Icon icon={editingTask === task.id ? 'check' : 'note'} h=5 w=5
+                  />
+            </button>
           <button
             type="button"
             class="text-red-600 hover:text-red-800"
             onclick={() => removeTask(task.id)}
           >
-            Remove Task
+            <Icon icon="trash" h=5 w=5 />
           </button>
         </div>
         

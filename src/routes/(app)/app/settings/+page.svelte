@@ -3,13 +3,10 @@
 	import { preventDefault } from 'svelte/legacy';
 	import { theme } from '$lib/stores/theme';
 
-	
-  import NotificationManagement from '$lib/components/settings/NotificationManagement.svelte';
 
-
-	import { settingsStore, coursesStore, studyData } from '$lib/data/index.svelte.ts';
+	import { settingsStore, studyData } from '$lib/data/index.svelte.ts';
 	
-	const courses = coursesStore.data || []
+
 	const baseSettings = {
 		theme: 'light',
 		language: 'en',
@@ -26,19 +23,7 @@
 	};
 	const settings = settingsStore.data ? {...settingsStore.data, ...baseSettings} : baseSettings
 	let studyPreferences = {}
-
-
-	let newCourse = $state({ name: '', strength: 5 });
-
-	function addCourse() {
-		if (!newCourse.name)  return
-			coursesStore.add(newCourse)
-			newCourse = { name: '', strength: 5 };
-	}
-
-	function removeCourse(course) {
-		coursesStore.delete(course)
-	}
+	
 
 	function updateStudyData() {
 		$studyData = {
@@ -160,48 +145,6 @@
 					</select>
 				</div>
 
-				<!-- Courses -->
-				<div>
-					<span class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-						Courses
-					</span>
-
-					<div class="space-y-2">
-						{#each courses as {id, name, strength}}
-							<div class="flex items-center gap-2">
-								<span class="flex-1 text-gray-700 dark:text-gray-300">{name}</span>
-								<div class="h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
-									<div
-										class="h-2.5 rounded-full bg-primary-600"
-										style="width: {strength * 10}%"
-									></div>
-								</div>
-								<button
-									onclick={() => removeCourse(id)}
-									class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-								>
-									Remove
-								</button>
-							</div>
-						{/each}
-					</div>
-
-					<div class="mt-2 flex flex-row gap-2">
-						<input
-							type="text"
-							placeholder="Course name"
-							bind:value={newCourse.name}
-							class="w-10 flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-						/>
-						<input type="range" min="0" max="10" bind:value={newCourse.strength} class="w-24" />
-						<button
-							onclick={addCourse}
-							class="rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-						>
-							Add
-						</button>
-					</div>
-				</div>
 			</div>
 		</div>
 
