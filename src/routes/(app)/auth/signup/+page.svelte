@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state'
+	import { page } from '$app/state';
 
 	import { signIn } from 'svelte-guardian/client';
 	import { enhance, applyAction } from '$app/forms';
@@ -16,19 +16,17 @@
 		password: '',
 		confirmPassword: ''
 	});
-	let user = form?.user
+	let user = form?.user;
 	let error = $state('');
 
+	if (form?.success) {
+		console.log({ name: user.name, email: user.email });
+		profileStore.data = { name: user.name, email: user.email };
 
-			if (form?.success) {
-
-console.log({ name: user.name, email: user.email })
-				profileStore.data = { name: user.name, email: user.email };
-		
-	handleSignIn()
-				//goto('/auth/onboarding');
-			}
-			async function handleSignIn() {
+		handleSignIn();
+		//goto('/auth/onboarding');
+	}
+	async function handleSignIn() {
 		try {
 			const result = await signIn('credentials', {
 				email: formData.email,
@@ -36,15 +34,13 @@ console.log({ name: user.name, email: user.email })
 				redirect: false,
 				callbackUrl: '/auth/onboarding'
 			});
-			console.log(result)
-			console.log(await result.json())
+			console.log(result);
+			console.log(await result.json());
 
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-			  if(page.data)
-			  console.log(page.data)
-			
+				if (page.data) console.log(page.data);
 			}
 		} catch (e) {
 			error = 'An error occurred. Please try again.';
@@ -75,24 +71,26 @@ console.log({ name: user.name, email: user.email })
 				</div>
 			{/if}
 
-			<form class="space-y-6" method="POST" use:enhance={
-			({ formData }) => {
+			<form
+				class="space-y-6"
+				method="POST"
+				use:enhance={({ formData }) => {
+					const password = formData.get('password');
+					const confirmPassword = formData.get('confirmPassword');
 
-				const password = formData.get('password');
-				const confirmPassword = formData.get('confirmPassword');
+					if (password !== confirmPassword) return (error = 'Passwords do not match');
 
-		if (password !== confirmPassword) return  error = 'Passwords do not match' ;
-
-				return async ({ result }) => {
-					console.log(result)
-					// `result` is an `ActionResult` object
-					if (result.type === 'redirect') {
-						goto(result.location);
-					} else {
-						await applyAction(result);
-					}
-				};
-			}}>
+					return async ({ result }) => {
+						console.log(result);
+						// `result` is an `ActionResult` object
+						if (result.type === 'redirect') {
+							goto(result.location);
+						} else {
+							await applyAction(result);
+						}
+					};
+				}}
+			>
 				<div>
 					<label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
 						Name
@@ -170,7 +168,7 @@ console.log({ name: user.name, email: user.email })
 				<div class="mt-6">
 					<button
 						type="button"
-						onclick={() => signIn('google', {callbackUrl: '/auth/onboarding'})}
+						onclick={() => signIn('google', { callbackUrl: '/auth/onboarding' })}
 						class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
 					>
 						<svg class="mr-2 h-5 w-5" viewBox="0 0 24 24">

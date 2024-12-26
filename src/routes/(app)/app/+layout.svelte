@@ -8,28 +8,25 @@
 	import { slide, fade } from 'svelte/transition';
 	import { swipe } from '$lib/actions/swipe';
 	import { profileStore } from '$lib/data/index.svelte.ts';
-	import Icon from '$lib/icons/Icon.svelte'
+	import Icon from '$lib/icons/Icon.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 	import SideNav from '$lib/components/layout/SideNav.svelte';
 	import BottomNav from '$lib/components/layout/BottomNav.svelte';
-	
-	import NotificationToast from '$lib/components/NotificationToast.svelte';
-  	import FloatingActionButton from '$lib/components/shared/FloatingActionButton.svelte';
-  
-	  import { setupNotifications } from '$lib/utils/notifications';
 
-	
+	import NotificationToast from '$lib/components/NotificationToast.svelte';
+	import FloatingActionButton from '$lib/components/shared/FloatingActionButton.svelte';
+
+	import { setupNotifications } from '$lib/utils/notifications';
+
 	let isNavOpen = $state(false);
-	
+
 	onMount(async () => {
 		if (browser) await initDB();
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register('/service-worker.js');
 		}
 		await setupNotifications();
-
-  });
-
+	});
 
 	const profile = profileStore.data || {};
 
@@ -40,21 +37,19 @@
 		$theme = $theme === 'light' ? 'dark' : 'light';
 	}
 
-  import { clickOutside } from '$lib/actions/clickOutside';
-  
-  let isOpen = $state(false);
-  
-  const menuItems = [
-    { label: 'Courses', href: '/app/courses', icon: 'book' },
-    { label: 'Notes', href: '/app/notes', icon:'note' },
-    { label: 'Settings', href: '/app/settings', icon: 'cog'},
-    { label: 'Help', href: '/app/help', icon: 'help' }
-  ];
+	import { clickOutside } from '$lib/actions/clickOutside';
+
+	let isOpen = $state(false);
+
+	const menuItems = [
+		{ label: 'Courses', href: '/app/courses', icon: 'book' },
+		{ label: 'Notes', href: '/app/notes', icon: 'note' },
+		{ label: 'Settings', href: '/app/settings', icon: 'cog' },
+		{ label: 'Help', href: '/app/help', icon: 'help' }
+	];
 </script>
 
 <div class="min-h-screen bg-gray-50 transition-colors duration-200 dark:bg-gray-900">
-
-
 	<SideNav bind:isNavOpen />
 	<!-- Main Content -->
 	<div class="sm:{isNavOpen ? 'ml-64' : 'ml-20'} min-h-screen transition-all duration-300">
@@ -65,11 +60,11 @@
 		</main>
 	</div>
 	{#if !page.url.pathname.startsWith('/app/settings')}
-	<Header />
-	<FloatingActionButton />
-	<BottomNav />
- 	 {/if}
-	
+		<Header />
+		<FloatingActionButton />
+		<BottomNav />
+	{/if}
+
 	<!-- Notifications -->
 	<NotificationToast />
 </div>

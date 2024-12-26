@@ -7,8 +7,7 @@ export const load = async (event) => {
 	const session = await event.locals.auth();
 
 	if (session?.user?.id) {
-
-		  return redirect(303, '/app')
+		return redirect(303, '/app');
 	}
 
 	return {
@@ -20,18 +19,17 @@ const prisma = new PrismaClient();
 
 export const actions = {
 	default: async ({ request }) => {
-
 		const data = await request.formData();
-		console.log(data)
+		console.log(data);
 		const name = data.get('name');
 		const email = data.get('email');
 		const password = data.get('password');
 		const confirmPassword = data.get('confirmPassword');
-console.log("sign up data", {
-	email,
-	name,
-	password
-})
+		console.log('sign up data', {
+			email,
+			name,
+			password
+		});
 		if (password !== confirmPassword) return { success: false, error: 'Passwords do not match' };
 
 		try {
@@ -41,10 +39,10 @@ console.log("sign up data", {
 				password
 			});
 
-			return result
+			return result;
 		} catch (error) {
 			console.error('Signup failed:', error);
-			return { success: false, error: "Signup failed" };
+			return { success: false, error: 'Signup failed' };
 		}
 		// TODO log the user in
 	}

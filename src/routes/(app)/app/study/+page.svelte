@@ -19,7 +19,7 @@
 	let loading = $state(true);
 	let error = $state(null);
 	let showFeedback = $state(false);
-	let activeSession = $state(studySessionsStore.active || null)
+	let activeSession = $state(studySessionsStore.active || null);
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
 
@@ -28,50 +28,47 @@
 		todaySessions = await getStudySessions(today);
 	});
 
-	function startStudySession(course = "General Study", session ) {	 
-
+	function startStudySession(course = 'General Study', session) {
 		isStudying = true;
 		startTime = new Date();
 		currentSession = {
 			startTime,
 			course
 		};
-	    studySessionsStore.active = session || currentSession;
-	console.log("activeSession")
-	console.log(studySessionsStore.active)
+		studySessionsStore.active = session || currentSession;
+		console.log('activeSession');
+		console.log(studySessionsStore.active);
 		timer = setInterval(() => {
 			elapsedTime = Math.floor((new Date() - startTime) / 1000);
 		}, 1000);
-		    
-    // Update streak and add points
-    updateStreak();
-    addPoints(10); // Base points for starting a study session
-    
-    const stats = {
-      totalStudyHours: calculateTotalStudyHours(),
-      completedTasks: tasks.filter(t => t.completed).length,
-      currentStreak: gameState.streak
-    };
-    
-    const newAchievements = checkAchievements(stats);
-    newAchievements.forEach(achievement => {
-      unlockAchievement(achievement);
-    });
-    
-    // Update study marathon challenge
-    const studyChallenge = gameState.activeChallenges.find(c => c.id === 'study_marathon');
-    if (studyChallenge) {
-      updateChallenge('study_marathon', stats.totalStudyHours);
-    }
-  
 
+		// Update streak and add points
+		updateStreak();
+		addPoints(10); // Base points for starting a study session
+
+		const stats = {
+			totalStudyHours: calculateTotalStudyHours(),
+			completedTasks: tasks.filter((t) => t.completed).length,
+			currentStreak: gameState.streak
+		};
+
+		const newAchievements = checkAchievements(stats);
+		newAchievements.forEach((achievement) => {
+			unlockAchievement(achievement);
+		});
+
+		// Update study marathon challenge
+		const studyChallenge = gameState.activeChallenges.find((c) => c.id === 'study_marathon');
+		if (studyChallenge) {
+			updateChallenge('study_marathon', stats.totalStudyHours);
+		}
 	}
 
 	async function endStudySession(session) {
 		isStudying = false;
 		showFeedback = true;
 		studySessionsStore.active = null;
-		
+
 		clearInterval(timer);
 
 		const endTime = new Date();
@@ -108,8 +105,6 @@
 	function getTotalStudyTime() {
 		return todaySessions.reduce((total, session) => total + (session.duration || 0), 0);
 	}
-	
-	
 
 	function handleFeedbackSubmit(feedback) {
 		studySessionsStore.put({
@@ -122,45 +117,43 @@
 		addNotification('Study session completed!', 'success');
 	}
 	import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamification.svelte.ts';
-  import { checkAchievements } from '$lib/utils/gamification';
-  
+	import { checkAchievements } from '$lib/utils/gamification';
 
-  let gameState = $state(gamificationStore.data || {
-  points: 0,
-  level: 1,
-  streak: 0,
-  achievements: [],
-  activeChallenges: []
-});
+	let gameState = $state(
+		gamificationStore.data || {
+			points: 0,
+			level: 1,
+			streak: 0,
+			achievements: [],
+			activeChallenges: []
+		}
+	);
 
-  
-  function calculateTotalStudyHours() {
-    // Calculate total study hours from sessions
-    return 0; // Implement actual calculation
-  }
+	function calculateTotalStudyHours() {
+		// Calculate total study hours from sessions
+		return 0; // Implement actual calculation
+	}
 </script>
 
 <!-- Add to schedule block -->
-<div class="flex items-center justify-between mb-4">
-  <h2 class="text-lg font-semibold text-gray-900">Your Study Schedule</h2>
-  <div class="flex items-center gap-2">
-    <span class="text-sm text-gray-600">Current Streak: {gameState.streak} days</span>
-    <button 
-      class="btn-primary"
-      onclick={startStudySession}
-    >
-      Start Session
-    </button>
-  </div>
+<div class="mb-4 flex items-center justify-between">
+	<h2 class="text-lg font-semibold text-gray-900">Your Study Schedule</h2>
+	<div class="flex items-center gap-2">
+		<span class="text-sm text-gray-600">Current Streak: {gameState.streak} days</span>
+		<button class="btn-primary" onclick={startStudySession}> Start Session </button>
+	</div>
 </div>
-
 
 <div class="mx-auto max-w-4xl">
 	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Study Session</h1>
 
 	<!-- Timer Card -->
-	<StudySessionTimer session={studySessionsStore.active} onStart={startStudySession} onEnd={endStudySession} />
-		
+	<StudySessionTimer
+		session={studySessionsStore.active}
+		onStart={startStudySession}
+		onEnd={endStudySession}
+	/>
+
 	<!-- <div class="mb-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
 		<div class="text-center">
 			<div class="mb-8 font-mono text-6xl text-primary-600 dark:text-primary-400">
@@ -199,7 +192,6 @@
 	</div>
 	<!-- Study Session Column -->
 	<div class="space-y-6">
-
 		{#if showFeedback}
 			<SessionFeedback onSubmit={handleFeedbackSubmit} />
 		{/if}

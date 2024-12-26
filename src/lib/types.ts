@@ -93,42 +93,42 @@ export interface Progress {
 
 // Courses Types
 export interface CourseOutline {
-  id: string;
-  title: string;
-  description?: string;
-  topics: CourseTopic[];
+	id: string;
+	title: string;
+	description?: string;
+	topics: CourseTopic[];
 }
 
 export interface CourseTopic {
-  id: string;
-  title: string;
-  description?: string;
-  estimatedHours: number;
-  subtopics?: CourseTopic[];
-  completed?: boolean;
+	id: string;
+	title: string;
+	description?: string;
+	estimatedHours: number;
+	subtopics?: CourseTopic[];
+	completed?: boolean;
 }
 
 export interface Course {
-  id: string;
-  name: string;
-  code: string;
-  description?: string;
-  strength: number;
-  estimatedHours: number;
-  outline?: CourseOutline;
-  progress?: number;
-  createdAt: string;
-  updatedAt: string;
+	id: string;
+	name: string;
+	code: string;
+	description?: string;
+	strength: number;
+	estimatedHours: number;
+	outline?: CourseOutline;
+	progress?: number;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface SuggestedTask {
-  id: string;
-  title: string;
-  description?: string;
-  estimatedTime: number;
-  priority: 'low' | 'medium' | 'high';
-  topic?: string;
-  dueOffset?: number; // days from course start
+	id: string;
+	title: string;
+	description?: string;
+	estimatedTime: number;
+	priority: 'low' | 'medium' | 'high';
+	topic?: string;
+	dueOffset?: number; // days from course start
 }
 
 export interface GameState {
@@ -140,70 +140,67 @@ export interface GameState {
 }
 
 export interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  condition: string;
-  points: number;
-  unlockedAt?: string;
+	id: string;
+	title: string;
+	description: string;
+	icon: string;
+	condition: string;
+	points: number;
+	unlockedAt?: string;
 }
 export interface Stats {
 	completedTasks: number;
 	studyHours: number;
 	currentStreak: number;
-
 }
 
 export interface Streak {
-  currentStreak: number;
-  longestStreak: number;
-  lastStudyDate: string;
+	currentStreak: number;
+	longestStreak: number;
+	lastStudyDate: string;
 }
 
 export interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  goal: number;
-  progress: number;
-  reward: number;
-  startDate: string;
-  endDate: string;
-  completed: boolean;
+	id: string;
+	title: string;
+	description: string;
+	goal: number;
+	progress: number;
+	reward: number;
+	startDate: string;
+	endDate: string;
+	completed: boolean;
 }
-
-
 
 //Resources types
 export interface Resource {
-  id: string;
-  type: 'pdf' | 'video' | 'flashcard';
-  title: string;
-  description?: string;
-  url: string;
-  courseId?: string;
-  createdAt: string;
-  updatedAt: string;
+	id: string;
+	type: 'pdf' | 'video' | 'flashcard';
+	title: string;
+	description?: string;
+	url: string;
+	courseId?: string;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface Annotation {
-  id: string;
-  resourceId: string;
-  page?: number;
-  timestamp?: number;
-  content: string;
-  color: string;
-  position?: { x: number; y: number };
-  createdAt: string;
+	id: string;
+	resourceId: string;
+	page?: number;
+	timestamp?: number;
+	content: string;
+	color: string;
+	position?: { x: number; y: number };
+	createdAt: string;
 }
 
 export interface Flashcard {
-  id: string;
-  front: string;
-  back: string;
-  resourceId: string;
-  lastReviewed?: string;
-  nextReview?: string;
-  difficulty: number;
+	id: string;
+	front: string;
+	back: string;
+	resourceId: string;
+	lastReviewed?: string;
+	nextReview?: string;
+	difficulty: number;
 }

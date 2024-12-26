@@ -20,19 +20,19 @@
 >
 	<div class="container mx-auto px-4 py-20">
 		<div class="mx-auto max-w-4xl text-center">
-			<a href="/" class="text-6xl font-bold text-primary-600 dark:text-primary-400 flez-col text-center">
+			<a
+				href="/"
+				class="flez-col text-center text-6xl font-bold text-primary-600 dark:text-primary-400"
+			>
 				<div class="flex items-center justify-center">
 					<span class="flex">
+						<img src="/favicon-512x512.png" alt="Modo" class=" mx-auto flex h-12 gap-3" />
 
-					<img src="/favicon-512x512.png" alt="Modo" class=" flex gap-3 mx-auto h-12" />
-					
 						odo
 					</span>
-					
-				</div>		
-			  
-		</a>
-		  
+				</div>
+			</a>
+
 			<h1 class="mb-6 text-5xl font-bold text-gray-900 dark:text-white">
 				Transform Your Study Habits with AI
 			</h1>

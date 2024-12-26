@@ -1,7 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-import { fade, slide } from 'svelte/transition'
+	import { fade, slide } from 'svelte/transition';
 	import { user } from '$lib/stores/auth';
 	import { coursesStore, settingsStore } from '$lib/data/index.svelte.ts';
 
@@ -32,22 +32,19 @@ import { fade, slide } from 'svelte/transition'
 		}
 	];
 
-	const courses = coursesStore.data || ['']
+	const courses = coursesStore.data || [''];
 
-
-	
 	let newCourse = $state({ name: '', strength: 5 });
 
-function addCourse() {
-	if (!newCourse.name)  return
-		coursesStore.add(newCourse)
+	function addCourse() {
+		if (!newCourse.name) return;
+		coursesStore.add(newCourse);
 		newCourse = { name: '', strength: 5 };
-}
+	}
 
-function removeCourse(course) {
-	coursesStore.delete(course)
-}
-
+	function removeCourse(course) {
+		coursesStore.delete(course);
+	}
 
 	async function nextStep() {
 		if (currentStep < steps.length - 1) {
@@ -65,7 +62,7 @@ function removeCourse(course) {
 
 	async function savePreferences() {
 		settingsStore.data = formData;
-	  	goto('/app')
+		goto('/app');
 	}
 
 	onMount(() => {
@@ -109,50 +106,46 @@ function removeCourse(course) {
 
 			<!-- Step Content -->
 			{#if currentStep === 0}
-			
 				<div class="space-y-4">
-						<div class="space-y-2">
-							{#each courses as {id, name, strength}, i}
-								<div class="flex items-center gap-2">
-									<span class="flex-1 text-gray-700 dark:text-gray-300">{name}</span>
-									<div class="h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
-										<div
-											class="h-2.5 rounded-full bg-primary-600"
-											style="width: {strength * 10}%"
-										></div>
-									</div>
-							
-									
-									<button
-										type="button"
-										onclick={() => removeCourse(id)}
-										class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-									>
-										Remove
-									</button>
-								
+					<div class="space-y-2">
+						{#each courses as { id, name, strength }, i}
+							<div class="flex items-center gap-2">
+								<span class="flex-1 text-gray-700 dark:text-gray-300">{name}</span>
+								<div class="h-2.5 w-24 rounded-full bg-gray-200 dark:bg-gray-700">
+									<div
+										class="h-2.5 rounded-full bg-primary-600"
+										style="width: {strength * 10}%"
+									></div>
 								</div>
-							{/each}
-						</div>
-	
-						<div class="mt-2 flex flex-row gap-2" in:slide>
-							<input
-								type="text"
-								placeholder="Course name"
-								bind:value={newCourse.name}
-								class="w-100 flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-							/>
-						
-							<input type="range" min="0" max="10" bind:value={newCourse.strength} class="w-24" />
-							<button
-								onclick={addCourse}
-								class="rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-							>
-								Add
-							</button>
-						</div>
+
+								<button
+									type="button"
+									onclick={() => removeCourse(id)}
+									class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+								>
+									Remove
+								</button>
+							</div>
+						{/each}
 					</div>
-				
+
+					<div class="mt-2 flex flex-row gap-2" in:slide>
+						<input
+							type="text"
+							placeholder="Course name"
+							bind:value={newCourse.name}
+							class="w-100 flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+						/>
+
+						<input type="range" min="0" max="10" bind:value={newCourse.strength} class="w-24" />
+						<button
+							onclick={addCourse}
+							class="rounded-md bg-primary-600 px-4 py-2 text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+						>
+							Add
+						</button>
+					</div>
+				</div>
 			{:else if currentStep === 1}
 				<div class="space-y-6" in:slide>
 					<div class="grid grid-cols-2 gap-4">

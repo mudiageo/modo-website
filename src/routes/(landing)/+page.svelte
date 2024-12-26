@@ -54,7 +54,10 @@
 		<div class="container mx-auto px-4">
 			<h2 class="mb-12 text-center text-3xl font-bold">Key Features</h2>
 			<div class="grid gap-8 md:grid-cols-3">
-				<div class="rounded-lg bg-white p-6 shadow-lg" transition:slide="{{delay: 250, duration: 300, easing: quintOut }}">
+				<div
+					class="rounded-lg bg-white p-6 shadow-lg"
+					transition:slide={{ delay: 250, duration: 300, easing: quintOut }}
+				>
 					<h3 class="mb-4 text-xl font-semibold">AI Study Planner</h3>
 					<p class="text-gray-600">
 						Get personalized study schedules based on your learning style and goals.
@@ -77,7 +80,7 @@
 	</section>
 
 	<!-- CTA Section -->
-	<section class="bg-primary-600 py-20 text-white" transition:fade="{{delay: 250, duration: 300}}">
+	<section class="bg-primary-600 py-20 text-white" transition:fade={{ delay: 250, duration: 300 }}>
 		<div class="container mx-auto px-4 text-center">
 			<h2 class="mb-6 text-3xl font-bold">Ready to Transform Your Study Habits?</h2>
 			<p class="mb-8 text-xl">

@@ -1,18 +1,20 @@
 # Modo
+
 Get personalized study plans, smart task management, and AI-driven insights to boost your academic performance.
 
 ## Key Features
 
 - AI Study Planner
-Get personalized study schedules based on your learning style and goals.
+  Get personalized study schedules based on your learning style and goals.
 
 - Smart Task Management
-Organize tasks, set priorities, and track your progress effortlessly.
+  Organize tasks, set priorities, and track your progress effortlessly.
 
 - Progress Analytics
-Visualize your progress and get insights to improve your study habit
+  Visualize your progress and get insights to improve your study habit
 
 ## Developing
+
 Clone repo, then cd into it
 
 ```bash

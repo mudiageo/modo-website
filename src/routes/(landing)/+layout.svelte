@@ -69,7 +69,7 @@
 					</button>
 					<a
 						href="/welcome"
-						class="text-gray-600 transition-colors hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 btn-primary"
+						class="btn-primary text-gray-600 transition-colors hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400"
 						>Go to app</a
 					>
 				</div>

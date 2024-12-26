@@ -1,8 +1,6 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import { handle as authHandle, middleware } from '$lib/server/auth';
 
-
-
 // 		trustHost: true
 
 // 	Premium guard middleware

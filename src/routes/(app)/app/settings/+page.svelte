@@ -3,9 +3,7 @@
 	import { preventDefault } from 'svelte/legacy';
 	import { theme } from '$lib/stores/theme';
 
-
 	import { settingsStore, studyData } from '$lib/data/index.svelte.ts';
-	
 
 	const baseSettings = {
 		theme: 'light',
@@ -18,12 +16,11 @@
 		studyPreferences: {
 			stressLevel: $studyData.stressLevel,
 			focusScore: $studyData.focusScore,
-			breakFrequency: $studyData.breakFrequency,
+			breakFrequency: $studyData.breakFrequency
 		}
 	};
-	const settings = settingsStore.data ? {...settingsStore.data, ...baseSettings} : baseSettings
-	let studyPreferences = {}
-	
+	const settings = settingsStore.data ? { ...settingsStore.data, ...baseSettings } : baseSettings;
+	let studyPreferences = {};
 
 	function updateStudyData() {
 		$studyData = {
@@ -39,33 +36,32 @@
 </script>
 
 <div class="space-y-8">
-  <div>
-    <h1 class="text-2xl font-bold text-gray-900">General Settings</h1>
-    <p class="mt-1 text-sm text-gray-500">Manage your app preferences and account settings.</p>
-  </div>
+	<div>
+		<h1 class="text-2xl font-bold text-gray-900">General Settings</h1>
+		<p class="mt-1 text-sm text-gray-500">Manage your app preferences and account settings.</p>
+	</div>
 
-  <!-- Theme Settings -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Theme</h2>
-    <select
-      bind:value={$theme}
-      class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
-    >
-      <option value="light">Light</option>
-      <option value="dark">Dark</option>
-      <option value="system">System Default</option>
-    </select>
-  </div>
+	<!-- Theme Settings -->
+	<div class="rounded-lg bg-white p-6 shadow">
+		<h2 class="mb-4 text-lg font-medium text-gray-900">Theme</h2>
+		<select
+			bind:value={$theme}
+			class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+		>
+			<option value="light">Light</option>
+			<option value="dark">Dark</option>
+			<option value="system">System Default</option>
+		</select>
+	</div>
 
-  <!-- Study Preferences -->
-  <div class="bg-white rounded-lg shadow p-6">
-    <h2 class="text-lg font-medium text-gray-900 mb-4">Study Preferences</h2>
-    <div class="space-y-4">
-      <!-- Add study preference controls here -->
-    </div>
-  </div>
+	<!-- Study Preferences -->
+	<div class="rounded-lg bg-white p-6 shadow">
+		<h2 class="mb-4 text-lg font-medium text-gray-900">Study Preferences</h2>
+		<div class="space-y-4">
+			<!-- Add study preference controls here -->
+		</div>
+	</div>
 </div>
-
 
 <div class="mx-auto max-w-4xl">
 	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
@@ -91,7 +87,10 @@
 			<div class="space-y-4">
 				<!-- Stress Level -->
 				<div>
-					<label for="stress-level" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<label
+						for="stress-level"
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+					>
 						Stress Level (1-10)
 					</label>
 					<input
@@ -110,7 +109,10 @@
 
 				<!-- Focus Score -->
 				<div>
-					<label for="focus-score" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<label
+						for="focus-score"
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+					>
 						Focus Score (0-100)
 					</label>
 					<input
@@ -129,7 +131,10 @@
 
 				<!-- Break Frequency -->
 				<div>
-					<label for="break-frequency" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+					<label
+						for="break-frequency"
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+					>
 						Break Frequency (minutes)
 					</label>
 					<select
@@ -144,7 +149,6 @@
 						<option value={60}>Every hour</option>
 					</select>
 				</div>
-
 			</div>
 		</div>
 

@@ -4,9 +4,14 @@
 		viewMode: 'daily' | 'weekly' | 'monthly';
 	}
 
-	let { selectedDate = $bindable(), viewMode = $bindable(), changeViewMode, changeDate, onTodayClick  }: Props = $props();
+	let {
+		selectedDate = $bindable(),
+		viewMode = $bindable(),
+		changeViewMode,
+		changeDate,
+		onTodayClick
+	}: Props = $props();
 
-	
 	let formattedDate = $derived(
 		new Intl.DateTimeFormat('en-US', {
 			weekday: 'long',

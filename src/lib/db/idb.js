@@ -48,22 +48,22 @@ export async function initDB() {
 			if (!db.objectStoreNames.contains('recommendations')) {
 				db.createObjectStore('recommendations');
 			}
-			
+
 			// Game state and elements store
 			if (!db.objectStoreNames.contains('gamification')) {
 				db.createObjectStore('gamification');
 			}
-			
+
 			// achievements store
 			if (!db.objectStoreNames.contains('achievements')) {
 				db.createObjectStore('achievements');
 			}
-			
+
 			// resources store
 			if (!db.objectStoreNames.contains('resources')) {
 				db.createObjectStore('resources');
 			}
-			
+
 			// Subscriptions store
 			if (!db.objectStoreNames.contains('subscriptions')) {
 				db.createObjectStore('subscriptions');

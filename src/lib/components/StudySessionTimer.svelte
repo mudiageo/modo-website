@@ -11,16 +11,16 @@
 	let timerInterval: number;
 	let startTime = $state(new Date());
 	let course = $state('');
-	let courses = coursesStore.data?.map(course => course.name) || [];
-	
+	let courses = coursesStore.data?.map((course) => course.name) || [];
+
 	onMount(() => {
 		if (studySessionsStore.active) {
-			console.log("studystudySessionsStore.active")
-			console.log(studySessionsStore.active)
+			console.log('studystudySessionsStore.active');
+			console.log(studySessionsStore.active);
 			timer = studySessionsStore.active.timer || 0;
 			isBreak = studySessionsStore.active.isBreak;
 			course = studySessionsStore.active.course;
-		//	startTimer();
+			//	startTimer();
 		}
 	});
 
@@ -35,15 +35,18 @@
 				// 25 minutes
 				isBreak = true;
 				timer = 0;
-				if(studySessionsStore.active) 	studySessionsStore.active = { ...studySessionsStore.active, isBreak: true, breaks: studySessionsStore.active.breaks + 1 }
-		
-		
+				if (studySessionsStore.active)
+					studySessionsStore.active = {
+						...studySessionsStore.active,
+						isBreak: true,
+						breaks: studySessionsStore.active.breaks + 1
+					};
 			} else if (isBreak && timer % 300 === 0) {
 				// 5 minutes
 				isBreak = false;
 				timer = 0;
-				if(studySessionsStore.active) 	studySessionsStore.active = { ...studySessionsStore.active, isBreak: false }
-		
+				if (studySessionsStore.active)
+					studySessionsStore.active = { ...studySessionsStore.active, isBreak: false };
 			}
 		}, 1000);
 	}
@@ -56,9 +59,8 @@
 
 	function handleStartSession() {
 		if (course) {
-		  
 			onStart(course, session);
-			console.log(studySessionsStore.active)
+			console.log(studySessionsStore.active);
 			startTimer();
 		}
 	}
@@ -67,7 +69,7 @@
 		clearInterval(timerInterval);
 		endSession(8, 'good'); // Example values, replace with actual user input
 		onEnd?.();
-		timer = 0
+		timer = 0;
 	}
 </script>
 
@@ -97,32 +99,31 @@
 			</button>
 		</div>
 	{:else}
-<div class="space-y-6" in:slide>
-		<div class="text-center">
-			<p class="text-sm text-gray-600 dark:text-gray-400">
-				{isBreak ? 'Break Time!' : 'Studying'}: {session?.task?.title}
-			</p>
-			<p class="mt-2 text-4xl font-bold text-gray-900 dark:text-white">
-				{formatTime(timer)}
-			</p>
-			<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-				{isBreak ? 'Next study session in:' : 'Break in:'}
-				{formatTime(isBreak ? 300 - (timer % 300) : 1500 - (timer % 1500))}
-			</p>
-		</div>
-
-		<div class="flex items-center justify-between">
-			<div class="text-sm text-gray-600 dark:text-gray-400">
-				Started: {startTime.toLocaleTimeString()}
+		<div class="space-y-6" in:slide>
+			<div class="text-center">
+				<p class="text-sm text-gray-600 dark:text-gray-400">
+					{isBreak ? 'Break Time!' : 'Studying'}: {session?.task?.title}
+				</p>
+				<p class="mt-2 text-4xl font-bold text-gray-900 dark:text-white">
+					{formatTime(timer)}
+				</p>
+				<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+					{isBreak ? 'Next study session in:' : 'Break in:'}
+					{formatTime(isBreak ? 300 - (timer % 300) : 1500 - (timer % 1500))}
+				</p>
 			</div>
-			<button
-				class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-				onclick={handleEndSession}
-			>
-				End Session
-			</button>
+
+			<div class="flex items-center justify-between">
+				<div class="text-sm text-gray-600 dark:text-gray-400">
+					Started: {startTime.toLocaleTimeString()}
+				</div>
+				<button
+					class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+					onclick={handleEndSession}
+				>
+					End Session
+				</button>
+			</div>
 		</div>
-	</div>
-	
 	{/if}
 </div>

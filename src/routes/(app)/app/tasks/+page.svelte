@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { preventDefault } from 'svelte/legacy';
 	import { fade, slide } from 'svelte/transition';
-	import { page } from '$app/state'
+	import { page } from '$app/state';
 	import { swipe } from '$lib/actions/swipe';
 	import { dndzone } from 'svelte-dnd-action';
 	import { tasksStore, studyData } from '$lib/data/index.svelte.ts';
@@ -26,11 +26,11 @@
 		priority: 'medium',
 		estimatedTime: 30
 	});
-  onMount(() => {
-    if (page.url.searchParams.get('new') === 'true') {
-      showTaskForm = true;
-    }
-  });
+	onMount(() => {
+		if (page.url.searchParams.get('new') === 'true') {
+			showTaskForm = true;
+		}
+	});
 	async function addTask() {
 		if (!newTask.title || !newTask.course || !newTask.dueDate) {
 			addNotification('Please fill in all required fields', 'warning');
@@ -60,8 +60,6 @@
 			addNotification('Please fill in all required fields', 'warning');
 			return;
 		}
-
-
 
 		tasksStore.put(task);
 		updateStudyData();
@@ -114,7 +112,7 @@
 	async function handleTaskSubmit(taskData) {
 		try {
 			newTask = taskData;
-			(editingTask) ? updateTask(taskData) : addTask(newTask);
+			editingTask ? updateTask(taskData) : addTask(newTask);
 			showTaskForm = false;
 			editingTask = null;
 		} catch (error) {
@@ -145,11 +143,11 @@
 	const flipDurationMs = 300;
 
 	function handleDndConsider(e) {
-console.log(e)
+		console.log(e);
 	}
 
 	function handleDndFinalize(e) {
-		console.log(e)
+		console.log(e);
 		handleTaskReorder(tasks);
 	}
 </script>
@@ -166,7 +164,6 @@ console.log(e)
 		<button class="btn-primary" onclick={() => (showTaskForm = true)}> Add Task </button>
 	</div>
 
-	
 	<div class="card">
 		<div class="border-b border-gray-200 dark:border-gray-700">
 			<nav class="flex" aria-label="Tabs">
@@ -186,16 +183,16 @@ console.log(e)
 		</div>
 
 		<div class="p-6">
-				<div
-					use:dndzone={{ items: filteredTasks, flipDurationMs }}
-					onconsider={handleDndConsider}
-					onfinalize={handleDndFinalize}
-					class="space-y-2"
-				>
-			{#if filteredTasks.length > 0}
+			<div
+				use:dndzone={{ items: filteredTasks, flipDurationMs }}
+				onconsider={handleDndConsider}
+				onfinalize={handleDndFinalize}
+				class="space-y-2"
+			>
+				{#if filteredTasks.length > 0}
 					{#each filteredTasks as task (task.id)}
 						<div
-							class="flex items-center justify-between rounded-lg bg-gray-50 p-4 dark:bg-gray-700 shadow-sm border border-gray-200 flex items-center gap-4"
+							class="flex flex items-center items-center justify-between gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm dark:bg-gray-700"
 							in:slide|local
 							out:slide|local
 						>
@@ -265,10 +262,10 @@ console.log(e)
 							</div>
 						</div>
 					{/each}
-			{:else}
-				<p class="py-4 text-center text-gray-500 dark:text-gray-400">No tasks found.</p>
-			{/if}
-				</div>
+				{:else}
+					<p class="py-4 text-center text-gray-500 dark:text-gray-400">No tasks found.</p>
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>

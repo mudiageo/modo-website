@@ -33,7 +33,7 @@ function createOptimalSchedule(tasks, preferences) {
 		// Add break if needed
 		if (schedule.length % 2 === 0) {
 			currentTime = new Date(currentTime.getTime() + 15 * 60000); // 15-minute break
-			
+
 			schedule.push({
 				date: new Date(currentTime).toISOString().slice(0, 10),
 				task: {},

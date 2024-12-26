@@ -33,16 +33,16 @@ export const getFromStoreIndexWhere = async (store, storeIndex, value) => {
 		console.log(data);
 	}
 	await tx.done;
-	return data
+	return data;
 };
-export const dbStoreData = (store, storeKey = "") => {
+export const dbStoreData = (store, storeKey = '') => {
 	let data = $state([]);
 
 	if (browser) {
 		getFromStoreIndexWhere('studySessions', 'date', '');
 		populateData(store).then((value) => {
-			console.log(store)
-			console.log(value)
+			console.log(store);
+			console.log(value);
 
 			data = value || data;
 		});
@@ -51,7 +51,7 @@ export const dbStoreData = (store, storeKey = "") => {
 		add: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					db.add(store, {id: Date.now(), ...$state.snapshot(newData)});
+					db.add(store, { id: Date.now(), ...$state.snapshot(newData) });
 					data.push(newData);
 				});
 			}
@@ -59,19 +59,19 @@ export const dbStoreData = (store, storeKey = "") => {
 		update: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-				  console.log(newData)
-				  
-				  console.log(data)
-					db.put(store, {id: Date.now(), ...$state.snapshot(newData)});
-					data = data.map(obj => obj.id === newData.id ? newData : obj)
-				  console.log(data)
+					console.log(newData);
+
+					console.log(data);
+					db.put(store, { id: Date.now(), ...$state.snapshot(newData) });
+					data = data.map((obj) => (obj.id === newData.id ? newData : obj));
+					console.log(data);
 				});
 			}
 		},
 		put: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-				  console.log("store", storeKey)
+					console.log('store', storeKey);
 					db.put(store, $state.snapshot(newData), storeKey);
 					data = [...data, newData];
 					console.log(data);
@@ -81,7 +81,7 @@ export const dbStoreData = (store, storeKey = "") => {
 		set data(value) {
 			data = value;
 			if (browser) {
-			  console.log(storeKey)
+				console.log(storeKey);
 				initDB().then((db) => db.put(store, $state.snapshot(value), storeKey));
 			}
 		},
@@ -92,12 +92,12 @@ export const dbStoreData = (store, storeKey = "") => {
 			return data?.find((value) => value.id === id);
 		},
 		selectWhere: (field, value) => {
-		  console.log(value)
-			return data?.find(obj => obj[field] === value);
+			console.log(value);
+			return data?.find((obj) => obj[field] === value);
 		},
 		selectMultipleWhere: (field, value) => {
-		  console.log(value)
-			return data?.filter(obj => obj[field] === value);
+			console.log(value);
+			return data?.filter((obj) => obj[field] === value);
 		},
 		delete: (id) => {
 			if (browser) {
@@ -114,26 +114,24 @@ export const dbStoreData = (store, storeKey = "") => {
 	};
 };
 
-export const settingsStore = dbStoreData('settings', "settings");
-export const profileStore = dbStoreData('profile', "profile");
+export const settingsStore = dbStoreData('settings', 'settings');
+export const profileStore = dbStoreData('profile', 'profile');
 export const tasksStore = dbStoreData('tasks');
 export const coursesStore = dbStoreData('courses');
 
-export const studySessionsStore = (() => { 
-  let activeSession = $state(null)
-  
- const initStore = dbStoreData('studySessions')
- return {
-   ...initStore,
-   get active (){
-     return activeSession
-   },
-   set active (session){
-     activeSession = session
-   }
- }
-  
-  
+export const studySessionsStore = (() => {
+	let activeSession = $state(null);
+
+	const initStore = dbStoreData('studySessions');
+	return {
+		...initStore,
+		get active() {
+			return activeSession;
+		},
+		set active(session) {
+			activeSession = session;
+		}
+	};
 })();
 export const progressStore = dbStoreData('progress');
 export const recommendationsStore = dbStoreData('recommendations');
@@ -178,8 +176,7 @@ interface ActiveSession {
 	isBreak: boolean;
 }
 
- let activeSession = $state<ActiveSession | null>(null);
-
+let activeSession = $state<ActiveSession | null>(null);
 
 export function startSession(courde: string) {
 	activeSession = {
@@ -192,32 +189,27 @@ export function startSession(courde: string) {
 }
 
 export function endSession(focusScore: number, mood: string, notes?: string) {
+	if (activeSession) {
+		const endTime = new Date();
+		const duration = Math.floor((endTime.getTime() - activeSession.startTime.getTime()) / 60000);
 
-		if (activeSession) {
-			const endTime = new Date();
-			const duration = Math.floor((endTime.getTime() - activeSession.startTime.getTime()) / 60000);
+		const newSession: StudySession = {
+			id: crypto.randomUUID(),
+			startTime: activeSession.startTime,
+			endTime,
+			duration,
+			course: activeSession.course,
+			createdAt: new Date(),
+			focusScore,
+			breaksTaken: activeSession.breaks,
+			mood: mood as StudySession['mood'],
+			notes
+		};
 
-			const newSession: StudySession = {
-				id: crypto.randomUUID(),
-				startTime: activeSession.startTime,
-				endTime,
-				duration,
-				course: activeSession.course,
-				createdAt: new Date(),
-				focusScore,
-				breaksTaken: activeSession.breaks,
-				mood: mood as StudySession['mood'],
-				notes
-			};
-
-			studySessionsStore.add(newSession);
-		}
-		activeSession = null
+		studySessionsStore.add(newSession);
+	}
+	activeSession = null;
 }
- 
-
-
-
 
 // Notes
-export const activeNote = $state(null)
+export const activeNote = $state(null);

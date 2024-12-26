@@ -5,7 +5,6 @@
 	import { page } from '$app/state';
 	import { signIn } from 'svelte-guardian/client';
 
-	
 	let email = $state('');
 	let password = $state('');
 	let error = $state('');
@@ -19,14 +18,13 @@
 				redirect: false,
 				callbackUrl: '/auth/onboarding'
 			});
-			console.log(result)
-			console.log(await result.json())
+			console.log(result);
+			console.log(await result.json());
 
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-			  if(page.data)
-			  console.log(page.data)
+				if (page.data) console.log(page.data);
 				goto('/app');
 			}
 		} catch (e) {
@@ -39,7 +37,7 @@
 	class="flex min-h-screen flex-col justify-center bg-gray-50 py-12 dark:bg-gray-900 sm:px-6 lg:px-8"
 >
 	<div class="sm:mx-auto sm:w-full sm:max-w-md">
-		<img src="/favicon-512x512.png" alt="Modo" class=" flex gap-3 mx-auto h-12" />
+		<img src="/favicon-512x512.png" alt="Modo" class=" mx-auto flex h-12 gap-3" />
 		<h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
 			Sign in to your account
 		</h2>
@@ -119,7 +117,7 @@
 				<div class="mt-6">
 					<button
 						type="button"
-						onclick={() => signIn('google', {callbackUrl: '/auth/onboarding'})}
+						onclick={() => signIn('google', { callbackUrl: '/auth/onboarding' })}
 						class="flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
 					>
 						<svg class="mr-2 h-5 w-5" viewBox="0 0 24 24">

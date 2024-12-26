@@ -1,5 +1,5 @@
 <script lang="ts">
-import { studySessionsStore } from '$lib/data/index.svelte.ts'
+	import { studySessionsStore } from '$lib/data/index.svelte.ts';
 	interface Props {
 		slot: {
 			id: string;
@@ -39,9 +39,9 @@ import { studySessionsStore } from '$lib/data/index.svelte.ts'
 		<p class="mt-1 text-sm opacity-75">{slot.task.course}</p>
 	{/if}
 	<button
-                      class="ml-4 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-                      onclick={() => studySessionsStore.active = slot}
-                    >
-                      Start
-                    </button>
+		class="ml-4 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
+		onclick={() => (studySessionsStore.active = slot)}
+	>
+		Start
+	</button>
 </div>

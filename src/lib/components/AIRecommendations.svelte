@@ -1,4 +1,4 @@
-<script> 
+<script>
 	import { onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
 	import { generateRecommendations } from '$lib/ai/recommendations';
@@ -12,7 +12,7 @@
 		try {
 			const result = await generateRecommendations(userData);
 			recommendations = result.recommendations;
-			console.log(recommendations)
+			console.log(recommendations);
 		} catch (error) {
 			console.error('Failed to generate recommendations:', error);
 		} finally {
@@ -34,10 +34,9 @@
 	<div class="space-y-6" in:fade>
 		<!-- Recommendations -->
 		<div class="space-y-4">
-		  
 			{#each recommendations as rec}
 				<div
-					class="rounded-lg border-l-4 bg-white dark:bg-gray-800 p-4 shadow-sm
+					class="rounded-lg border-l-4 bg-white p-4 shadow-sm dark:bg-gray-800
             {rec.priority === 'high'
 						? 'border-red-500'
 						: rec.priority === 'medium'

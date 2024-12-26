@@ -5,8 +5,8 @@ export async function POST({ request }) {
 	const data = await request.json();
 
 	try {
-	  if(data.confirmPassword) delete data.confirmPassword
-	  console.log(data)
+		if (data.confirmPassword) delete data.confirmPassword;
+		console.log(data);
 
 		const user = await createUser(data);
 

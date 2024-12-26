@@ -15,22 +15,25 @@
 	import AIRecommendations from '$lib/components/AIRecommendations.svelte';
 	import PremiumBanner from '$lib/components/PremiumBanner.svelte';
 	import { fade, slide } from 'svelte/transition';
-	
+
 	import { page } from '$app/state';
 
-  let gameState = $state(gamificationStore.data || {
-    points: 0,
-    level: 1,
-    streak: 0,
-    achievements: [],
-    activeChallenges: []
-  });
+	let gameState = $state(
+		gamificationStore.data || {
+			points: 0,
+			level: 1,
+			streak: 0,
+			achievements: [],
+			activeChallenges: []
+		}
+	);
 
-  
-  // Show most relevant challenge
-  let topChallenge = $derived(gameState.activeChallenges
-    ?.filter(c => !c.completed)
-    .sort((a, b) => (b.progress / b.goal) - (a.progress / a.goal))[0]);
+	// Show most relevant challenge
+	let topChallenge = $derived(
+		gameState.activeChallenges
+			?.filter((c) => !c.completed)
+			.sort((a, b) => b.progress / b.goal - a.progress / a.goal)[0]
+	);
 
 	const tasks = tasksStore.data || [];
 	const profile = $state(profileStore.data || {});
@@ -65,7 +68,7 @@
 				if (response.ok) {
 					const data = await response.json();
 					studyTips = data.recommendations;
-					console.log(studyTips)
+					console.log(studyTips);
 					addNotification('AI recommendations updated', 'success');
 				}
 			} catch (error) {
@@ -102,6 +105,7 @@
 		return streak;
 	}
 </script>
+
 <svelte:head>
 	<title>Dashboard - Modo</title>
 </svelte:head>
@@ -109,27 +113,30 @@
 <div class="container mx-auto space-y-6 px-4 py-6 dark:bg-gray-900">
 	<!-- Welcome Section -->
 	<div class="rounded-lg bg-white p-6 shadow-lg transition-colors dark:bg-gray-800" in:fade>
-		<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center"> 
-		<!-- Welcome Card with Streak -->
+		<div class="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
+			<!-- Welcome Card with Streak -->
 
-    <div class="flex justify-between items-center">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">Welcome back, {profile?.name || 'Student'}!</h1>
-        <p class="mt-2 text-gray-600 dark:text-gray-400 ">Level {gameState.level} • {gameState.points || 0} points</p>
-      </div>
-      <StreakCounter />
-  </div>
-
+			<div class="flex items-center justify-between">
+				<div>
+					<h1 class="text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
+						Welcome back, {profile?.name || 'Student'}!
+					</h1>
+					<p class="mt-2 text-gray-600 dark:text-gray-400">
+						Level {gameState.level} • {gameState.points || 0} points
+					</p>
+				</div>
+				<StreakCounter />
+			</div>
+		</div>
 	</div>
-	</div>
 
-  <!-- Active Challenge -->
-  {#if topChallenge}
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-600 mb-4">Active Challenge</h2>
-      <ChallengeCard challenge={topChallenge} />
-    </div>
-  {/if}
+	<!-- Active Challenge -->
+	{#if topChallenge}
+		<div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+			<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-600">Active Challenge</h2>
+			<ChallengeCard challenge={topChallenge} />
+		</div>
+	{/if}
 	<!-- Stats Overview -->
 	<div class="grid grid-cols-2 gap-4 md:grid-cols-4" in:fade={{ delay: 200 }}>
 		<div class="rounded-lg bg-white p-4 shadow dark:bg-gray-800">
@@ -245,46 +252,46 @@
 			{/if}
 		</div>
 
-	<!-- Study Progress -->
-	<div class="rounded-lg bg-white dark:bg-gray-800 p-6 shadow">
-		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Today's Progress</h2>
-		<div class="space-y-4">
-			<div class="relative pt-1">
-				<div class="mb-2 flex items-center justify-between">
-					<div>
-						<span class="inline-block text-xs font-semibold text-primary-600">
-							Study Progress
-						</span>
+		<!-- Study Progress -->
+		<div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+			<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Today's Progress</h2>
+			<div class="space-y-4">
+				<div class="relative pt-1">
+					<div class="mb-2 flex items-center justify-between">
+						<div>
+							<span class="inline-block text-xs font-semibold text-primary-600">
+								Study Progress
+							</span>
+						</div>
+						<div class="text-right">
+							<span class="inline-block text-xs font-semibold text-primary-600"> 30% </span>
+						</div>
 					</div>
-					<div class="text-right">
-						<span class="inline-block text-xs font-semibold text-primary-600"> 30% </span>
+					<div class="mb-4 flex h-2 overflow-hidden rounded bg-primary-100 text-xs">
+						<div
+							style="width: 30%"
+							class="flex flex-col justify-center whitespace-nowrap bg-primary-600 text-center text-white shadow-none"
+						></div>
 					</div>
-				</div>
-				<div class="mb-4 flex h-2 overflow-hidden rounded bg-primary-100 text-xs">
-					<div
-						style="width: 30%"
-						class="flex flex-col justify-center whitespace-nowrap bg-primary-600 text-center text-white shadow-none"
-					></div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<!-- Priority Tasks -->
-	<div class="rounded-lg bg-white dark:bg-gray-800 p-6 shadow">
-		<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Priority Tasks</h2>
-		{#if tasks?.length > 0}
-			<ul class="space-y-3">
-				{#each tasks as task}
-					<li class="flex items-center justify-between rounded-lg bg-gray-50 p-3">
-						<span class="text-gray-700 dark:text-gray-300">{task.title}</span>
-						<span class="text-sm text-gray-500  dark:text-gray-300">{task.dueDate}</span>
-					</li>
-				{/each}
-			</ul>
-		{:else}
-			<p class="text-gray-500">No priority tasks at the moment.</p>
-		{/if}
-	</div>
+		<!-- Priority Tasks -->
+		<div class="rounded-lg bg-white p-6 shadow dark:bg-gray-800">
+			<h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">Priority Tasks</h2>
+			{#if tasks?.length > 0}
+				<ul class="space-y-3">
+					{#each tasks as task}
+						<li class="flex items-center justify-between rounded-lg bg-gray-50 p-3">
+							<span class="text-gray-700 dark:text-gray-300">{task.title}</span>
+							<span class="text-sm text-gray-500 dark:text-gray-300">{task.dueDate}</span>
+						</li>
+					{/each}
+				</ul>
+			{:else}
+				<p class="text-gray-500">No priority tasks at the moment.</p>
+			{/if}
+		</div>
 
 		<!-- Motivational Features -->
 		<div class="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800" in:slide>
@@ -292,7 +299,4 @@
 			<MotivationalFeatures />
 		</div>
 	</div>
-
-	
-	
 </div>
