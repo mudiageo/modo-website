@@ -67,7 +67,12 @@
 			{/if}
 			{#if form?.error}
 				<div class="mb-4 rounded-md bg-red-50 p-4 text-red-700 dark:bg-red-900 dark:text-red-100">
-					{form?.error}
+					{form?.success}
+				</div>
+			{/if}
+				{#if form?.success}
+				<div class="mb-4 rounded-md bg-greenn-50 p-4 text-green-700 dark:bg-green-900 dark:text-green-100">
+					{form?.success}
 				</div>
 			{/if}
 
@@ -83,6 +88,14 @@
 					return async ({ result }) => {
 						console.log(result);
 						// `result` is an `ActionResult` object
+						let user = result.data?.user
+						if(user) {
+						
+							await applyAction(result);
+						profileStore.data = { name: user.name, email: user.email };
+						goto('/auth/onboarding')
+
+						}
 						if (result.type === 'redirect') {
 							goto(result.location);
 						} else {

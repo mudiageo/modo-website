@@ -25,11 +25,7 @@ export const actions = {
 		const email = data.get('email');
 		const password = data.get('password');
 		const confirmPassword = data.get('confirmPassword');
-		console.log('sign up data', {
-			email,
-			name,
-			password
-		});
+		
 		if (password !== confirmPassword) return { success: false, error: 'Passwords do not match' };
 
 		try {
