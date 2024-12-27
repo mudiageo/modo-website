@@ -9,7 +9,18 @@
 
 	import { getStudySessions } from '$lib/db/idb';
 	import { dailyProgress } from '$lib/stores/progress';
+import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamification.svelte.ts';
+	import { checkAchievements } from '$lib/utils/gamification';
 
+	let gameState = $state(
+		gamificationStore.data || {
+			points: 0,
+			level: 1,
+			streak: 0,
+			achievements: [],
+			activeChallenges: []
+		}
+	);
 	let isStudying = $state(false);
 	let startTime = $state(null);
 	let elapsedTime = $state(0);
@@ -58,7 +69,7 @@
 		});
 
 		// Update study marathon challenge
-		const studyChallenge = gameState.activeChallenges.find((c) => c.id === 'study_marathon');
+		const studyChallenge = gameState.activeChallenges?.find((c) => c.id === 'study_marathon');
 		if (studyChallenge) {
 			updateChallenge('study_marathon', stats.totalStudyHours);
 		}
@@ -73,6 +84,8 @@
 
 		const endTime = new Date();
 		const duration = Math.floor((endTime - startTime) / 1000 / 60); // in minutes
+		
+		console.log(duration)
 
 		session = session || {
 			...currentSession,
@@ -116,22 +129,11 @@
 		showFeedback = false;
 		addNotification('Study session completed!', 'success');
 	}
-	import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamification.svelte.ts';
-	import { checkAchievements } from '$lib/utils/gamification';
-
-	let gameState = $state(
-		gamificationStore.data || {
-			points: 0,
-			level: 1,
-			streak: 0,
-			achievements: [],
-			activeChallenges: []
-		}
-	);
+	
 
 	function calculateTotalStudyHours() {
 		// Calculate total study hours from sessions
-		return 0; // Implement actual calculation
+		return getTotalStudyTime();
 	}
 </script>
 
@@ -149,7 +151,6 @@
 
 	<!-- Timer Card -->
 	<StudySessionTimer
-		session={studySessionsStore.active}
 		onStart={startStudySession}
 		onEnd={endStudySession}
 	/>

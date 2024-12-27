@@ -4,8 +4,9 @@
 	import { studySessionsStore, coursesStore, endSession } from '$lib/data/index.svelte.ts';
 	import type { StudySession } from '$lib/types';
 
-	let { session, onStart, onEnd } = $props();
+	let { onStart, onEnd } = $props();
 
+  let session = $state(studySessionsStore.active)
 	let timer = $state(0);
 	let isBreak = $state(false);
 	let timerInterval: number;
@@ -15,9 +16,7 @@
 
 	onMount(() => {
 		if (studySessionsStore.active) {
-			console.log('studystudySessionsStore.active');
-			console.log(studySessionsStore.active);
-			timer = studySessionsStore.active.timer || 0;
+			timer = 8
 			isBreak = studySessionsStore.active.isBreak;
 			course = studySessionsStore.active.course;
 			//	startTimer();
