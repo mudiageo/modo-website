@@ -1,7 +1,7 @@
 <script>
 	import { preventDefault } from 'svelte/legacy';
 
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { page } from '$app/state';
 	import { signIn } from 'svelte-guardian/client';
 
@@ -18,14 +18,16 @@
 				redirect: false,
 				callbackUrl: '/auth/onboarding'
 			});
-			console.log(result);
-			console.log(await result.json());
-
+			
 			if (result?.error) {
 				error = 'Invalid email or password';
 			} else {
-				if (page.data) console.log(page.data);
-				goto('/app');
+				const res = await result.json()
+				
+				let url = new URL(res.url)
+				console.log(url)
+				if(url.pathname === '/auth/onboarding') goto(url.pathname)
+
 			}
 		} catch (e) {
 			error = 'An error occurred. Please try again.';
