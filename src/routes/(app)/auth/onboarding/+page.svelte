@@ -2,8 +2,10 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
-	import { user } from '$lib/stores/auth';
-	import { coursesStore, settingsStore } from '$lib/data/index.svelte.ts';
+	import { page } from '$app/state';
+	import { profileStore, coursesStore, settingsStore } from '$lib/data/index.svelte.ts';
+
+	let { data } = $props()
 
 	let currentStep = $state(0);
 	let formData = $state({
@@ -62,14 +64,12 @@
 
 	async function savePreferences() {
 		settingsStore.data = formData;
+		let user = data.session?.user
+						if(user) {
+							profileStore.data = { name: user.name, email: user.email };
+						}
 		goto('/app');
 	}
-
-	onMount(() => {
-		if (!$user) {
-			//  goto('/auth/login');
-		}
-	});
 </script>
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
