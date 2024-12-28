@@ -1,49 +1,76 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { fade, slide } from 'svelte/transition';
-	import { studySessionsStore, coursesStore, endSession } from '$lib/data/index.svelte.ts';
+	import { studySessionsStore, coursesStore, tasksStore, endSession } from '$lib/data/index.svelte.ts';
 	import type { StudySession } from '$lib/types';
 
-	let { onStart, onEnd } = $props();
+	import { dailyProgress } from '$lib/stores/progress';
+	import { gamificationStore, addPoints, updateStreak, unlockAchievement, updateChallenge } from '$lib/data/gamification.svelte.ts';
+	import { checkAchievements } from '$lib/utils/gamification';
+	import { getStudySessions } from '$lib/db/idb';
 
-  let session = $state(studySessionsStore.active)
-	let timer = $state(0);
-	let isBreak = $state(false);
-	let timerInterval: number;
+
+	let gameState = $state(
+		gamificationStore.data || {
+			points: 0,
+			level: 1,
+			streak: 0,
+			achievements: [],
+			activeChallenges: []
+		}
+	);
+	let { onEnd } = $props();
+	
+	let session: StudySession = $state(studySessionsStore.active)
 	let startTime = $state(new Date());
+	let tasks = tasksStore.data || [];
+	let studySessions = studySessionsStore.data || [];
+	
+	let todaySessions = $state([]);
+
+	let elapsedTime = $state(0);
+	let isBreak = $state(false);
+	let timer: number;
+
 	let course = $state('');
 	let courses = coursesStore.data?.map((course) => course.name) || [];
 
-	onMount(() => {
+	onMount(async () => {
 		if (studySessionsStore.active) {
-			timer = 8
+			elapsedTime = studySessionsStore.active.timer || 0;
 			isBreak = studySessionsStore.active.isBreak;
-			course = studySessionsStore.active.course;
-			//	startTimer();
+			course = studySessionsStore.active.course || studySessionsStore.active.task?.course;
+			handleStartSession();
 		}
+		const today = new Date().toISOString().split('T')[0];
+		todaySessions = await getStudySessions(today);
+
 	});
 
 	onDestroy(() => {
-		clearInterval(timerInterval);
+		clearInterval(timer);
 	});
 
 	function startTimer() {
-		timerInterval = setInterval(() => {
-			timer++;
-			if (!isBreak && timer % 1500 === 0) {
+		startTime = new Date();
+
+		timer = setInterval(() => {
+			elapsedTime++;
+
+			if (!isBreak && elapsedTime % 1500 === 0) {
 				// 25 minutes
 				isBreak = true;
-				timer = 0;
+				elapsedTime = 0;
 				if (studySessionsStore.active)
 					studySessionsStore.active = {
 						...studySessionsStore.active,
 						isBreak: true,
 						breaks: studySessionsStore.active.breaks + 1
 					};
-			} else if (isBreak && timer % 300 === 0) {
+			} else if (isBreak && elapsedTime % 300 === 0) {
 				// 5 minutes
 				isBreak = false;
-				timer = 0;
+				elapsedTime = 0;
 				if (studySessionsStore.active)
 					studySessionsStore.active = { ...studySessionsStore.active, isBreak: false };
 			}
@@ -58,17 +85,71 @@
 
 	function handleStartSession() {
 		if (course) {
-			onStart(course, session);
-			console.log(studySessionsStore.active);
 			startTimer();
+
+		session = {
+			date: new Date(startTime).toISOString().slice(0, 10),
+			startTime,
+			course
+		};
+	    studySessionsStore.active = session ;
+
+		// Update streak and add points
+		updateStreak();
+		addPoints(10); // Base points for starting a study session
+
+		const stats = {
+			totalStudyHours: calculateTotalStudyHours(),
+			completedTasks: tasks.filter((t) => t.completed).length,
+			currentStreak: gameState.streak
+		};
+
+		const newAchievements = checkAchievements(stats);
+		newAchievements.forEach((achievement) => {
+			unlockAchievement(achievement);
+		});
+
+		// Update study marathon challenge
+		const studyChallenge = gameState.activeChallenges?.find((c) => c.id === 'study_marathon');
+		if (studyChallenge) {
+			updateChallenge('study_marathon', stats.totalStudyHours);
+		}
 		}
 	}
 
-	function handleEndSession() {
-		clearInterval(timerInterval);
+	function handleEndSession() {		
+		
+		studySessionsStore.active = null;
+		clearInterval(timer);
+		const endTime = new Date();
+		const duration = Math.floor((endTime - startTime) / 1000 / 60); // in minutes
+		
+		session = { ...session, 
+			endTime,
+			duration
+		};
+		
+		
+		studySessionsStore.add(session);
+		console.log(session)
+		
+		// Update daily progress
+		dailyProgress.update((progress) => ({
+			...progress,
+			studyTime: (progress.studyTime || 0) + duration,
+			lastStudyDate: new Date().toISOString().split('T')[0]
+		}));
+
+		
+		
 		endSession(8, 'good'); // Example values, replace with actual user input
 		onEnd?.();
-		timer = 0;
+		elapsedTime = 0;
+
+	}
+	function calculateTotalStudyHours() {
+		// Calculate total study hours from sessions
+		return todaySessions.reduce((total, session) => total + (session.duration || 0), 0);
 	}
 </script>
 
@@ -89,12 +170,12 @@
 						{#each courses as course}
 							<option value={course}>{course}</option>
 						{/each}
-						<option value="CPE272">CPE272</option>
+						<option value="General">General</option>
 					</select>
 				</div>
 			</div>
 			<button class="btn-primary w-full" onclick={handleStartSession} disabled={!course}>
-				Start Sessiont
+				Start Session
 			</button>
 		</div>
 	{:else}
@@ -104,11 +185,11 @@
 					{isBreak ? 'Break Time!' : 'Studying'}: {session?.task?.title}
 				</p>
 				<p class="mt-2 text-4xl font-bold text-gray-900 dark:text-white">
-					{formatTime(timer)}
+					{formatTime(elapsedTime)}
 				</p>
 				<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
 					{isBreak ? 'Next study session in:' : 'Break in:'}
-					{formatTime(isBreak ? 300 - (timer % 300) : 1500 - (timer % 1500))}
+					{formatTime(isBreak ? 300 - (elapsedTime % 300) : 1500 - (elapsedTime % 1500))}
 				</p>
 			</div>
 

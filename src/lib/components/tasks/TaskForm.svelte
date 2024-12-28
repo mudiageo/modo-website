@@ -83,7 +83,7 @@
 				{#each courses as course}
 					<option value={course.code}>{course.name} - {course.code}</option>
 				{/each}
-				<option value="CPE272">CPE272</option>
+				<option value="General">General</option>
 			</select>
 		</div>
 	</div>

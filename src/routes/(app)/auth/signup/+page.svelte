@@ -11,7 +11,7 @@
 	import { profileStore } from '$lib/data/index.svelte.ts';
 
 	let formData = $state({
-		name: 'new person',
+		name: '',
 		email: '',
 		password: '',
 		confirmPassword: ''

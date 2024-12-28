@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { studySessionsStore } from '$lib/data/index.svelte.ts';
+	import { goto } from '$app/navigation'
 	interface Props {
 		slot: { title: string; type: string };
 		view: 'monthly' | 'weekly' | 'daily';
 	}
 
 	let { slot, view, handleSlotEvent }: Props = $props();
-	console.log(slot);
+
 	const HOUR_HEIGHT = 60; // pixels per hour
 	const DAY_START = 6; // 6 AM
 	const DAY_END = 22; // 10 PM
@@ -41,7 +42,10 @@
 	{slot.task?.course}
 	<button
 		class="ml-4 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-		onclick={() => (studySessionsStore.active = slot)}
+		onclick={() => {
+			studySessionsStore.active = slot
+			goto('/app/study')
+		}}
 	>
 		Start
 	</button>

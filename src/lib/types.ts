@@ -52,8 +52,7 @@ export interface StudySession {
 	startTime: Date;
 	endTime?: Date;
 	duration?: number;
-	subject: string;
-	userId: string;
+	course: string;
 	createdAt: Date;
 	focusScore?: number;
 	breaksTaken?: number;
@@ -65,7 +64,6 @@ export interface StudySession {
 // Schedule Types
 export interface Schedule {
 	id: string;
-	userId: string;
 	date: Date;
 	blocks: StudyBlock[];
 	createdAt: Date;

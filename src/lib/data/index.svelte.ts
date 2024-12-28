@@ -41,9 +41,6 @@ export const dbStoreData = (store, storeKey = '') => {
 	if (browser) {
 		getFromStoreIndexWhere('studySessions', 'date', '');
 		populateData(store).then((value) => {
-			console.log(store);
-			console.log(value);
-
 			data = value || data;
 		});
 	}
@@ -59,29 +56,23 @@ export const dbStoreData = (store, storeKey = '') => {
 		update: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					console.log(newData);
-
-					console.log(data);
 					db.put(store, { id: Date.now(), ...$state.snapshot(newData) });
 					data = data.map((obj) => (obj.id === newData.id ? newData : obj));
-					console.log(data);
+
 				});
 			}
 		},
 		put: (newData) => {
 			if (browser) {
 				initDB().then((db) => {
-					console.log('store', storeKey);
 					db.put(store, $state.snapshot(newData), storeKey);
 					data = [...data, newData];
-					console.log(data);
 				});
 			}
 		},
 		set data(value) {
 			data = value;
 			if (browser) {
-				console.log(storeKey);
 				initDB().then((db) => db.put(store, $state.snapshot(value), storeKey));
 			}
 		},
@@ -92,11 +83,9 @@ export const dbStoreData = (store, storeKey = '') => {
 			return data?.find((value) => value.id === id);
 		},
 		selectWhere: (field, value) => {
-			console.log(value);
 			return data?.find((obj) => obj[field] === value);
 		},
 		selectMultipleWhere: (field, value) => {
-			console.log(value);
 			return data?.filter((obj) => obj[field] === value);
 		},
 		delete: (id) => {

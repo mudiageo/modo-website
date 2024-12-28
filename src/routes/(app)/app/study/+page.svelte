@@ -8,9 +8,8 @@
 	import StudyMetrics from '$lib/components/StudyMetrics.svelte';
 
 	import { getStudySessions } from '$lib/db/idb';
-	import { dailyProgress } from '$lib/stores/progress';
-import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamification.svelte.ts';
-	import { checkAchievements } from '$lib/utils/gamification';
+import { gamificationStore } from '$lib/data/gamification.svelte.ts';
+
 
 	let gameState = $state(
 		gamificationStore.data || {
@@ -21,16 +20,11 @@ import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamificati
 			activeChallenges: []
 		}
 	);
-	let isStudying = $state(false);
-	let startTime = $state(null);
-	let elapsedTime = $state(0);
-	let currentSession = $state(null);
+
 	let todaySessions = $state([]);
-	let timer;
 	let loading = $state(true);
 	let error = $state(null);
 	let showFeedback = $state(false);
-	let activeSession = $state(studySessionsStore.active || null);
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
 
@@ -38,82 +32,6 @@ import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamificati
 		const today = new Date().toISOString().split('T')[0];
 		todaySessions = await getStudySessions(today);
 	});
-
-	function startStudySession(course = 'General Study', session) {
-		isStudying = true;
-		startTime = new Date();
-		currentSession = {
-			startTime,
-			course
-		};
-		studySessionsStore.active = session || currentSession;
-		console.log('activeSession');
-		console.log(studySessionsStore.active);
-		timer = setInterval(() => {
-			elapsedTime = Math.floor((new Date() - startTime) / 1000);
-		}, 1000);
-
-		// Update streak and add points
-		updateStreak();
-		addPoints(10); // Base points for starting a study session
-
-		const stats = {
-			totalStudyHours: calculateTotalStudyHours(),
-			completedTasks: tasks.filter((t) => t.completed).length,
-			currentStreak: gameState.streak
-		};
-
-		const newAchievements = checkAchievements(stats);
-		newAchievements.forEach((achievement) => {
-			unlockAchievement(achievement);
-		});
-
-		// Update study marathon challenge
-		const studyChallenge = gameState.activeChallenges?.find((c) => c.id === 'study_marathon');
-		if (studyChallenge) {
-			updateChallenge('study_marathon', stats.totalStudyHours);
-		}
-	}
-
-	async function endStudySession(session) {
-		isStudying = false;
-		showFeedback = true;
-		studySessionsStore.active = null;
-
-		clearInterval(timer);
-
-		const endTime = new Date();
-		const duration = Math.floor((endTime - startTime) / 1000 / 60); // in minutes
-		
-		console.log(duration)
-
-		session = session || {
-			...currentSession,
-			endTime,
-			duration
-		};
-
-		studySessionsStore.add(session);
-		todaySessions = [...todaySessions, session];
-
-		// Update daily progress
-		dailyProgress.update((progress) => ({
-			...progress,
-			studyTime: (progress.studyTime || 0) + duration,
-			lastStudyDate: new Date().toISOString().split('T')[0]
-		}));
-
-		currentSession = null;
-		elapsedTime = 0;
-	}
-
-	function formatTime(seconds) {
-		const hours = Math.floor(seconds / 3600);
-		const minutes = Math.floor((seconds % 3600) / 60);
-		const remainingSeconds = seconds % 60;
-
-		return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-	}
 
 	function getTotalStudyTime() {
 		return todaySessions.reduce((total, session) => total + (session.duration || 0), 0);
@@ -131,47 +49,19 @@ import { gamificationStore, addPoints, updateStreak } from '$lib/data/gamificati
 	}
 	
 
-	function calculateTotalStudyHours() {
-		// Calculate total study hours from sessions
-		return getTotalStudyTime();
-	}
 </script>
 
-<!-- Add to schedule block -->
-<div class="mb-4 flex items-center justify-between">
-	<h2 class="text-lg font-semibold text-gray-900">Your Study Schedule</h2>
+<div class="mx-auto max-w-4xl">
+	<div class="mb-4 flex items-center justify-between">
+
+	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Study Session</h1>
 	<div class="flex items-center gap-2">
 		<span class="text-sm text-gray-600">Current Streak: {gameState.streak} days</span>
-		<button class="btn-primary" onclick={startStudySession}> Start Session </button>
 	</div>
 </div>
 
-<div class="mx-auto max-w-4xl">
-	<h1 class="mb-8 text-2xl font-bold text-gray-900 dark:text-white">Study Session</h1>
-
 	<!-- Timer Card -->
-	<StudySessionTimer
-		onStart={startStudySession}
-		onEnd={endStudySession}
-	/>
-
-	<!-- <div class="mb-8 rounded-lg bg-white p-8 shadow-lg dark:bg-gray-800">
-		<div class="text-center">
-			<div class="mb-8 font-mono text-6xl text-primary-600 dark:text-primary-400">
-				{formatTime(elapsedTime)}
-			</div>
-
-			{#if !isStudying}
-				<button class="btn-primary px-8 py-4 text-lg" onclick={startStudySession}>
-					Start Studying
-				</button>
-			{:else}
-				<button class="btn-secondary px-8 py-4 text-lg" onclick={endStudySession}>
-					End Session
-				</button>
-			{/if}
-		</div>
-	</div> -->
+	<StudySessionTimer onEnd={() => showFeedback = true} />
 
 	<!-- Today's Progress -->
 	<div class="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">
