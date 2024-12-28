@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { theme } from '$lib/stores/theme';
 	import { page } from '$app/state';
+	import { signOut } from 'svelte-guardian/client'
 	import Icon from '$lib/icons/Icon.svelte';
 
 	let { isNavOpen = $bindable() } = $props();
@@ -125,9 +126,7 @@
 			<button
 				class="flex w-full items-center rounded-lg px-4 py-2 text-gray-600
             transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-				onclick={() => {
-					// TODO logout				window.location.href = '/login';
-				}}
+				onclick={signOut}
 			>
 				<svg
 					class="h-5 w-5 {isNavOpen ? 'mr-3' : ''}"

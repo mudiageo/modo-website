@@ -2,6 +2,8 @@
 	import { theme } from '$lib/stores/theme';
 	import { slide, fade } from 'svelte/transition';
 	import { profileStore } from '$lib/data/index.svelte.ts';
+  import { signOut } from 'svelte-guardian/client'
+
 	import Icon from '$lib/icons/Icon.svelte';
 
 	const profile = profileStore.data || {};
@@ -80,6 +82,25 @@
 								</span>
 							</a>
 						{/each}
+            <button class="flex px-4 py-2 text-sm text-gray-600 hover:text-primary-600 dark:text-gray-300" onclick={signOut}>
+              <span class="mr-2 flex h-6 w-6 items-center">
+                <svg
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              </span>
+              <span class="flex items-center">
+                Signout
+              </span>
+            </button>
 					</div>
 				</div>
 			{/if}
