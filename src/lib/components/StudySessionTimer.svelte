@@ -19,15 +19,13 @@
 			activeChallenges: []
 		}
 	);
-	let { onEnd } = $props();
+	let { onEnd, todaySessions = $bindable() } = $props();
 	
 	let session: StudySession = $state(studySessionsStore.active)
 	let startTime = $state(new Date());
 	let tasks = tasksStore.data || [];
 	let studySessions = studySessionsStore.data || [];
 	
-	let todaySessions = $state([]);
-
 	let elapsedTime = $state(0);
 	let isBreak = $state(false);
 	let timer: number;
@@ -131,6 +129,7 @@
 		
 		
 		studySessionsStore.add(session);
+		todaySessions.push(session)
 		console.log(session)
 		
 		// Update daily progress

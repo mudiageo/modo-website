@@ -21,7 +21,8 @@ import { gamificationStore } from '$lib/data/gamification.svelte.ts';
 		}
 	);
 
-	let todaySessions = $state([]);
+
+	let todaySessions = $state(studySessionsStore.data || []);
 	let loading = $state(true);
 	let error = $state(null);
 	let showFeedback = $state(false);
@@ -29,8 +30,10 @@ import { gamificationStore } from '$lib/data/gamification.svelte.ts';
 	let studySessions = studySessionsStore.data || [];
 
 	onMount(async () => {
+	
 		const today = new Date().toISOString().split('T')[0];
 		todaySessions = await getStudySessions(today);
+
 	});
 
 	function getTotalStudyTime() {
@@ -61,7 +64,7 @@ import { gamificationStore } from '$lib/data/gamification.svelte.ts';
 </div>
 
 	<!-- Timer Card -->
-	<StudySessionTimer onEnd={() => showFeedback = true} />
+	<StudySessionTimer bind:todaySessions onEnd={() => showFeedback = true} />
 
 	<!-- Today's Progress -->
 	<div class="mb-8 rounded-lg bg-white p-6 shadow dark:bg-gray-800">

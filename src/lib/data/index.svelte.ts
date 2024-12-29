@@ -109,9 +109,11 @@ export const tasksStore = dbStoreData('tasks');
 export const coursesStore = dbStoreData('courses');
 
 export const studySessionsStore = (() => {
+
 	let activeSession = $state(null);
 
 	const initStore = dbStoreData('studySessions');
+
 	return {
 		...initStore,
 		get active() {
@@ -119,7 +121,7 @@ export const studySessionsStore = (() => {
 		},
 		set active(session) {
 			activeSession = session;
-		}
+		},
 	};
 })();
 export const progressStore = dbStoreData('progress');
