@@ -1,7 +1,7 @@
 import { openDB } from 'idb';
 
 const DB_NAME = 'studyai_db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export async function initDB() {
 	return openDB(DB_NAME, DB_VERSION, {
@@ -18,6 +18,12 @@ export async function initDB() {
 				coursesStore.createIndex('strength', 'strength');
 			}
 
+			// Schedule store
+			if (!db.objectStoreNames.contains('schedule')) {
+				const scheduleStore = db.createObjectStore('schedule', { keyPath: 'id' });
+				scheduleStore.createIndex('date', 'date');
+			}
+			
 			// Study sessions store
 			if (!db.objectStoreNames.contains('studySessions')) {
 				const sessionStore = db.createObjectStore('studySessions', { keyPath: 'id' });

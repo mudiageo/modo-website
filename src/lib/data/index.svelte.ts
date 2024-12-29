@@ -39,7 +39,6 @@ export const dbStoreData = (store, storeKey = '') => {
 	let data = $state([]);
 
 	if (browser) {
-		getFromStoreIndexWhere('studySessions', 'date', '');
 		populateData(store).then((value) => {
 			data = value || data;
 		});
@@ -107,6 +106,7 @@ export const settingsStore = dbStoreData('settings', 'settings');
 export const profileStore = dbStoreData('profile', 'profile');
 export const tasksStore = dbStoreData('tasks');
 export const coursesStore = dbStoreData('courses');
+export const scheduleStore = dbStoreData('schedule');
 
 export const studySessionsStore = (() => {
 

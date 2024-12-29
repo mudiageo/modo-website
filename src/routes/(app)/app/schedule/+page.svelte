@@ -5,7 +5,7 @@
 	import {
 		tasksStore,
 		studyData,
-		studySessionsStore,
+		scheduleStore,
 		getFromStoreIndexWhere
 	} from '$lib/data/index.svelte.ts';
 	import Calendar from '$lib/components/schedule/Calendar.svelte';
@@ -17,7 +17,7 @@
 
 	import { addNotification } from '$lib/stores/notifications';
 
-	let schedule = $state(studySessionsStore.data || []);
+	let schedule = $state(scheduleStore.data || []);
 	let selectedDate = $state(new Date());
 	let currentDate = $state(selectedDate);
 
@@ -31,8 +31,7 @@
 	let isCreating = $state(false);
 
 	let tasks = tasksStore.data || [];
-	let studySessions = studySessionsStore.data || [];
-	let events = $state(studySessionsStore.data || []);
+	let events = $state(scheduleStore.data || []);
 
 	const HOUR_HEIGHT = 60; // pixels per hour
 	const DAY_START = 6; // 6 AM
@@ -90,8 +89,8 @@
 			if (response.ok) {
 				const { schedule: newSchedule } = await response.json();
 				schedule = newSchedule;
-				console.log(newSchedule);
-				newSchedule.forEach((session) => studySessionsStore.add(session));
+				events = newSchedule;
+				newSchedule.forEach((slot) => scheduleStore.add(slot));
 				addNotification('Schedule generated successfully', 'success');
 			} else {
 				throw new Error('Failed to generate schedule');
@@ -108,11 +107,10 @@
 		loading = true;
 		try {
 			let sessions = await getFromStoreIndexWhere(
-				'studySessions',
+				'schedule',
 				'date',
 				selectedDate.toISOString().slice(0, 10)
 			);
-			console.log(sessions);
 			events = sessions;
 			schedule = sessions;
 		} catch (error) {
