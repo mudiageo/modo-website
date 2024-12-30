@@ -13,7 +13,7 @@ export async function POST({ request, locals }) {
 
 	try {
 		const { email } = session.user;
-		const amount = 5000; // ₦5,000 in kobo
+		const amount = 500000; // ₦5,000 in kob
 
 		const transaction = await paystack.transaction.initialize({
 			email,

@@ -104,7 +104,7 @@
 					</li>
 				</ul>
 
-				<a href="/signup" class="btn-secondary w-full text-center">Get Started</a>
+				<a href="/app" class="btn-secondary w-full text-center">Get Started</a>
 			</div>
 
 			<!-- Premium Plan -->
@@ -211,24 +211,18 @@
 							email={session.user.email}
 							amount={5000}
 							text="Subscribe Now"
-							{onSuccess}
-							{onCancel}
+						  onSuccess={handleSuccess}
+							onCancel={handleSuccess}
 						/>
 					{/if}
 				{:else}
 					<a
-						href="/login?redirect=/pricing"
+						href="/auth/login?redirect=/pricing"
 						class="block w-full rounded-lg bg-white px-6 py-3 text-center font-semibold text-primary-600 transition-colors hover:bg-primary-50"
 					>
 						Login to Subscribe
 					</a>
 				{/if}
-				<button
-					class="w-full rounded-lg bg-white px-6 py-3 font-semibold text-primary-600 transition-colors hover:bg-primary-50"
-					onclick={handleSubscribe}
-				>
-					{page.data.session?.user?.premium ? 'Manage Subscription' : 'Subscribe Now'}
-				</button>
 			</div>
 		</div>
 	</div>
