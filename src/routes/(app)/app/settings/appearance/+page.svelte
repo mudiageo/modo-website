@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { preventDefault } from 'svelte/legacy';
 
 	import { onMount } from 'svelte';
@@ -32,6 +32,24 @@
 			showToast = true;
 		}
 	}
+import { theme } from '$lib/stores/theme';
+  
+  let fontSize = $state('medium');
+  
+  function updateFontSize(size: string) {
+    fontSize = size;
+    document.documentElement.classList.remove('text-sm', 'text-base', 'text-lg');
+    switch (size) {
+      case 'small':
+        document.documentElement.classList.add('text-sm');
+        break;
+      case 'large':
+        document.documentElement.classList.add('text-lg');
+        break;
+      default:
+        document.documentElement.classList.add('text-base');
+    }
+  }
 </script>
 
 <div class="mx-auto max-w-2xl">
@@ -115,6 +133,49 @@
 	<Toast
 		message="Appearance settings updated successfully"
 		type="success"
-		on:close={() => (showToast = false)}
+		onclose={() => (showToast = false)}
 	/>
 {/if}
+
+<div class="space-y-6">
+  <div>
+    <h2 class="text-lg font-medium text-gray-900 dark:text-white">Appearance</h2>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      Customize how Modo looks and feels
+    </p>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+    <div class="space-y-6">
+      <div>
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Theme</label>
+        <select
+          bind:value={$theme}
+          class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+        >
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="system">System</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Font Size</label>
+        <div class="mt-2 grid grid-cols-3 gap-3">
+          {#each ['small', 'medium', 'large'] as size}
+            <button
+              type="button"
+              class="px-4 py-2 text-sm font-medium rounded-md
+                {fontSize === size ?
+                  'bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-100' :
+                  'bg-white text-gray-700 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'}"
+              onclick={() => updateFontSize(size)}
+            >
+              {size.charAt(0).toUpperCase() + size.slice(1)}
+            </button>
+          {/each}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

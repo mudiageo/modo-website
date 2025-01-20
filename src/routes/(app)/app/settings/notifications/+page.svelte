@@ -2,8 +2,29 @@
 	import { preventDefault } from 'svelte/legacy';
 
 	import { onMount } from 'svelte';
+	import { settingsStore } from '$lib/data/index.svelte.ts'
 	import Toast from '$lib/components/Toast.svelte';
-
+  // import NotificationManager from '$lib/components/NotificationManager.svelte';
+  
+  let settings = settingsStore.data || {
+    notifications: {
+      tasks: {
+        enabled: false,
+        before: 30,
+        sound: true
+      },
+      schedule: {
+        enabled: false,
+        before: 15,
+        sound: true
+      },
+      studyReminders: {
+        enabled: false,
+        frequency: 'daily',
+        time: '09:00'
+      }
+    }
+  };
 	let notifications = $state({
 		email: {
 			enabled: true,
@@ -198,3 +219,16 @@
 		on:close={() => (showToast = false)}
 	/>
 {/if}
+  
+
+<div class="space-y-6">
+  <div>
+    <h2 class="text-lg font-medium text-gray-900 dark:text-white">Notifications</h2>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+      Manage how and when you receive notifications
+    </p>
+  </div>
+
+  NotificationManager
+</div>
+

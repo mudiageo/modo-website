@@ -202,3 +202,16 @@ export interface Flashcard {
 	nextReview?: string;
 	difficulty: number;
 }
+
+
+export interface SettingsSection {
+  id: string;
+  label: string;
+  icon: string;
+  href: string;
+}
+
+export interface ThemeSettings {
+  mode: 'light' | 'dark' | 'system';
+  fontSize: 'small' | 'medium' | 'large';
+}

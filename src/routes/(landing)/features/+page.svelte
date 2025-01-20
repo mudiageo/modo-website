@@ -1,5 +1,61 @@
 <script>
 	import { fade, fly } from 'svelte/transition';
+	import ScrollReveal from '$lib/components/shared/ScrollReveal.svelte';
+  import FeatureGrid from './FeatureGrid.svelte';
+
+  const aiFeatures = [
+    {
+      title: 'Smart Study Planning',
+      description: 'AI analyzes your learning patterns to create optimized study schedules',
+      icon: 'brain'
+    },
+    {
+      title: 'Personalized Recommendations',
+      description: 'Get tailored suggestions based on your performance and goals',
+      icon: 'lightbulb'
+    },
+    {
+      title: 'Adaptive Learning',
+      description: 'System adjusts to your progress and learning style',
+      icon: 'refresh'
+    }
+  ];
+
+  const gamificationFeatures = [
+    {
+      title: 'Achievement System',
+      description: 'Earn badges and rewards for reaching study milestones',
+      icon: 'trophy'
+    },
+    {
+      title: 'Study Streaks',
+      description: 'Maintain daily study streaks for bonus rewards',
+      icon: 'fire'
+    },
+    {
+      title: 'Challenges',
+      description: 'Complete time-limited challenges for extra motivation',
+      icon: 'target'
+    }
+  ];
+
+  const productivityFeatures = [
+    {
+      title: 'Task Management',
+      description: 'Organize and prioritize your study tasks effectively',
+      icon: 'check-square'
+    },
+    {
+      title: 'Progress Analytics',
+      description: 'Track your performance with detailed insights',
+      icon: 'chart'
+    },
+    {
+      title: 'Resource Library',
+      description: 'Store and organize study materials efficiently',
+      icon: 'book'
+    }
+  ];
 </script>
 
 <svelte:head>
@@ -52,4 +108,49 @@
 			</p>
 		</div>
 	</div>
+</div>
+
+
+<div class="max-w-6xl mx-auto px-4 py-12">
+  <ScrollReveal animation="slide-up">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Features</h1>
+      <p class="text-xl text-gray-600">Everything you need to study smarter, not harder</p>
+    </div>
+  </ScrollReveal>
+
+  <!-- AI Features -->
+  <section class="mb-20">
+    <ScrollReveal animation="slide-up">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">AI-Powered Learning</h2>
+    </ScrollReveal>
+    <FeatureGrid features={aiFeatures} />
+  </section>
+
+  <!-- Gamification -->
+  <section class="mb-20">
+    <ScrollReveal animation="slide-up">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">Gamified Experience</h2>
+    </ScrollReveal>
+    <FeatureGrid features={gamificationFeatures} />
+  </section>
+
+  <!-- Productivity -->
+  <section class="mb-20">
+    <ScrollReveal animation="slide-up">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">Productivity Tools</h2>
+    </ScrollReveal>
+    <FeatureGrid features={productivityFeatures} />
+  </section>
+
+  <!-- CTA -->
+  <ScrollReveal animation="fade" delay={400}>
+    <div class="text-center">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">Ready to Transform Your Study Habits?</h2>
+      <div class="flex gap-4 justify-center">
+        <a href="/signup" class="btn-primary">Get Started Free</a>
+        <a href="/pricing" class="btn-secondary">View Pricing</a>
+      </div>
+    </div>
+  </ScrollReveal>
 </div>
