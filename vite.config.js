@@ -3,9 +3,4 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [sveltekit()],
-	build: {
-		rollUpconfisg: {
-			external: ['argon2']
-		}
-	}
 });
