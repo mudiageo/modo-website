@@ -32,10 +32,8 @@
 
 <div
   bind:this={element}
-  class="transition-all duration-700"
   style="transition-delay: {delay}ms"
-  class:"{animations[animation]}: !visible"
-  class:"{visible ? 'opacity-100 translate-x-0 translate-y-0' : ''}"
+  class={["transition-all duration-700", {[animations[animation]]: !visible, 'opacity-100 translate-x-0 translate-y-0': visible}]}
 >
   {@render children?.()}
 </div>

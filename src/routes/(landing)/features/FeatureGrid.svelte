@@ -1,5 +1,5 @@
 <script>
-import AnimatedFeature from '$lib/components/landing/AnimatedFeature.svekte'
+import AnimatedFeature from '$lib/components/landing/AnimatedFeature.svelte'
   /** @type {Array<{title: string, description: string, icon: string}>} */
   let { features } = $props();
 </script>
